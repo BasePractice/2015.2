@@ -10,7 +10,7 @@ public class Main {
         mylist.add(2);
         mylist.add(3);
         mylist.add(4);
-        ILinkedList<Integer> list2 =  Algorithms.subList(mylist, 2);
-        System.out.println(list2.toString());
+        ILinkedList<Integer> list2 = Algorithms.subList(mylist, 3);
+        System.out.println(Algorithms.print(list2));
     }
 }

@@ -12,13 +12,14 @@ public final class Algorithms {
         LinkedListImpl sublist = null;
         boolean isFound = false;
         E item = null;
+        sublist = new LinkedListImpl<E>();
             while (!isFound && iterator.hasNext()){
                item = iterator.next();
                    if(item.equals(offset)) {
                        isFound = true;
                        while (iterator.hasNext()) {
-                           sublist = new LinkedListImpl<E>();
-                           sublist.add(iterator.next());
+                           item = iterator.next();
+                           sublist.add(item);
                        }
                    }
         }
@@ -26,20 +27,17 @@ public final class Algorithms {
     }
 
 
-    public static void<E> Print(ILinkedList<E> list) {
+    public static <E> String print(ILinkedList<E> list) {
         Iterator<E> iterator = list.iterator();
-        LinkedListImpl sublist = null;
-        boolean isFound = false;
-        E item = null;
+        E item;
+        String output = "";
         while (iterator.hasNext()){
             item = iterator.next();
-                while (iterator.hasNext()) {
-                    sublist = new LinkedListImpl<E>();
-                    sublist.add(iterator.next());
-                }
-            }
+            output += "[" + item.toString() + "]";
         }
+        return output;
     }
+
 
 
     public static <E> ILinkedList<E> subList(ILinkedList<E> list, E offset, int size) {
@@ -62,14 +60,14 @@ public final class Algorithms {
         return false;
     }
 
-    public interface LinkedListFold<R, E> {
-        R execute(R accum, E element);
-    }
-
     public static <E extends Comparable<E>, R> R foldl(ILinkedList<E> list, R accum, LinkedListFold<R, E> func) {
         for (E element : list) {
             accum = func.execute(accum, element);
         }
         return accum;
+    }
+
+    public interface LinkedListFold<R, E> {
+        R execute(R accum, E element);
     }
 }
