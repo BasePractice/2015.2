@@ -102,6 +102,8 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
             this.next = next;
             this.prev = prev;
         }
+
+
     }
 
     private final class IteratorImpl implements Iterator<E> {
