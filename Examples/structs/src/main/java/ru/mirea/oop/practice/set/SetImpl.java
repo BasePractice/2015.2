@@ -57,7 +57,7 @@ public final class SetImpl<E> implements ISet<E> {
         int hash = hash(element);
         Node<E> it;
         if ((it = table[i]) == null) {
-            table[i] = new Node<>(null, element, null);
+            table[i] = new Node<E>(null, element, null);
             size++;
         } else {
             Node<E> exists = null;
@@ -66,7 +66,7 @@ public final class SetImpl<E> implements ISet<E> {
             } else {
                 while (it != null) {
                     if ((exists = it.next) == null) {
-                        it.next = new Node<>(it, element, null);
+                        it.next = new Node<E>(it, element, null);
                         break;
                     }
                     if (exists.hash == hash && element != null && element.equals(exists.item))

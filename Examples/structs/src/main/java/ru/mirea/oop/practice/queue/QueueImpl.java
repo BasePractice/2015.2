@@ -16,7 +16,7 @@ public final class QueueImpl<E> implements IQueue<E> {
     @Override
     public void push(E element) {
         final Node<E> l = last;
-        final Node<E> newNode = new Node<>(element, null);
+        final Node<E> newNode = new Node<E>(element, null);
         last = newNode;
         if (l == null) {
             first = newNode;

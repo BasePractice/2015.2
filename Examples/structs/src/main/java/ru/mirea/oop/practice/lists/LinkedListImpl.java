@@ -121,9 +121,22 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
         @Override
         public E next() {
             returned = next;
-            next = next.next;
+            if (next.next != null){
+            next = next.next;}
             nextIndex++;
             return returned.item;
+        }
+
+
+        @Override
+        public String toString() {
+            String output = "";
+            Node current = first;
+            while (current.next != null) {
+                output += "["+current.item.toString()+"]";
+                current = current.next;
+            }
+            return output;
         }
     }
 }

@@ -1,13 +1,46 @@
 package ru.mirea.oop.practice.lists;
 
+import java.util.Iterator;
+
 public final class Algorithms {
     public static <E> void sort(ILinkedList<E> list) {
         throw new RuntimeException("Not implement");
     }
 
     public static <E> ILinkedList<E> subList(ILinkedList<E> list, E offset) {
-        throw new RuntimeException("Not implement yet");
+        Iterator<E> iterator = list.iterator();
+        LinkedListImpl sublist = null;
+        boolean isFound = false;
+        E item = null;
+            while (!isFound && iterator.hasNext()){
+               item = iterator.next();
+                   if(item.equals(offset)) {
+                       isFound = true;
+                       while (iterator.hasNext()) {
+                           sublist = new LinkedListImpl<E>();
+                           sublist.add(iterator.next());
+                       }
+                   }
+        }
+        return sublist;
     }
+
+
+    public static void<E> Print(ILinkedList<E> list) {
+        Iterator<E> iterator = list.iterator();
+        LinkedListImpl sublist = null;
+        boolean isFound = false;
+        E item = null;
+        while (iterator.hasNext()){
+            item = iterator.next();
+                while (iterator.hasNext()) {
+                    sublist = new LinkedListImpl<E>();
+                    sublist.add(iterator.next());
+                }
+            }
+        }
+    }
+
 
     public static <E> ILinkedList<E> subList(ILinkedList<E> list, E offset, int size) {
         throw new RuntimeException("Not implement yet");
