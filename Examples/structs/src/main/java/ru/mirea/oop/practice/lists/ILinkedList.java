@@ -1,6 +1,6 @@
 package ru.mirea.oop.practice.lists;
 
-public interface ILinkedList<E> extends Iterable<E> {
+public interface ILinkedList<E> extends Iterable<E>{
 
     int size();
 
@@ -13,4 +13,6 @@ public interface ILinkedList<E> extends Iterable<E> {
     void remove(E element);
 
     void clear();
+
+
 }
