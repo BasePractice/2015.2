@@ -33,7 +33,7 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
     @Override
     public void add(E element) {
         final Node<E> l = last;
-        final Node<E> newNode = new Node<>(l, element, null);
+        final Node<E> newNode = new Node<E>(l, element, null);
         last = newNode;
         if (l == null) {
             first = newNode;
@@ -42,6 +42,7 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
         }
         size++;
     }
+
 
     @Override
     public void remove(E element) {
