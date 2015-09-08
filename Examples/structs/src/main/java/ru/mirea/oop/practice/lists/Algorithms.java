@@ -66,7 +66,16 @@ public final class Algorithms {
     }
 
     public static <E> ILinkedList<E> removeList(ILinkedList<E> list, E offset, int size) {
-        throw new RuntimeException("Not implement yet");
+        Iterator<E> iterator = list.iterator();
+        LinkedListImpl sublist = null;
+        E item = null;
+        sublist = new LinkedListImpl<E>();
+        while (iterator.hasNext()) {
+            item = iterator.next();
+            sublist.add(item);
+            if (item.equals(offset)) break;
+        }
+        return sublist;
     }
 
     public static <E> boolean compareList(ILinkedList<E> list, ILinkedList<E> other) {

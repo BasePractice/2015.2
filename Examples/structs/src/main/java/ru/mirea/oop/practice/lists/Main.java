@@ -10,9 +10,12 @@ public class Main {
         mylist.add(2);
         mylist.add(3);
         mylist.add(4);
+        mylist.add(5);
         ILinkedList<Integer> list2 = Algorithms.subList(mylist, 3);
-        ILinkedList<Integer> list3 = Algorithms.subList(mylist, 1, 2);
+        ILinkedList<Integer> list3 = Algorithms.subList(mylist, 1, 3);
+        ILinkedList<Integer> list4 = Algorithms.removeList(mylist, 2, 2);
         System.out.println(Algorithms.print(list2));
         System.out.println(Algorithms.print(list3));
+        System.out.println(Algorithms.print(list4));
     }
 }
