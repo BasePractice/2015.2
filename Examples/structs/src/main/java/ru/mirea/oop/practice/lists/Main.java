@@ -11,6 +11,8 @@ public class Main {
         mylist.add(3);
         mylist.add(4);
         ILinkedList<Integer> list2 = Algorithms.subList(mylist, 3);
+        ILinkedList<Integer> list3 = Algorithms.subList(mylist, 1, 2);
         System.out.println(Algorithms.print(list2));
+        System.out.println(Algorithms.print(list3));
     }
 }

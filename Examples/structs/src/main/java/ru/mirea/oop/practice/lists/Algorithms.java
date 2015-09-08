@@ -41,7 +41,22 @@ public final class Algorithms {
 
 
     public static <E> ILinkedList<E> subList(ILinkedList<E> list, E offset, int size) {
-        throw new RuntimeException("Not implement yet");
+        Iterator<E> iterator = list.iterator();
+        LinkedListImpl sublist = null;
+        boolean isFound = false;
+        E item = null;
+        sublist = new LinkedListImpl<E>();
+        while (!isFound && iterator.hasNext()) {
+            item = iterator.next();
+            if (item.equals(offset)) {
+                isFound = true;
+                for (int i = 1; i <= size; i++) {
+                    item = iterator.next();
+                    sublist.add(item);
+                }
+            }
+        }
+        return sublist;
     }
 
     public static <E> ILinkedList<E> addList(ILinkedList<E> list, ILinkedList<E> other) {
