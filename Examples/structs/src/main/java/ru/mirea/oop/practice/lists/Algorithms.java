@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public final class Algorithms {
     public static <E> void sort(ILinkedList<E> list) {
-        throw new RuntimeException("Not implement");
+        throw new RuntimeException(" ");
     }
 
     public static <E> ILinkedList<E> subList(ILinkedList<E> list, E offset) {
