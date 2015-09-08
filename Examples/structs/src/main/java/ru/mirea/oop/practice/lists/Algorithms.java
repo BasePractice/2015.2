@@ -2,7 +2,7 @@ package ru.mirea.oop.practice.lists;
 
 public final class Algorithms {
     public static <E> void sort(ILinkedList<E> list) {
-        throw new RuntimeException("Not implement yet");
+        throw new RuntimeException("Not implement");
     }
 
     public static <E> ILinkedList<E> subList(ILinkedList<E> list, E offset) {
