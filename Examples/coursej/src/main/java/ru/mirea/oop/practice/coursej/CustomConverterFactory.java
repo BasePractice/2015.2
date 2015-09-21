@@ -49,20 +49,10 @@ final class CustomConverterFactory implements Converter.Factory {
             this.typeAdapter = typeAdapter;
         }
 
-        private static void to(Reader reader, int ch) throws IOException {
-            int readed;
-            while ((readed = reader.read()) > 0) {
-                if (readed == ch)
-                    break;
-            }
-        }
-
         @Override
         public E fromBody(ResponseBody body) throws IOException {
             Reader in = body.charStream();
             try {
-                //FIXME: Исправить и облагородить
-                to(in, ':');
                 return typeAdapter.fromJson(in);
             } finally {
                 try {

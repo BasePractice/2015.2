@@ -21,17 +21,17 @@ final class Authenticator {
     public void authenticate(OkHttpClient ok) throws Exception {
 
         if (token == null || token.idUser < 0 || token.expireTime < System.currentTimeMillis()) {
-            HttpUrl url = new VkUrlBuilder()
+            HttpUrl url = new UrlBuilder()
                     .setClientId(idClient)
-                    .addScope(VkUrlBuilder.Scope.AUDIO)
-                    .addScope(VkUrlBuilder.Scope.DOCS)
-                    .addScope(VkUrlBuilder.Scope.MESSAGES)
-                    .addScope(VkUrlBuilder.Scope.NOTES)
-                    .addScope(VkUrlBuilder.Scope.NOTIFICATIONS)
-                    .addScope(VkUrlBuilder.Scope.NOTIFY)
-                    .addScope(VkUrlBuilder.Scope.PHOTOS)
-                    .addScope(VkUrlBuilder.Scope.VIDEO)
-                    .addScope(VkUrlBuilder.Scope.WALL)
+                    .addScope(UrlBuilder.Scope.AUDIO)
+                    .addScope(UrlBuilder.Scope.DOCS)
+                    .addScope(UrlBuilder.Scope.MESSAGES)
+                    .addScope(UrlBuilder.Scope.NOTES)
+                    .addScope(UrlBuilder.Scope.NOTIFICATIONS)
+                    .addScope(UrlBuilder.Scope.NOTIFY)
+                    .addScope(UrlBuilder.Scope.PHOTOS)
+                    .addScope(UrlBuilder.Scope.VIDEO)
+                    .addScope(UrlBuilder.Scope.WALL)
                     .build();
             Request request = new Request.Builder().url(url).build();
             System.out.println(url.toString());

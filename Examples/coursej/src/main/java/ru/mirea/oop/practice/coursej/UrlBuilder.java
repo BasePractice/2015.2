@@ -5,7 +5,7 @@ import com.squareup.okhttp.HttpUrl;
 import java.util.HashSet;
 import java.util.Set;
 
-final class VkUrlBuilder {
+final class UrlBuilder {
     private static final String BASE = "oauth.vk.com";
     private final Set<String> scopes = new HashSet<>();
     private String clientId;
@@ -33,27 +33,27 @@ final class VkUrlBuilder {
         TOKEN
     }
 
-    VkUrlBuilder addScope(Scope scope) {
+    UrlBuilder addScope(Scope scope) {
         scopes.add(scope.toString().toLowerCase());
         return this;
     }
 
-    VkUrlBuilder setClientId(int id) {
+    UrlBuilder setClientId(int id) {
         clientId = Integer.toString(id);
         return this;
     }
 
-    VkUrlBuilder setDisplay(Display display) {
+    UrlBuilder setDisplay(Display display) {
         this.display = display.toString().toLowerCase();
         return this;
     }
 
-    VkUrlBuilder setRedirectUrl(String redirectUrl) {
+    UrlBuilder setRedirectUrl(String redirectUrl) {
         this.redirectUrl = redirectUrl;
         return this;
     }
 
-    VkUrlBuilder setResponseType(ResponseType type) {
+    UrlBuilder setResponseType(ResponseType type) {
         this.responseType = type.toString().toLowerCase();
         return this;
     }
