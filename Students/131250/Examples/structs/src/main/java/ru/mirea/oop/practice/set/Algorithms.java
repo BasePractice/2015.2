@@ -13,7 +13,7 @@ public final class Algorithms {
         }
         return f;
     }
-    /** Равенство */
+    /** Равенствo */
     public static <E> boolean isEquals(ISet<E> set, ISet<E> other) {
         return set.equals(other);
     }
