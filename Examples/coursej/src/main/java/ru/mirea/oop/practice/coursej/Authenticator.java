@@ -91,6 +91,7 @@ final class Authenticator {
     }
 
     static final class Token {
+        private static final String OS = System.getProperty("os.name").toLowerCase();
         public static final String ACCESS_TOKEN = "access_token";
         public static final String EXPIRES_IN = "expires_in";
         public static final String USER_ID = "user_id";
@@ -128,7 +129,11 @@ final class Authenticator {
         }
 
         static void save(Token token) {
-            save(token, "D:\\GitHub\\2015.2\\Examples\\coursej\\src\\main\\resources\\.accessToken");
+            if (OS.contains("mac")) {
+                save(token, "/Users/pastor/GitHub/2015.2/Examples/coursej/src/main/resources/.accessToken");
+            } else {
+                save(token, "D:\\GitHub\\2015.2\\Examples\\coursej\\src\\main\\resources\\.accessToken");
+            }
         }
 
         public static Token createDefault() {

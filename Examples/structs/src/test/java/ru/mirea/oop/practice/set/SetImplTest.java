@@ -58,7 +58,7 @@ public class SetImplTest {
         Iterator<Integer> it = set.iterator();
         while (it.hasNext()) {
             Integer next = it.next();
-            System.out.println(next);
+            assertTrue(set.contains(next));
         }
     }
 }

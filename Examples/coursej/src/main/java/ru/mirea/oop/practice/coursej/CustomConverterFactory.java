@@ -1,6 +1,7 @@
 package ru.mirea.oop.practice.coursej;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.MediaType;
@@ -9,10 +10,7 @@ import com.squareup.okhttp.ResponseBody;
 import okio.Buffer;
 import retrofit.Converter;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
@@ -31,9 +29,9 @@ final class CustomConverterFactory implements Converter.Factory {
     @Override
     public Converter<?> get(Type type) {
         final TypeAdapter<?> adapter;
-        if (type instanceof ParameterizedType) {
+        /*if (type instanceof ParameterizedType) {
             adapter = gson.getAdapter(TypeToken.get(((ParameterizedType) type).getActualTypeArguments()[0]));
-        } else {
+        } else*/ {
             adapter = gson.getAdapter(TypeToken.get(type));
         }
         return new CustomConverter<>(adapter);
@@ -51,7 +49,9 @@ final class CustomConverterFactory implements Converter.Factory {
 
         @Override
         public E fromBody(ResponseBody body) throws IOException {
-            Reader in = body.charStream();
+            String ret = body.string();
+            //System.out.println(ret);
+            Reader in = new StringReader(ret);
             try {
                 return typeAdapter.fromJson(in);
             } finally {

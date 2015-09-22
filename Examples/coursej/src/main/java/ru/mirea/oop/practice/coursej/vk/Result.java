@@ -9,6 +9,9 @@ import java.io.IOException;
 public final class Result<E> {
     @SerializedName("response")
     public E response;
+    @SuppressWarnings("unused")
+    @SerializedName("error")
+    public String error;
 
     public static <E> E call(Call<Result<E>> callable) throws IOException {
         if (callable == null)
