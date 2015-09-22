@@ -1,15 +1,18 @@
-package ru.mirea.oop.practice.set;
+package ru.mirea.oop.practice.lists;
 
-public interface ISet<E> extends Iterable<E> {
+public interface ILinkedList<E> extends Iterable<E>{
+
     int size();
 
     boolean isEmpty();
 
     boolean contains(E element);
 
-    void put(E element);
+    void add(E element);
 
     void remove(E element);
 
     void clear();
+
+
 }
