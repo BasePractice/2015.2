@@ -162,6 +162,7 @@ public final class SetImpl<E> implements ISet<E> {
                 return false;
             if (next.hasNext())
                 return true;
+            ++nextIndex;
             while (nextIndex < table.length) {
                 next = new IteratorImpl(table[nextIndex]);
                 if (next.hasNext())

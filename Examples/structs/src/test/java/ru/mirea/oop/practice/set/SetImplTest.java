@@ -3,6 +3,8 @@ package ru.mirea.oop.practice.set;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -49,5 +51,14 @@ public class SetImplTest {
     public void testClear() throws Exception {
         set.clear();
         assertTrue(set.isEmpty());
+    }
+
+    @Test
+    public void testIterator() throws Exception {
+        Iterator<Integer> it = set.iterator();
+        while (it.hasNext()) {
+            Integer next = it.next();
+            System.out.println(next);
+        }
     }
 }
