@@ -18,7 +18,7 @@ public final class DqueueImpl<E> implements IDqueue<E> {
     @Override
     public void pushBack(E element) {
         final Node<E> l = last;
-        final Node<E> newNode = new Node<E>(l, element, null);
+        final Node<E> newNode = new Node<>(l, element, null);
         last = newNode;
         if (l == null) {
             first = newNode;

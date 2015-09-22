@@ -33,7 +33,7 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
     @Override
     public void add(E element) {
         final Node<E> l = last;
-        final Node<E> newNode = new Node<E>(l, element, null);
+        final Node<E> newNode = new Node<>(l, element, null);
         last = newNode;
         if (l == null) {
             first = newNode;
@@ -121,22 +121,9 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
         @Override
         public E next() {
             returned = next;
-            if (next.next != null){
-            next = next.next;}
+            next = next.next;
             nextIndex++;
             return returned.item;
-        }
-
-
-        @Override
-        public String toString() {
-            String output = "";
-            Node current = first;
-            while (current.next != null) {
-                output += "["+current.item.toString()+"]";
-                current = current.next;
-            }
-            return output;
         }
     }
 }
