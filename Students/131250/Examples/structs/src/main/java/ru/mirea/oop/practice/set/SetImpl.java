@@ -139,10 +139,15 @@ public final class SetImpl<E> implements ISet<E> {
 
     @Override
     public boolean equals(Object obj) {
+        boolean f = true;
         if (obj instanceof ISet) {
-            throw new RuntimeException("Not implement yet");
+            if (this.size != ((ISet) obj).size()) {return false;}
+            for (E e : this) {
+                if (!(this.contains(e))) {f = false;}
+            }
         }
-        return super.equals(obj);
+        return f;
+
     }
 
     private final class IteratorImpl2 implements Iterator<E> {

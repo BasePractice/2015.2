@@ -1,16 +1,26 @@
 package ru.mirea.oop.practice.lists;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public final class Algorithms {
-    public static <E> void sort(ILinkedList<E> list) {
-        LinkedListImpl sublist = new LinkedListImpl<E>();
-        
-
-
-
-
-
+    public static <E> ILinkedList<E> sort(ILinkedList<E> list) {
+        ArrayList sublist = new ArrayList();
+        Iterator<E> iterator = list.iterator();
+        E item;
+        while (iterator.hasNext()){
+            item = iterator.next();
+            sublist.add(item);
+        }
+        E[] arr = (E[]) sublist.toArray();
+        Arrays.sort(arr);
+        LinkedListImpl sublist1 = new LinkedListImpl<E>();
+        for (int i = 0; i < arr.length; i++) {
+            sublist1.add(arr[i]);
+        }
+        return sublist1;
     }
 
     public static <E> ILinkedList<E> subList(ILinkedList<E> list, E offset) {
