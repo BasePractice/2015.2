@@ -1,9 +1,11 @@
 package ru.mirea.oop.practice.coursej;
 
-import com.squareup.okhttp.OkHttpClient;
 import retrofit.Call;
+import ru.mirea.oop.practice.coursej.ext.Extension;
+import ru.mirea.oop.practice.coursej.ext.ServiceExtension;
 import ru.mirea.oop.practice.coursej.vk.Result;
 import ru.mirea.oop.practice.coursej.vk.Users;
+import ru.mirea.oop.practice.coursej.vk.VkApi;
 import ru.mirea.oop.practice.coursej.vk.entities.Contact;
 
 public final class Main {
@@ -11,15 +13,39 @@ public final class Main {
 
     //5067217
     public static void main(String[] args) throws Exception {
-        Authenticator authenticator = new Authenticator(5067217);
-        OkHttpClient ok = ClientFactory.createOkClient();
-        authenticator.authenticate(ok);
-        Users users = ServiceCreator.createService(ok, Users.class, "https://api.vk.com/");
+        VkApi api = new VkApiImpl(5067217);
+        //printOwner(api);
+        Extension ext = new ServiceExtensionImpl(api);
+        ext.load();
+        ext.start();
+        Thread.sleep(60000);
+        ext.stop();
+    }
+
+    private static void printOwner(VkApi api) throws java.io.IOException {
+        Users users = api.getUsers();
         Call<Result<Contact[]>> u = users.list(
                 null,
                 DEFAULT_USER_FIELDS,
                 null);
         Contact[] contacts = Result.call(u);
         System.out.println(contacts[0]);
+    }
+
+    private static final class ServiceExtensionImpl extends ServiceExtension {
+
+        private ServiceExtensionImpl(VkApi api) {
+            super(api);
+        }
+
+        @Override
+        protected void doEvent(Event event) {
+            System.out.println(event);
+        }
+
+        @Override
+        protected boolean init() {
+            return true;
+        }
     }
 }
