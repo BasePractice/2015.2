@@ -57,7 +57,7 @@ public final class SetImpl<E> implements ISet<E> {
         int hash = hash(element);
         Node<E> it;
         if ((it = table[i]) == null) {
-            table[i] = new Node<E>(null, element, null);
+            table[i] = new Node<>(null, element, null);
             size++;
         } else {
             Node<E> exists = null;
@@ -66,7 +66,7 @@ public final class SetImpl<E> implements ISet<E> {
             } else {
                 while (it != null) {
                     if ((exists = it.next) == null) {
-                        it.next = new Node<E>(it, element, null);
+                        it.next = new Node<>(it, element, null);
                         break;
                     }
                     if (exists.hash == hash && element != null && element.equals(exists.item))
@@ -139,15 +139,10 @@ public final class SetImpl<E> implements ISet<E> {
 
     @Override
     public boolean equals(Object obj) {
-        boolean f = true;
         if (obj instanceof ISet) {
-            if (this.size != ((ISet) obj).size()) {return false;}
-            for (E e : this) {
-                if (!(this.contains(e))) {f = false;}
-            }
+            return Algorithms.isEquals(this, (ISet<E>)obj);
         }
-        return f;
-
+        return false;
     }
 
     private final class IteratorImpl2 implements Iterator<E> {
@@ -167,6 +162,7 @@ public final class SetImpl<E> implements ISet<E> {
                 return false;
             if (next.hasNext())
                 return true;
+            ++nextIndex;
             while (nextIndex < table.length) {
                 next = new IteratorImpl(table[nextIndex]);
                 if (next.hasNext())

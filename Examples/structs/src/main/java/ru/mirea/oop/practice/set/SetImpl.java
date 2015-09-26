@@ -140,7 +140,7 @@ public final class SetImpl<E> implements ISet<E> {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ISet) {
-            throw new RuntimeException("Not implement yet");
+            return Algorithms.isEquals(this, (ISet<E>)obj);
         }
         return super.equals(obj);
     }
