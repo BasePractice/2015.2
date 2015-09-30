@@ -30,12 +30,26 @@ public final class DqueueImpl<E> implements IDqueue<E> {
 
     @Override
     public void pushFront(E element) {
-        throw new RuntimeException("Not implement yet");
+        final Node<E> f = first;
+        final Node<E> newFirst = new Node<>(f, element, null);
+        first = newFirst;
+        if (f == null) {
+            last = newFirst;
+        } else {
+            f.prev = newFirst;
+        }
     }
 
     @Override
     public E popBack() {
-        throw new RuntimeException("Not implement yet");
+
+        final E current = last.item;
+        last = last.prev;
+        if (last == null) {
+            first = null;
+        }
+        --size;
+        return current;
     }
 
     @Override
@@ -50,12 +64,14 @@ public final class DqueueImpl<E> implements IDqueue<E> {
 
     @Override
     public E peekBack() {
-        throw new RuntimeException("Not implement yet");
+        return last.item;
+
     }
+
 
     @Override
     public E peekFront() {
-        throw new RuntimeException("Not implement yet");
+        return first.item;
     }
 
     @Override
@@ -114,5 +130,7 @@ public final class DqueueImpl<E> implements IDqueue<E> {
             nextIndex++;
             return returned.item;
         }
+
     }
+
 }
