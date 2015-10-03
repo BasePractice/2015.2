@@ -30,12 +30,26 @@ public final class DqueueImpl<E> implements IDqueue<E> {
 
     @Override
     public void pushFront(E element) {
-        throw new RuntimeException("Not implement yet");
+        final Node<E> l = first;
+        final Node<E> newNode = new Node<>(null, element, l);
+        first = newNode;
+        if (l == null) {
+            last = newNode;
+        } else {
+            l.prev = newNode;
+        }
+        size++;
     }
 
     @Override
     public E popBack() {
-        throw new RuntimeException("Not implement yet");
+        final E current = last.item;
+        last = last.prev;
+        if (last == null) {
+            first = null;
+        }
+        --size;
+        return current;
     }
 
     @Override
@@ -50,12 +64,12 @@ public final class DqueueImpl<E> implements IDqueue<E> {
 
     @Override
     public E peekBack() {
-        throw new RuntimeException("Not implement yet");
+        return last.item;
     }
 
     @Override
     public E peekFront() {
-        throw new RuntimeException("Not implement yet");
+        return first.item;
     }
 
     @Override
@@ -114,5 +128,39 @@ public final class DqueueImpl<E> implements IDqueue<E> {
             nextIndex++;
             return returned.item;
         }
+    }
+
+    public static class A {
+        private int n;
+
+        public A(int n) {
+            this.n = n;
+        }
+
+        public int getN() {
+            return n;
+        }
+    }
+
+    public static void main(String[] args) {
+        A a = new A(1);
+        A a1 = new A(2);
+        A a2 = new A(3);
+        A a3 = new A(4);
+        A a4 = new A(5);
+        A a5 = new A(6);
+        IDqueue<A> iDqueue = new DqueueImpl<>();
+        iDqueue.pushFront(a);
+        iDqueue.pushFront(a1);
+        iDqueue.pushFront(a2);
+        iDqueue.pushFront(a3);
+        iDqueue.pushFront(a4);
+        iDqueue.pushFront(a5);
+        System.out.println(iDqueue.popBack().getN());
+        System.out.println(iDqueue.peekBack().getN());
+        System.out.println(iDqueue.popFront().getN());
+        System.out.println(iDqueue.peekFront().getN());
+        iDqueue.pushBack(a3);
+        System.out.println(iDqueue.peekBack().getN());
     }
 }
