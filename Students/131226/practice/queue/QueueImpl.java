@@ -2,57 +2,38 @@ package ru.mirea.oop.practice.queue;
 
 import java.util.Iterator;
 
-public final class CircleQueueImpl<E> implements IQueue<E> {
+public final class QueueImpl<E> implements IQueue<E> {
 
-    private int size = 0;
-
+    private int size;
     private Node<E> first;
-
     private Node<E> last;
-
-
-    private final int capacity;
-
-    public CircleQueueImpl(int capacity) {
-        this.capacity = capacity;
-    }
 
     @Override
     public int size() {
         return size;
-
     }
 
+    @Override
     public void push(E element) {
-        if (size < capacity) {
-
-
-            final Node<E> l = last;
-            final Node<E> newNode = new Node<>(element, first);
-            last = newNode;
-            if (l == null) {
-                first = newNode;
-            } else {
-                l.next = newNode;
-            }
-            size++;
+        final Node<E> l = last;
+        final Node<E> newNode = new Node<>(element, null);
+        last = newNode;
+        if (l == null) {
+            first = newNode;
         } else {
-            throw new QueueFullException();
+            l.next = newNode;
         }
-
+        size++;
     }
 
     @Override
     public E pop() {
-
         final E current = first.item;
         first = first.next;
-        last.next = first;
         if (first == null)
             last = null;
         --size;
         return current;
-
     }
 
     @Override
@@ -62,14 +43,18 @@ public final class CircleQueueImpl<E> implements IQueue<E> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+        return size == 0 && first == null;
     }
 
     @Override
     public void clear() {
-        size = 0;
+        for (Node<E> it = first; it != null; ) {
+            Node<E> next = it.next;
+            it.next = null;
+            it = next;
+        }
         first = null;
-        last = null;
+        size = 0;
     }
 
     @Override
@@ -108,21 +93,6 @@ public final class CircleQueueImpl<E> implements IQueue<E> {
             next = next.next;
             nextIndex++;
             return returned.item;
-        }
-    }
-
-    public class QueueFullException extends RuntimeException {
-
-        public QueueFullException() {
-            super();
-        }
-
-        public QueueFullException(String message) {
-            super(message);
-        }
-
-        public QueueFullException(String message, Throwable cause) {
-            super(message, cause);
         }
     }
 }

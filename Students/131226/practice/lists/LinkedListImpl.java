@@ -1,8 +1,8 @@
-package ru.mirea.oop.practice.queue;
+package ru.mirea.oop.practice.lists;
 
 import java.util.Iterator;
 
-public final class DqueueImpl<E> implements IDqueue<E> {
+final class LinkedListImpl<E> implements ILinkedList<E> {
 
     private int size = 0;
 
@@ -16,7 +16,22 @@ public final class DqueueImpl<E> implements IDqueue<E> {
     }
 
     @Override
-    public void pushBack(E element) {
+    public boolean isEmpty() {
+        return size == 0 || first == null;
+    }
+
+    @Override
+    public boolean contains(E element) {
+        for (Node<E> it = first; it != null; it = it.next) {
+            if (element.equals(it.item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void add(E element) {
         final Node<E> l = last;
         final Node<E> newNode = new Node<>(l, element, null);
         last = newNode;
@@ -29,54 +44,12 @@ public final class DqueueImpl<E> implements IDqueue<E> {
     }
 
     @Override
-    public void pushFront(E element) {
-        final Node<E> f = first;
-        final Node<E> newFirst = new Node<>(f, element, null);
-        first = newFirst;
-        if (f == null) {
-            last = newFirst;
-        } else {
-            f.prev = newFirst;
+    public void remove(E element) {
+        for (Node<E> it = first; it != null; it = it.next) {
+            if (element.equals(it.item)) {
+                remove(it);
+            }
         }
-    }
-
-    @Override
-    public E popBack() {
-
-        final E current = last.item;
-        last = last.prev;
-        if (last == null) {
-            first = null;
-        }
-        --size;
-        return current;
-    }
-
-    @Override
-    public E popFront() {
-        final E current = first.item;
-        first = first.next;
-        if (first == null)
-            last = null;
-        --size;
-        return current;
-    }
-
-    @Override
-    public E peekBack() {
-        return last.item;
-
-    }
-
-
-    @Override
-    public E peekFront() {
-        return first.item;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
     }
 
     @Override
@@ -94,6 +67,28 @@ public final class DqueueImpl<E> implements IDqueue<E> {
     @Override
     public Iterator<E> iterator() {
         return new IteratorImpl(first);
+    }
+
+    private E remove(Node<E> x) {
+        final E element = x.item;
+        final Node<E> next = x.next;
+        final Node<E> prev = x.prev;
+
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            x.prev = null;
+        }
+
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            x.next = null;
+        }
+        size--;
+        return element;
     }
 
     private static final class Node<E> {
@@ -130,7 +125,5 @@ public final class DqueueImpl<E> implements IDqueue<E> {
             nextIndex++;
             return returned.item;
         }
-
     }
-
 }

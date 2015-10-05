@@ -41,17 +41,16 @@ public final class CircleQueueImpl<E> implements IQueue<E> {
         }
 
     }
-
     @Override
     public E pop() {
 
-        final E current = first.item;
-        first = first.next;
-        last.next = first;
-        if (first == null)
-            last = null;
-        --size;
-        return current;
+            final E current = first.item;
+            first = first.next;
+            last.next = first;
+            if (first == null)
+                last = null;
+            --size;
+            return current;
 
     }
 
@@ -62,12 +61,12 @@ public final class CircleQueueImpl<E> implements IQueue<E> {
 
     @Override
     public boolean isEmpty() {
-        return size == 0;
+       return size == 0;
     }
 
     @Override
     public void clear() {
-        size = 0;
+        size=0;
         first = null;
         last = null;
     }
@@ -110,18 +109,17 @@ public final class CircleQueueImpl<E> implements IQueue<E> {
             return returned.item;
         }
     }
-
     public class QueueFullException extends RuntimeException {
 
-        public QueueFullException() {
+        public QueueFullException(){
             super();
         }
 
-        public QueueFullException(String message) {
+        public QueueFullException(String message){
             super(message);
         }
 
-        public QueueFullException(String message, Throwable cause) {
+        public QueueFullException(String message, Throwable cause){
             super(message, cause);
         }
     }
