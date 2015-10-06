@@ -142,7 +142,7 @@ public final class SetImpl<E> implements ISet<E> {
         if (obj instanceof ISet) {
             return Algorithms.isEquals(this, (ISet<E>)obj);
         }
-        return super.equals(obj);
+        return false;
     }
 
     private final class IteratorImpl2 implements Iterator<E> {
