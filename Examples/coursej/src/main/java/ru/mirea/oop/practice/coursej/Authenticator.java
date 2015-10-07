@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Properties;
-
 final class Authenticator {
     private final int idClient;
     private final Credentials credentials;
@@ -64,6 +63,7 @@ final class Authenticator {
                 throw new Exception("Must 302 code");
             }
             location = processed.header("Location");
+            location = location.replaceAll("#", "?");
             token = Token.parse(HttpUrl.parse(location));
             Token.save(token);
         }
