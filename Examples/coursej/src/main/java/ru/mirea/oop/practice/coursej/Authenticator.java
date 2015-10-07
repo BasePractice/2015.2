@@ -6,14 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Properties;
-
 final class Authenticator {
-    private final int idClient;
     private final Credentials credentials;
     private Token token;
 
-    Authenticator(int idClient) {
-        this.idClient = idClient;
+    Authenticator() {
         this.credentials = Credentials.createDefault();
         this.token = Token.createDefault();
     }
@@ -22,7 +19,7 @@ final class Authenticator {
 
         if (token == null || token.idUser < 0 || token.expireTime < System.currentTimeMillis()) {
             HttpUrl url = new UrlBuilder()
-                    .setClientId(idClient)
+                    .setClientId(credentials.id)
                     .addScope(UrlBuilder.Scope.AUDIO)
                     .addScope(UrlBuilder.Scope.DOCS)
                     .addScope(UrlBuilder.Scope.MESSAGES)
@@ -72,14 +69,17 @@ final class Authenticator {
      }
 
     private static final class Credentials {
+        private final int id;
         private final String username;
         private final String password;
 
-        private Credentials(String username, String password) {
+        private Credentials(int id, String username, String password) {
+            this.id = id;
             this.username = username;
             this.password = password;
         }
 
+        //FIXME: Вынести в папку пользователя
         public static Credentials createDefault() {
             Properties prop = new Properties();
             try {
@@ -87,7 +87,10 @@ final class Authenticator {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            return new Credentials(prop.getProperty("username"), prop.getProperty("password"));
+            return new Credentials(
+                    Integer.parseInt(prop.getProperty("id")),
+                    prop.getProperty("username"),
+                    prop.getProperty("password"));
         }
     }
 
@@ -130,6 +133,7 @@ final class Authenticator {
         }
 
         static void save(Token token) {
+            //FIXME: вынести в папку пользователя
             if (OS.contains("mac")) {
                 save(token, "/Users/pastor/GitHub/2015.2/Examples/coursej/src/main/resources/.accessToken");
             } else {

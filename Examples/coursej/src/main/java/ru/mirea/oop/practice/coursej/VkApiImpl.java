@@ -7,17 +7,15 @@ import ru.mirea.oop.practice.coursej.vk.VkApi;
 
 final class VkApiImpl implements VkApi {
 
-    private final int idApplication;
     private final String url;
 
     private final OkHttpClient ok;
     private final Authenticator authenticator;
 
-    VkApiImpl(int idApplication, String url) {
-        this.idApplication = idApplication;
+    VkApiImpl(String url) {
         this.url = url;
         this.ok = ClientFactory.createOkClient();
-        this.authenticator = new Authenticator(idApplication);
+        this.authenticator = new Authenticator();
         try {
             this.authenticator.authenticate(ok);
         } catch (Exception e) {
@@ -25,8 +23,8 @@ final class VkApiImpl implements VkApi {
         }
     }
 
-    VkApiImpl(int idApplication) {
-        this(idApplication, "https://api.vk.com/");
+    VkApiImpl() {
+        this("https://api.vk.com/");
     }
 
     @Override
