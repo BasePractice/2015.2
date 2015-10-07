@@ -126,7 +126,18 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         return response.isSuccessful() ? data.lastEvent : -1;
     }
 
+    //http://vk.com/dev/using_longpoll
+    //TODO:  Написать разбор обновлений
     private void processUpdates(List<List<Object>> updates) {
+        for (List<Object> update: updates) {
+            Integer type = (Integer)update.remove(0);
+            switch (type) {
+                case 4: {
+                    //TODO: Message
+                    break;
+                }
+            }
+        }
         System.out.println("Updates: " + updates.size());
     }
 
