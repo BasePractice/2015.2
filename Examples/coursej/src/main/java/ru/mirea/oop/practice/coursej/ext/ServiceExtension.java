@@ -130,15 +130,69 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     //TODO:  Написать разбор обновлений
     private void processUpdates(List<List<Object>> updates) {
         for (List<Object> update: updates) {
-            Integer type = (Integer)update.remove(0);
+            Integer type = ((Double) update.remove(0)).intValue(); // костыль, интовые значения приводится к типу double, возвращаем в Integer, !!!встречается далее в коде
+            System.out.println("тип обновления: " + type);
             switch (type) {
-                case 4: {
-                    //TODO: Message
+                case 4: { // новое сообщение (ушло\пришло) TODO: дописать разделение пришедших и ушедших(флаги)
+                    System.out.println("Новое сообщение от(для) " + ((Double) update.get(2)).intValue() + " c текстом \"" + update.get(5) + "\"");
                     break;
                 }
+                case 8: { //появление в сети
+                    // для mode=64    System.out.println(" Пользователь с ID "+((Double) update.get(2)).intValue()+" зашел сеть с "+getPlatform(((Double) update.get(2)).intValue()));
+                    System.out.println(" Пользователь с ID " + ((Double) update.get(0)).intValue() + " зашел сеть.");
+                    break;
+                }
+                case 9: {// выход из сети
+                    switch (((Double) update.get(1)).intValue()) { // как именно вышел? проверка флага
+                        case 0: {
+                            System.out.println("Польователь с ID " + ((Double) update.get(0)).intValue() + " вышел из сети.");
+                            break;
+                        }
+                        case 1: {
+                            System.out.println("Польователь с ID " + ((Double) update.get(0)).intValue() + " не был активен более 15 минут.");
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case 61: {
+                    System.out.println("Пользователь с ID " + ((Double) update.get(0)).intValue() + " набирает сообщение.");
+                    break;
+                }
+                //TODO дописать остальные типы обновлений
             }
         }
         System.out.println("Updates: " + updates.size());
+    }
+
+    private static String getPlatform(int extra) {
+        switch (extra) {
+            case 0: {
+                return "в mode передан флаг отличный от 64.";
+            }
+            case 1: {
+                return "мобильной версии сайта или неизвестного мобильного приложения.";
+            }
+            case 2: {
+                return "мобильного приложения для iPhone.";
+            }
+            case 3: {
+                return "мобильного приложения для iPad.";
+            }
+            case 4: {
+                return "мобильного приложения для Android.";
+            }
+            case 5: {
+                return "мобильного приложения для Windows Phone.";
+            }
+            case 6: {
+                return "приложения для Windows(metro interface).";
+            }
+            case 7: {
+                return "полной версии сайта или неопознанного приложения.";
+            }
+        }
+        return "полной версии сайта или неопознанного приложения.";
     }
 
     protected enum EventType {
