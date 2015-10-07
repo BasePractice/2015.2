@@ -9,7 +9,9 @@ import ru.mirea.oop.practice.coursej.vk.Result;
 import ru.mirea.oop.practice.coursej.vk.VkApi;
 import ru.mirea.oop.practice.coursej.vk.entities.LongPollData;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.SocketTimeoutException;
 import java.util.List;
@@ -65,6 +67,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         System.out.println("Start longpll");
         while (isRunning) {
             requestServer();
+
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
@@ -74,7 +77,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         System.out.println("Stop longpull");
     }
 
-    private void requestServer() {
+    private  void requestServer() {
         LongPollData data;
         try {
             data = Result.call(messages.getLongPollServer(null, null));
@@ -104,29 +107,36 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         }
     }
 
-    private void raiseException(IOException e) {
+    private  void raiseException(IOException e) {
         e.printStackTrace();
     }
 
-    private long requestData(HttpUrl url, long lastEvent) throws IOException {
+    private  long requestData(HttpUrl url, long lastEvent) throws IOException {
         HttpUrl requestUrl = url.newBuilder().addQueryParameter("ts", Long.toString(lastEvent)).build();
         Request request = new Request.Builder().url(requestUrl).get().build();
         Response response = ok.newCall(request).execute();
         LongPollData data = null;
-        if (response.isSuccessful()) {
-            ResponseBody body = response.body();
-            try (Reader reader = body.charStream()) {
-                data = gson.fromJson(reader, LongPollData.class);
-                if (data.failed != null) {
-                    return -1;
+
+            if (response.isSuccessful()) {
+
+                ResponseBody body = response.body();
+                BufferedReader reader1 = new BufferedReader(new InputStreamReader(body.byteStream()));
+
+                try (Reader reader = body.charStream()) {
+                    data = gson.fromJson(reader, LongPollData.class);
+                    System.out.println(gson.toJson(data));
+                    if (data.failed != null) {
+                        return -1;
+                    }
+
+                    processUpdates(data.updates);
                 }
-                processUpdates(data.updates);
             }
-        }
+
         return response.isSuccessful() ? data.lastEvent : -1;
     }
 
-    private void processUpdates(List<List<Integer>> updates) {
+    private  void processUpdates(List<List<Object>> updates) {
         System.out.println("Updates: " + updates.size());
     }
 

@@ -64,11 +64,12 @@ final class Authenticator {
                 throw new Exception("Must 302 code");
             }
             location = processed.header("Location");
+            location = location.replaceAll("#", "?");
             token = Token.parse(HttpUrl.parse(location));
             Token.save(token);
         }
         AccessTokenAuthenticator.setAccessToken(ok, token.accessToken);
-    }
+     }
 
     private static final class Credentials {
         private final String username;
