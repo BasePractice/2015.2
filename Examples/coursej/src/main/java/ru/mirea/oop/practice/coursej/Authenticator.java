@@ -79,6 +79,7 @@ final class Authenticator {
             this.password = password;
         }
 
+        //FIXME: Вынести в папку пользователя
         public static Credentials createDefault() {
             Properties prop = new Properties();
             try {
@@ -132,6 +133,7 @@ final class Authenticator {
         }
 
         static void save(Token token) {
+            //FIXME: вынести в папку пользователя
             if (OS.contains("mac")) {
                 save(token, "/Users/pastor/GitHub/2015.2/Examples/coursej/src/main/resources/.accessToken");
             } else {
