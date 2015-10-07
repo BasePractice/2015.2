@@ -7,12 +7,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Properties;
 final class Authenticator {
-    private final int idClient;
     private final Credentials credentials;
     private Token token;
 
-    Authenticator(int idClient) {
-        this.idClient = idClient;
+    Authenticator() {
         this.credentials = Credentials.createDefault();
         this.token = Token.createDefault();
     }
@@ -21,7 +19,7 @@ final class Authenticator {
 
         if (token == null || token.idUser < 0 || token.expireTime < System.currentTimeMillis()) {
             HttpUrl url = new UrlBuilder()
-                    .setClientId(idClient)
+                    .setClientId(credentials.id)
                     .addScope(UrlBuilder.Scope.AUDIO)
                     .addScope(UrlBuilder.Scope.DOCS)
                     .addScope(UrlBuilder.Scope.MESSAGES)
@@ -71,10 +69,12 @@ final class Authenticator {
     }
 
     private static final class Credentials {
+        private final int id;
         private final String username;
         private final String password;
 
-        private Credentials(String username, String password) {
+        private Credentials(int id, String username, String password) {
+            this.id = id;
             this.username = username;
             this.password = password;
         }
@@ -86,7 +86,10 @@ final class Authenticator {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            return new Credentials(prop.getProperty("username"), prop.getProperty("password"));
+            return new Credentials(
+                    Integer.parseInt(prop.getProperty("id")),
+                    prop.getProperty("username"),
+                    prop.getProperty("password"));
         }
     }
 

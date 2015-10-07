@@ -13,11 +13,8 @@ public final class Main {
 
     //5067217
     public static void main(String[] args) throws Exception {
-        //Authenticator.Token token = Authenticator.Token.parse(HttpUrl.parse("https://oauth.vk.com/blank.html?access_token=toooooken2&expires_in=86400&user_id=6658522"));
-        //Authenticator.Token.save(token, "/Users/pastor/GitHub/2015.2/Examples/coursej/src/main/resources/.accessToken");
-
-        VkApi api = new VkApiImpl(5067217);
-        //printOwner(api);
+        VkApi api = new VkApiImpl();
+        printOwner(api);
         Extension ext = new ServiceExtensionImpl(api);
         ext.load();
         ext.start();
