@@ -11,6 +11,6 @@ public final class LongPollData {
     public String server;
     @SerializedName("ts")
     public long lastEvent;
-    public List<List<Integer>> updates;
+    public List<List<Object>> updates;
     public String failed;
 }

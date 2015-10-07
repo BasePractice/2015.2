@@ -126,7 +126,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         return response.isSuccessful() ? data.lastEvent : -1;
     }
 
-    private void processUpdates(List<List<Integer>> updates) {
+    private void processUpdates(List<List<Object>> updates) {
         System.out.println("Updates: " + updates.size());
     }
 
