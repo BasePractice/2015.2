@@ -9,9 +9,7 @@ import ru.mirea.oop.practice.coursej.vk.Result;
 import ru.mirea.oop.practice.coursej.vk.VkApi;
 import ru.mirea.oop.practice.coursej.vk.entities.LongPollData;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.SocketTimeoutException;
 import java.util.List;
@@ -22,6 +20,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final OkHttpClient ok;
     private final Messages messages;
+
 
     private static final int DEFAULT_TIMEOUT = 1000;
     private static final Event timeoutEvent = new Event(EventType.TIMEOUT);
@@ -116,15 +115,10 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         Request request = new Request.Builder().url(requestUrl).get().build();
         Response response = ok.newCall(request).execute();
         LongPollData data = null;
-
-            if (response.isSuccessful()) {
-
+          if (response.isSuccessful()) {
                 ResponseBody body = response.body();
-                BufferedReader reader1 = new BufferedReader(new InputStreamReader(body.byteStream()));
-
                 try (Reader reader = body.charStream()) {
                     data = gson.fromJson(reader, LongPollData.class);
-                    System.out.println(gson.toJson(data));
                     if (data.failed != null) {
                         return -1;
                     }
@@ -136,7 +130,22 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         return response.isSuccessful() ? data.lastEvent : -1;
     }
 
-    private  void processUpdates(List<List<Object>> updates) {
+
+
+
+    //http://vk.com/dev/using_longpoll
+    //TODO:  Написать разбор обновлений
+    private void processUpdates(List<List<Object>> updates) {
+        for (List<Object> update: updates) {
+            Integer type=((Double)update.remove(0)).intValue();
+            switch (type) {
+                case 4: {
+                    //TODO: Message
+                    break;
+                }
+            }
+        }
+
         System.out.println("Updates: " + updates.size());
     }
 

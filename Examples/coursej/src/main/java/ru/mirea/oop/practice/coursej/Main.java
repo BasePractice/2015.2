@@ -31,7 +31,6 @@ public final class Main {
         Contact[] contacts = Result.call(u);
         System.out.println(contacts[0]);
     }
-
     private static final class ServiceExtensionImpl extends ServiceExtension {
 
         private ServiceExtensionImpl(VkApi api) {
