@@ -20,7 +20,27 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public abstract class ServiceExtension extends AbstractExtension implements Runnable {
-
+   private static final String FRIENDS_FIELDS = "nickname, " +
+           "domain, " +
+           "sex, " +
+           "bdate, " +
+           "city, " +
+           "country, " +
+           "timezone, " +
+           "photo_50, " +
+           "photo_100, " +
+           "photo_200_orig, " +
+           "has_mobile, " +
+           "contacts, " +
+           "education, " +
+           "online, " +
+           "relation, " +
+           "last_seen, " +
+           "status, " +
+           "can_write_private_message, " +
+           "can_see_all_posts, " +
+           "can_post, " +
+           "universities";
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Map<Long, Contact> friends = new HashMap<>();
     private static final Map<Long, Message> messageCache = new HashMap<>();
@@ -73,7 +93,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         try {
             ServiceExtension.friends.clear();
             Friends friends = api.getFriends();
-            retrofit.Call<Result<Contact[]>> list = friends.list(null, null, null, null, "nickname, domain, sex, bdate, city, country, timezone, photo_50, photo_100, photo_200_orig, has_mobile, contacts, education, online, relation, last_seen, status, can_write_private_message, can_see_all_posts, can_post, universities");
+            retrofit.Call<Result<Contact[]>> list = friends.list(null, null, null, null, FRIENDS_FIELDS);
             Contact[] contacts = Result.call(list);
             for (Contact contact : contacts) {
                 ServiceExtension.friends.put(contact.uid, contact);
@@ -177,7 +197,8 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
             switch (type) {
                 case 0: {
                     long idMessage = ((Number) update.remove(0)).longValue();
-                    messageCache.remove(idMessage);
+                    Message message = messageCache.remove(idMessage);
+                    doEvent(new Event(EventType.MESSAGE_DELETE, message));
                     break;
                 }
                 case 1: {
