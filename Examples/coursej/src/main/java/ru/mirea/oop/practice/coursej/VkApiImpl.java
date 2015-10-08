@@ -1,6 +1,7 @@
 package ru.mirea.oop.practice.coursej;
 
 import com.squareup.okhttp.OkHttpClient;
+import ru.mirea.oop.practice.coursej.vk.Friends;
 import ru.mirea.oop.practice.coursej.vk.Messages;
 import ru.mirea.oop.practice.coursej.vk.Users;
 import ru.mirea.oop.practice.coursej.vk.VkApi;
@@ -40,5 +41,10 @@ final class VkApiImpl implements VkApi {
     @Override
     public Messages getMessages() {
         return ServiceCreator.createService(ok, Messages.class, url);
+    }
+
+    @Override
+    public Friends getFriends() {
+        return ServiceCreator.createService(ok, Friends.class, url);
     }
 }

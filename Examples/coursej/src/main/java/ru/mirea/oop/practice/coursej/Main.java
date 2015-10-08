@@ -18,7 +18,7 @@ public final class Main {
         Extension ext = new ServiceExtensionImpl(api);
         ext.load();
         ext.start();
-        Thread.sleep(60000);
+        Thread.sleep(600000);
         ext.stop();
     }
 

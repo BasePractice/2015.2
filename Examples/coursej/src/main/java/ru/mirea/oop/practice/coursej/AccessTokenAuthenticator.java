@@ -10,7 +10,8 @@ final class AccessTokenAuthenticator {
         ok.networkInterceptors().add(chain -> {
             Request request = chain.request();
             HttpUrl httpUrl = request.httpUrl().newBuilder().addQueryParameter("access_token", accessToken).build();
-            System.out.println("Request: " + httpUrl.toString());
+            //NOTIFY: Для отладки можно включить
+            //System.out.println("Request: " + httpUrl.toString());
             return chain.proceed(request.newBuilder().url(httpUrl).build());
         });
     }

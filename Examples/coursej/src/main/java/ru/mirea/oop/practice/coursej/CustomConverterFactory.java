@@ -29,7 +29,8 @@ final class CustomConverterFactory implements Converter.Factory {
         final TypeAdapter<?> adapter;
         /*if (type instanceof ParameterizedType) {
             adapter = gson.getAdapter(TypeToken.get(((ParameterizedType) type).getActualTypeArguments()[0]));
-        } else*/ {
+        } else*/
+        {
             adapter = gson.getAdapter(TypeToken.get(type));
         }
         return new CustomConverter<>(adapter);
