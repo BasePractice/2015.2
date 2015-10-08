@@ -2,7 +2,6 @@ package ru.mirea.oop.practice.coursej.vk.entities;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public final class Error {
@@ -11,5 +10,5 @@ public final class Error {
     @SerializedName("error_msg")
     public String errorMessage;
     @SerializedName("request_params")
-    public Map<String, String> requestParams [];
+    public Map<String, String> requestParams[];
 }

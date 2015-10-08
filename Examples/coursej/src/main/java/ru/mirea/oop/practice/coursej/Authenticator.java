@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Properties;
+
 final class Authenticator {
     private final Credentials credentials;
     private Token token;
