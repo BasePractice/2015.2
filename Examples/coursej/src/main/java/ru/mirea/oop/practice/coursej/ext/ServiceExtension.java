@@ -112,12 +112,10 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     }
 
 
-
-
-        private static final int MODE_ATTACH = 2;
-        private static final int MODE_EXTEND_EVENT = 8;
-        private static final int MODE_PTS = 32;
-        private static final int MODE_STATUS_CODE = 64;
+    private static final int MODE_ATTACH = 2;
+    private static final int MODE_EXTEND_EVENT = 8;
+    private static final int MODE_PTS = 32;
+    private static final int MODE_STATUS_CODE = 64;
 
     private void requestServer() {
 
@@ -180,7 +178,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
 
     /**
      * Первым параметром каждого события передаётся его код, поддерживаются следующие коды событий:
-     * <p>
+     * <p/>
      * 0,$message_id,0 — удаление сообщения с указанным local_id
      * 1,$message_id,$flags — замена флагов сообщения (FLAGS:=$flags)
      * 2,$message_id,$mask[,$user_id] — установка флагов сообщения (FLAGS|=$mask)
@@ -321,41 +319,19 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         private Event(EventType type, Object object) {
             this.type = type;
             this.object = object;
-=======
-
-
-        protected enum EventType {
-            TIMEOUT
         }
+    }
 
-        @Data
-        protected static final class Event {
-            public final EventType type;
-
-            private Event(EventType type) {
-                this.type = type;
-            }
->>>>>>> 97c01ef2b8057ea2c0c9a3ea440210733ae0033a
-        }
-
-<<<<<<< HEAD
     protected static final class UserOnline {
         protected final Contact contact;
         protected final int platform;
-=======
-        @Data
-        protected static final class UserOnline {
-            protected final Contact contact;
-            protected final int platform;
->>>>>>> 97c01ef2b8057ea2c0c9a3ea440210733ae0033a
 
 
-            protected UserOnline(Contact contact, int platform) {
-                this.contact = contact;
-                this.platform = platform;
-            }
+        protected UserOnline(Contact contact, int platform) {
+            this.contact = contact;
+            this.platform = platform;
+        }
 
-<<<<<<< HEAD
         @Override
         public String toString() {
             return contact.firstName + " " + contact.lastName;
@@ -373,44 +349,24 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         @Override
         public String toString() {
             return contact.firstName + " " + contact.lastName;
-=======
-            @Override
-            public String toString() {
-                return contact.firstName + " " + contact.lastName + " online";
-            }
->>>>>>> 97c01ef2b8057ea2c0c9a3ea440210733ae0033a
         }
+    }
 
-<<<<<<< HEAD
     protected static final class UserOffline {
         protected final Contact contact;
         protected final boolean isAway;
-=======
-        @Data
-        protected static final class UserOffline {
-            protected final Contact contact;
-            protected final boolean isAway;
->>>>>>> 97c01ef2b8057ea2c0c9a3ea440210733ae0033a
 
 
-            protected UserOffline(Contact contact, boolean isAway) {
-                this.contact = contact;
-                this.isAway = isAway;
-            }
+        protected UserOffline(Contact contact, boolean isAway) {
+            this.contact = contact;
+            this.isAway = isAway;
+        }
 
-<<<<<<< HEAD
         @Override
         public String toString() {
             return contact.firstName + " " + contact.lastName + (isAway ? " (away)" : "");
-=======
-            @Override
-            public String toString() {
-                return contact.firstName + " " + contact.lastName + " " + (isAway ? "away" : "offline");
-            }
->>>>>>> 97c01ef2b8057ea2c0c9a3ea440210733ae0033a
         }
-
-<<<<<<< HEAD
+    }
 
     protected static final class Message {
         protected static final int UNREAD = 1;//	сообщение не прочитано
@@ -461,28 +417,5 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
             return contact.firstName + " " + contact.lastName + "\t: " + text;
         }
     }
-=======
-        @Data
-        protected static final class Message {
-            protected final long id;
-            protected final int flags;
-            protected final Contact contact;
-            protected final long timestamp;
-            protected final String subject;
-            protected final String text;
-
-            /**
-             * Attach
-             */
-            protected Message(long id, int flags, Contact contact, long timestamp, String subject, String text) {
-                this.id = id;
-                this.flags = flags;
-                this.contact = contact;
-                this.timestamp = timestamp;
-                this.subject = subject;
-                this.text = text;
-            }
-        }
->>>>>>> 97c01ef2b8057ea2c0c9a3ea440210733ae0033a
 }
 
