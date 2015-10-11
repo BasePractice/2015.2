@@ -17,6 +17,7 @@ import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public abstract class ServiceExtension extends AbstractExtension implements Runnable {
@@ -69,8 +70,8 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     }
 
     @Override
-    protected final void doStart() throws Exception {
-        new Thread(this).start();
+    protected final Future<?> doStart() throws Exception {
+        return executor.submit(this);
     }
 
     @Override
@@ -86,7 +87,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
 
     @Override
     public final void run() {
-        logger.info("Start longpll");
+        logger.info("Запущен сервис оповещения");
         try {
             friends.clear();
             Friends friendsApi = api.getFriends();
@@ -107,7 +108,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                 logger.error("Ошибка запроса к серверу", ex);
             }
         }
-        logger.info("Stop longpull");
+        logger.info("Сервис оповещения остановлен");
     }
 
 
@@ -293,8 +294,6 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                     }
                 }
             }
-
-            System.out.println("Updates: " + updates.size());
         }
     }
 

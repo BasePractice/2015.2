@@ -4,6 +4,9 @@ import ru.mirea.oop.practice.coursej.vk.entities.Contact;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public interface Extension extends Serializable {
 
@@ -19,7 +22,9 @@ public interface Extension extends Serializable {
 
     void stop();
 
-    void start();
+    Future<?> start();
 
     void load();
+
+    ExecutorService executor = Executors.newCachedThreadPool();
 }
