@@ -87,7 +87,6 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     @Override
     public final void run() {
         logger.info("Start longpll");
-        //FIXME: Получаем всех друзей
         try {
             friends.clear();
             Friends friendsApi = api.getFriends();
@@ -194,7 +193,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
      * 70,$user_id,$call_id — пользователь $user_id совершил звонок имеющий идентификатор $call_id.
      * 80,$count,0 — новый счетчик непрочитанных в левом меню стал равен $count.
      */
-    //TODO:  Написать разбор обновлений
+    //TODO:  Дописать разбор обновлений
     private void processUpdates(List<List<Object>> updates) {
         for (List<Object> update : updates) {
             int type = ((Number) update.remove(0)).intValue();
