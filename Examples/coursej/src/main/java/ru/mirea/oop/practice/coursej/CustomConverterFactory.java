@@ -69,6 +69,7 @@ final class CustomConverterFactory implements Converter.Factory {
                 typeAdapter.toJson(writer, value);
                 writer.flush();
             } catch (IOException e) {
+
                 throw new AssertionError(e); // Writing to Buffer does no I/O.
             }
             return RequestBody.create(MEDIA_TYPE, buffer.readByteString());

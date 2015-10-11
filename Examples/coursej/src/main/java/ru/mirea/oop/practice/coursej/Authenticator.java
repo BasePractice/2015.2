@@ -71,7 +71,7 @@ final class Authenticator {
             Token.save(token);
         }
         AccessTokenAuthenticator.setAccessToken(ok, token.accessToken);
-    }
+     }
 
     private static final class Credentials {
         private final int id;
