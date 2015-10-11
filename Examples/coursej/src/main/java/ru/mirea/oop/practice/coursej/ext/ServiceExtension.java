@@ -3,11 +3,11 @@ package ru.mirea.oop.practice.coursej.ext;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.*;
-import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.vk.Friends;
 import ru.mirea.oop.practice.coursej.vk.Messages;
 import ru.mirea.oop.practice.coursej.vk.Result;
-import ru.mirea.oop.practice.coursej.vk.VkApi;
 import ru.mirea.oop.practice.coursej.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.vk.entities.LongPollData;
 
@@ -20,30 +20,31 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public abstract class ServiceExtension extends AbstractExtension implements Runnable {
-   private static final String FRIENDS_FIELDS = "nickname, " +
-           "domain, " +
-           "sex, " +
-           "bdate, " +
-           "city, " +
-           "country, " +
-           "timezone, " +
-           "photo_50, " +
-           "photo_100, " +
-           "photo_200_orig, " +
-           "has_mobile, " +
-           "contacts, " +
-           "education, " +
-           "online, " +
-           "relation, " +
-           "last_seen, " +
-           "status, " +
-           "can_write_private_message, " +
-           "can_see_all_posts, " +
-           "can_post, " +
-           "universities";
+    private static final Logger logger = LoggerFactory.getLogger(ServiceExtension.class);
+    private static final String FRIENDS_FIELDS = "nickname, " +
+            "domain, " +
+            "sex, " +
+            "bdate, " +
+            "city, " +
+            "country, " +
+            "timezone, " +
+            "photo_50, " +
+            "photo_100, " +
+            "photo_200_orig, " +
+            "has_mobile, " +
+            "contacts, " +
+            "education, " +
+            "online, " +
+            "relation, " +
+            "last_seen, " +
+            "status, " +
+            "can_write_private_message, " +
+            "can_see_all_posts, " +
+            "can_post, " +
+            "universities";
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final Map<Long, Contact> friends = new HashMap<>();
-    private static final Map<Long, Message> messageCache = new HashMap<>();
+    private final Map<Long, Contact> friends = new HashMap<>();
+    private final Map<Long, Message> messageCache = new HashMap<>();
     private final OkHttpClient ok;
     private final Messages messages;
 
@@ -52,17 +53,13 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     private final int timeout;
     private volatile boolean isRunning;
 
-    protected ServiceExtension(VkApi api, int timeout) {
-        super(api);
-        this.timeout = timeout;
+    protected ServiceExtension() throws Exception {
+        super();
+        this.timeout = DEFAULT_TIMEOUT;
         this.isRunning = true;
         this.ok = api.getClient().clone();
         this.messages = api.getMessages();
         this.ok.setConnectTimeout(timeout, TimeUnit.MILLISECONDS);
-    }
-
-    public ServiceExtension(VkApi api) {
-        this(api, DEFAULT_TIMEOUT);
     }
 
     @Override
@@ -88,28 +85,28 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
 
     @Override
     public final void run() {
-        System.out.println("Start longpll");
+        logger.info("Start longpll");
         //FIXME: Получаем всех друзей
         try {
-            ServiceExtension.friends.clear();
-            Friends friends = api.getFriends();
-            retrofit.Call<Result<Contact[]>> list = friends.list(null, null, null, null, FRIENDS_FIELDS);
+            friends.clear();
+            Friends friendsApi = api.getFriends();
+            retrofit.Call<Result<Contact[]>> list = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
             Contact[] contacts = Result.call(list);
             for (Contact contact : contacts) {
-                ServiceExtension.friends.put(contact.uid, contact);
+                friends.put(contact.id, contact);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Ошибка получения списка друзей", ex);
         }
         while (isRunning) {
             requestServer();
             try {
                 Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException ex) {
+                logger.error("Ошибка запроса к серверу", ex);
             }
         }
-        System.out.println("Stop longpull");
+        logger.info("Stop longpull");
     }
 
     private static final int MODE_ATTACH = 2;
@@ -148,8 +145,8 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         }
     }
 
-    private void raiseException(IOException e) {
-        e.printStackTrace();
+    private void raiseException(IOException ex) {
+        logger.error("Ошибка запроса к серверу", ex);
     }
 
     private long requestData(HttpUrl url, long lastEvent) throws IOException {
@@ -308,7 +305,6 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         FRIEND_WRITE
     }
 
-    @Data
     protected static final class Event {
         public final EventType type;
         public final Object object;
@@ -378,11 +374,11 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
         protected static final int FIXED = 256;//сообщение проверено пользователем на спам
         protected static final int MEDIA = 512;//сообщение содержит медиаконтент
 
-        protected final long id;
-        protected final Contact contact;
-        protected final long timestamp;
-        protected final String subject;
-        protected final String text;
+        public final long id;
+        public final Contact contact;
+        public final long timestamp;
+        public final String subject;
+        public final String text;
 
         protected int flags;
 

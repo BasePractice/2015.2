@@ -1,9 +1,17 @@
 package ru.mirea.oop.practice.coursej.ext;
 
+import retrofit.Call;
+import ru.mirea.oop.practice.coursej.VkApiImpl;
+import ru.mirea.oop.practice.coursej.vk.Result;
+import ru.mirea.oop.practice.coursej.vk.Users;
 import ru.mirea.oop.practice.coursej.vk.VkApi;
+import ru.mirea.oop.practice.coursej.vk.entities.Contact;
+
+import java.io.IOException;
 
 abstract class AbstractExtension implements Extension {
     protected final VkApi api;
+    protected Contact owner;
 
     private boolean isRunnings;
     private boolean isLoaded;
@@ -12,6 +20,11 @@ abstract class AbstractExtension implements Extension {
         this.api = api;
         this.isRunnings = false;
         this.isLoaded = false;
+        this.owner = null;
+    }
+
+    protected AbstractExtension() throws Exception {
+        this(VkApiImpl.load());
     }
 
     @Override
@@ -26,9 +39,14 @@ abstract class AbstractExtension implements Extension {
 
     @Override
     public final void start() {
+        if (!isLoaded) {
+            throw new RuntimeException("Расширение предварительно должно быть загружено. Вызван метод load()");
+        }
         if (!isRunning()) {
             isRunnings = true;
             try {
+                Contact owner = owner();
+                System.out.println("Запустились под пользователем " + owner.firstName + " " + owner.lastName);
                 doStart();
             } catch (Exception e) {
                 isRunnings = false;
@@ -48,6 +66,19 @@ abstract class AbstractExtension implements Extension {
     }
 
     @Override
+    public synchronized Contact owner() throws IOException {
+        if (owner == null) {
+            Call<Result<Contact[]>> callable = api.getUsers().list("" + api.idOwner(), Users.DEFAULT_USER_FIELDS, null);
+            Contact[] contacts = Result.call(callable);
+            if (contacts == null || contacts.length == 0) {
+                throw new IOException("Не могу получить собственного пользователя");
+            }
+            owner = contacts[0];
+        }
+        return owner;
+    }
+
+    @Override
     public final void load() {
         if (!isLoaded())
             isLoaded = init();
@@ -63,5 +94,4 @@ abstract class AbstractExtension implements Extension {
     protected abstract void doStop() throws Exception;
 
     protected abstract boolean init();
-
 }

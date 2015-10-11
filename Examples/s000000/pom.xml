@@ -7,13 +7,13 @@
         <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>coursej</artifactId>
+    <artifactId>s000000</artifactId>
     <packaging>jar</packaging>
     <version>1.0.1</version>
-    <name>Mirea.Oop.Practice.CourseJ</name>
+    <name>Mirea.Oop.Practice.CourseJ.S000000</name>
 
     <build>
-        <finalName>Mirea.Oop.Practice.Course</finalName>
+        <finalName>Mirea.Oop.Practice.Course.S000000</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
@@ -34,7 +34,16 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <jarName>Mirea.Oop.Practice.Course</jarName>
+                    <jarName>Mirea.Oop.Practice.Course.S000000</jarName>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Export-Package>ru.mirea.oop.practice.coursej.s000000.MessagePingService</Export-Package>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
@@ -69,13 +78,9 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>coursej</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
