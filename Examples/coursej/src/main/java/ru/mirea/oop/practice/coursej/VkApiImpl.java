@@ -6,26 +6,30 @@ import ru.mirea.oop.practice.coursej.vk.Messages;
 import ru.mirea.oop.practice.coursej.vk.Users;
 import ru.mirea.oop.practice.coursej.vk.VkApi;
 
-final class VkApiImpl implements VkApi {
+import java.lang.reflect.Constructor;
+import java.util.Properties;
+
+public final class VkApiImpl implements VkApi {
 
     private final String url;
 
     private final OkHttpClient ok;
     private final Authenticator authenticator;
 
-    VkApiImpl(String url) {
+    private VkApiImpl(String url) throws Exception {
         this.url = url;
         this.ok = ClientFactory.createOkClient();
         this.authenticator = new Authenticator();
-        try {
-            this.authenticator.authenticate(ok);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.authenticator.authenticate(ok);
     }
 
-    VkApiImpl() {
+    private VkApiImpl() throws Exception {
         this("https://api.vk.com/");
+    }
+
+    @Override
+    public long idOwner() {
+        return authenticator.idOwner();
     }
 
     @Override
@@ -46,5 +50,24 @@ final class VkApiImpl implements VkApi {
     @Override
     public Friends getFriends() {
         return ServiceCreator.createService(ok, Friends.class, url);
+    }
+
+    public static synchronized VkApi load() throws Exception {
+        Properties prop = new Properties();
+        ClassLoader loader = VkApiImpl.class.getClassLoader();
+        try {
+            prop.load(loader.getResourceAsStream("impl.properties"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            Class<?> klass = loader.loadClass(prop.getProperty("vk.api.class", "ru.mirea.oop.practice.coursej.VkApiImpl"));
+            Constructor<?> constructor = klass.getConstructor();
+            constructor.setAccessible(true);
+            return (VkApi) constructor.newInstance();
+        } catch (Exception ex) {
+            return new VkApiImpl();
+        }
     }
 }

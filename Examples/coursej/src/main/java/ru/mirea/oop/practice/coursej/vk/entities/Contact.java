@@ -8,7 +8,8 @@ import lombok.Data;
 @Data
 @Builder
 public final class Contact {
-    public long uid;
+    @SerializedName("uid")
+    public long id;
     @SerializedName("first_name")
     public String firstName;
     @SerializedName("last_name")
@@ -38,4 +39,8 @@ public final class Contact {
     public String status;
     public String site;
     public int timezon;
+
+    public static String viewerString(Contact contact) {
+        return contact.lastName + " " + contact.firstName;
+    }
 }
