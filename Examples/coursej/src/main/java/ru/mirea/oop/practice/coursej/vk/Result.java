@@ -3,6 +3,7 @@ package ru.mirea.oop.practice.coursej.vk;
 import com.google.gson.annotations.SerializedName;
 import retrofit.Call;
 import retrofit.Response;
+import ru.mirea.oop.practice.coursej.vk.entities.*;
 
 import java.io.IOException;
 
@@ -11,7 +12,7 @@ public final class Result<E> {
     public E response;
     @SuppressWarnings("unused")
     @SerializedName("error")
-    public String error;
+    public ru.mirea.oop.practice.coursej.vk.entities.Error error;
 
     public static <E> E call(Call<Result<E>> callable) throws IOException {
         if (callable == null)
