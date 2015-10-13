@@ -1,9 +1,10 @@
-package ru.mirea.oop.practice.coursej.ext;
+package ru.mirea.oop.practice.coursej.vk.ext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.Call;
 import ru.mirea.oop.practice.coursej.VkApiImpl;
+import ru.mirea.oop.practice.coursej.ext.Extension;
 import ru.mirea.oop.practice.coursej.vk.Result;
 import ru.mirea.oop.practice.coursej.vk.Users;
 import ru.mirea.oop.practice.coursej.vk.VkApi;
@@ -50,7 +51,7 @@ abstract class AbstractExtension implements Extension {
         if (!isRunning()) {
             isRunnings = true;
             try {
-                Contact owner = owner();
+                owner();
                 logger.debug("Запустились под пользователем " + owner.firstName + " " + owner.lastName);
                 started = doStart();
             } catch (Exception ex) {
@@ -72,7 +73,7 @@ abstract class AbstractExtension implements Extension {
     }
 
     @Override
-    public synchronized Contact owner() throws IOException {
+    public synchronized long owner() throws IOException {
         if (owner == null) {
             Call<Result<Contact[]>> callable = api.getUsers().list("" + api.idOwner(), Users.DEFAULT_USER_FIELDS, null);
             Contact[] contacts = Result.call(callable);
@@ -81,7 +82,7 @@ abstract class AbstractExtension implements Extension {
             }
             owner = contacts[0];
         }
-        return owner;
+        return owner.id;
     }
 
     @Override

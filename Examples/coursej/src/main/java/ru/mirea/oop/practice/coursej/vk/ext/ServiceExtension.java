@@ -1,4 +1,4 @@
-package ru.mirea.oop.practice.coursej.ext;
+package ru.mirea.oop.practice.coursej.vk.ext;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

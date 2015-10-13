@@ -41,7 +41,7 @@
                             <addClasspath>true</addClasspath>
                         </manifest>
                         <manifestEntries>
-                            <Export-Package>ru.mirea.oop.practice.coursej.s000000.MessagePingService</Export-Package>
+                            <Export-Package>ru.mirea.oop.practice.coursej.s000000.VkMessagePingService</Export-Package>
                         </manifestEntries>
                     </archive>
                 </configuration>

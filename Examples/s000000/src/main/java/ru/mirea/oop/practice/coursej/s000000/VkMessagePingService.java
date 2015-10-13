@@ -3,18 +3,18 @@ package ru.mirea.oop.practice.coursej.s000000;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.Call;
-import ru.mirea.oop.practice.coursej.ext.ServiceExtension;
+import ru.mirea.oop.practice.coursej.vk.ext.ServiceExtension;
 import ru.mirea.oop.practice.coursej.vk.Messages;
 import ru.mirea.oop.practice.coursej.vk.Result;
 import ru.mirea.oop.practice.coursej.vk.entities.Contact;
 
 import java.io.IOException;
 
-public final class MessagePingService extends ServiceExtension {
-    private static final Logger logger = LoggerFactory.getLogger(MessagePingService.class);
+public final class VkMessagePingService extends ServiceExtension {
+    private static final Logger logger = LoggerFactory.getLogger(VkMessagePingService.class);
     private final Messages msgApi;
 
-    public MessagePingService() throws Exception {
+    public VkMessagePingService() throws Exception {
         super();
         this.msgApi = api.getMessages();
     }
@@ -65,6 +65,6 @@ public final class MessagePingService extends ServiceExtension {
 
     @Override
     public String name() {
-        return "Сервис пересылки сообщения";
+        return "Сервис пересылки сообщения \"Вконтакте\"";
     }
 }
