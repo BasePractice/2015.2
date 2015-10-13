@@ -21,6 +21,7 @@ public interface Messages {
      * @param guid            уникальный идентификатор, предназначенный для предотвращения повторной отправки одинакового сообщения.
      * @param latitude        latitude, широта при добавлении местоположения.
      * @param longitude       longitude, долгота при добавлении местоположения.
+     * @param attachment      медиавложения к личному сообщению, перечисленные через запятую.
      * @param forwardMessages идентификаторы пересылаемых сообщений, перечисленные через запятую. Перечисленные сообщения отправителя будут отображаться в теле письма у получателя.
      * @param isSticker       идентификатор стикера.
      * @return После успешного выполнения возвращает идентификатор отправленного сообщения.
@@ -34,6 +35,7 @@ public interface Messages {
                                @Query("guid") Integer guid,
                                @Query("lat") Float latitude,
                                @Query("long") Float longitude,
+                               @Query("attachment") String attachment,
                                @Query("forward_messages") String forwardMessages,
                                @Query("sticker_id") Integer isSticker);
 }

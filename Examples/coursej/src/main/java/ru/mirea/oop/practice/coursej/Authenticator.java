@@ -22,7 +22,7 @@ final class Authenticator {
 
     public void authenticate(OkHttpClient ok) throws Exception {
 
-        if (token == null || token.idUser < 0 || token.expireTime < System.currentTimeMillis()) {
+        if (token == null || token.idUser < 0 || (token.expireTime < System.currentTimeMillis() && token.expireTime != 0)) {
             HttpUrl url = new UrlBuilder()
                     .setClientId(credentials.id)
                     .addScope(UrlBuilder.Scope.AUDIO)
@@ -34,6 +34,7 @@ final class Authenticator {
                     .addScope(UrlBuilder.Scope.PHOTOS)
                     .addScope(UrlBuilder.Scope.VIDEO)
                     .addScope(UrlBuilder.Scope.WALL)
+                    .addScope(UrlBuilder.Scope.OFFLINE)
                     .build();
             Request request = new Request.Builder().url(url).build();
             System.out.println(url.toString());
@@ -71,7 +72,7 @@ final class Authenticator {
             Token.save(token);
         }
         AccessTokenAuthenticator.setAccessToken(ok, token.accessToken);
-     }
+    }
 
     private static final class Credentials {
         private final int id;
@@ -92,10 +93,15 @@ final class Authenticator {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            return new Credentials(
-                    Integer.parseInt(prop.getProperty("id")),
-                    prop.getProperty("username"),
-                    prop.getProperty("password"));
+            try {
+                return new Credentials(
+                        Integer.parseInt(prop.getProperty("id")),
+                        prop.getProperty("username"),
+                        prop.getProperty("password"));
+            } catch (Exception ex) {
+                return null;
+            }
+
         }
     }
 

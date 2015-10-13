@@ -42,6 +42,7 @@ public final class VkMessagePingService extends ServiceExtension {
                         null,
                         null,
                         null,
+                        null,
                         null
                 );
                 try {

@@ -12,5 +12,9 @@ public interface VkApi {
 
     Messages getMessages();
 
+    Photos saveMessagesPhoto();
+
     Friends getFriends();
+
+    Photos getMessagesUploadServer();
 }
