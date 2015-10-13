@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.vk.Friends;
 import ru.mirea.oop.practice.coursej.vk.Messages;
 import ru.mirea.oop.practice.coursej.vk.Result;
+import ru.mirea.oop.practice.coursej.vk.Users;
 import ru.mirea.oop.practice.coursej.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.vk.entities.LongPollData;
 
@@ -242,7 +243,20 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                     long timestamp = ((Number) update.remove(0)).longValue();
                     String subject = (String) update.remove(0);
                     String text = (String) update.remove(0);
-                    Message message = new Message(idMessage, flags, friends.get(idFrom), timestamp, subject, text);
+                    Message message;
+                    if (friends.get(idFrom) != null) {
+                        message = new Message(idMessage, flags, friends.get(idFrom), timestamp, subject, text);}
+                    else {
+                        Users usersApi = api.getUsers();
+                        retrofit.Call<Result<Contact[]>> list = usersApi.list(String.valueOf(idFrom),"","nom");
+                        Contact user = null;
+                        try {
+                            user = Result.call(list)[0];
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        message = new Message(idMessage, flags, user, timestamp, subject, text);
+                    }
                     messageCache.put(idMessage, message);
                     doEvent(new Event(EventType.MESSAGE_RECEIVE, message));
                     break;
@@ -281,7 +295,20 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                 case 61: {
                     long idUser = Math.abs(((Number) update.remove(0)).longValue());
                     int flags = ((Number) update.remove(0)).intValue();
-                    UserWrite status = new UserWrite(friends.get(idUser));
+                    UserWrite status;
+                    if (friends.get(idUser) != null) {
+                        status = new UserWrite(friends.get(idUser));
+                    } else {
+                        Users usersApi = api.getUsers();
+                        retrofit.Call<Result<Contact[]>> list = usersApi.list(String.valueOf(idUser),"","nom");
+                        Contact user = null;
+                        try {
+                            user = Result.call(list)[0];
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        status = new UserWrite(user);
+                    }
                     doEvent(new Event(EventType.FRIEND_WRITE, status));
                     break;
                 }

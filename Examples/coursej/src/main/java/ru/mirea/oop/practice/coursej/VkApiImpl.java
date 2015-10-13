@@ -1,10 +1,7 @@
 package ru.mirea.oop.practice.coursej;
 
 import com.squareup.okhttp.OkHttpClient;
-import ru.mirea.oop.practice.coursej.vk.Friends;
-import ru.mirea.oop.practice.coursej.vk.Messages;
-import ru.mirea.oop.practice.coursej.vk.Users;
-import ru.mirea.oop.practice.coursej.vk.VkApi;
+import ru.mirea.oop.practice.coursej.vk.*;
 
 import java.lang.reflect.Constructor;
 import java.util.Properties;
@@ -45,6 +42,16 @@ public final class VkApiImpl implements VkApi {
     @Override
     public Messages getMessages() {
         return ServiceCreator.createService(ok, Messages.class, url);
+    }
+
+    @Override
+    public Photos getMessagesUploadServer() {
+        return ServiceCreator.createService(ok, Photos.class, url);
+    }
+
+    @Override
+    public Photos saveMessagesPhoto() {
+        return ServiceCreator.createService(ok, Photos.class, url);
     }
 
     @Override

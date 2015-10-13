@@ -22,7 +22,8 @@ final class UrlBuilder {
         MESSAGES,
         NOTIFICATIONS,
         NOTES,
-        NOTIFY
+        NOTIFY,
+        OFFLINE
     }
 
     enum Display {
