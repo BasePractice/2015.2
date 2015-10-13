@@ -131,6 +131,7 @@
         <module>structs</module>
         <module>coursej</module>
         <module>s000000</module>
+        <module>s131250</module>
         <module>starter</module>
     </modules>
 </project>

@@ -1,7 +1,9 @@
 package ru.mirea.oop.practice.coursej.tg.entities;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.Data;
 
+@Data
 public final class Message {
     @SerializedName("message_id")
     public Integer id;

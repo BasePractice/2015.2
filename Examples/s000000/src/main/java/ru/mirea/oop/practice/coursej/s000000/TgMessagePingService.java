@@ -10,16 +10,16 @@ public final class TgMessagePingService extends ServiceExtension {
     private static final Logger logger = LoggerFactory.getLogger(TgMessagePingService.class);
 
     public TgMessagePingService() {
-
+        super("tg.services.EchoServer");
     }
 
     @Override
     protected void sendEvent(Update update) {
-        logger.debug("Update: " + update);
+        logger.debug("Update: " + update.message);
     }
 
     @Override
-    public String name() {
+    public String description() {
         return "Сервис пересылки сообщений \"Telegram\"";
     }
 

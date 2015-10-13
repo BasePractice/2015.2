@@ -22,7 +22,7 @@ final class Authenticator {
 
     public void authenticate(OkHttpClient ok) throws Exception {
 
-        if (token == null || token.idUser < 0 || token.expireTime < System.currentTimeMillis()) {
+        if (token == null || token.idUser < 0 || (token.expireTime < System.currentTimeMillis() && token.expireTime != 0)) {
             HttpUrl url = new UrlBuilder()
                     .setClientId(credentials.id)
                     .addScope(UrlBuilder.Scope.AUDIO)
@@ -34,9 +34,10 @@ final class Authenticator {
                     .addScope(UrlBuilder.Scope.PHOTOS)
                     .addScope(UrlBuilder.Scope.VIDEO)
                     .addScope(UrlBuilder.Scope.WALL)
+                    .addScope(UrlBuilder.Scope.OFFLINE)
                     .build();
             Request request = new Request.Builder().url(url).build();
-            System.out.println(url.toString());
+            //System.out.println(url.toString());
             Response response = ok.newCall(request).execute();
             ResponseBody body = response.body();
             FormAction fa = FormAction.create(body.string());
@@ -71,7 +72,7 @@ final class Authenticator {
             Token.save(token);
         }
         AccessTokenAuthenticator.setAccessToken(ok, token.accessToken);
-     }
+    }
 
     private static final class Credentials {
         private final int id;
@@ -84,18 +85,21 @@ final class Authenticator {
             this.password = password;
         }
 
-        //FIXME: Вынести в папку пользователя
         public static Credentials createDefault() {
             Properties prop = new Properties();
             try {
-                prop.load(Credentials.class.getResourceAsStream("/.credentials"));
+                prop.load(Configuration.loadFrom(".credentials"));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            return new Credentials(
-                    Integer.parseInt(prop.getProperty("id")),
-                    prop.getProperty("username"),
-                    prop.getProperty("password"));
+            try {
+                return new Credentials(
+                        Integer.parseInt(prop.getProperty("id")),
+                        prop.getProperty("username"),
+                        prop.getProperty("password"));
+            } catch (Exception ex) {
+                return null;
+            }
         }
     }
 
@@ -142,18 +146,13 @@ final class Authenticator {
         }
 
         static void save(Token token) {
-            //FIXME: вынести в папку пользователя
-            if (OS.contains("mac")) {
-                save(token, "/Users/pastor/GitHub/2015.2/Examples/coursej/src/main/resources/.accessToken");
-            } else {
-                save(token, "D:\\GitHub\\2015.2\\Examples\\coursej\\src\\main\\resources\\.accessToken");
-            }
+            save(token, Configuration.getFileName(".accessToken"));
         }
 
         public static Token createDefault() {
             Properties prop = new Properties();
             try {
-                prop.load(Credentials.class.getResourceAsStream("/.accessToken"));
+                prop.load(Configuration.loadFrom(".accessToken"));
             } catch (Exception ex) {
                 return null;
             }

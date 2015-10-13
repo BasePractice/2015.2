@@ -15,7 +15,7 @@ public final class VkMessagePingService extends ServiceExtension {
     private final Messages msgApi;
 
     public VkMessagePingService() throws Exception {
-        super();
+        super("vk.services.EchoServer");
         this.msgApi = api.getMessages();
     }
 
@@ -42,6 +42,7 @@ public final class VkMessagePingService extends ServiceExtension {
                         null,
                         null,
                         null,
+                        null,
                         null
                 );
                 try {
@@ -64,7 +65,7 @@ public final class VkMessagePingService extends ServiceExtension {
     }
 
     @Override
-    public String name() {
+    public String description() {
         return "Сервис пересылки сообщения \"Вконтакте\"";
     }
 }

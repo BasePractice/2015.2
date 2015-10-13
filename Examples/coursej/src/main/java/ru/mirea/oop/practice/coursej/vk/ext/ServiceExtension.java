@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.vk.Friends;
 import ru.mirea.oop.practice.coursej.vk.Messages;
 import ru.mirea.oop.practice.coursej.vk.Result;
+import ru.mirea.oop.practice.coursej.vk.Users;
 import ru.mirea.oop.practice.coursej.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.vk.entities.LongPollData;
 
@@ -55,8 +56,8 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     private final int timeout;
     private volatile boolean isRunning;
 
-    protected ServiceExtension() throws Exception {
-        super();
+    protected ServiceExtension(String name) throws Exception {
+        super(name);
         this.timeout = DEFAULT_TIMEOUT;
         this.isRunning = true;
         this.ok = api.getClient().clone();
@@ -242,7 +243,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                     long timestamp = ((Number) update.remove(0)).longValue();
                     String subject = (String) update.remove(0);
                     String text = (String) update.remove(0);
-                    Message message = new Message(idMessage, flags, friends.get(idFrom), timestamp, subject, text);
+                    Message message = new Message(idMessage, flags, loadContactFrom(idFrom), timestamp, subject, text);
                     messageCache.put(idMessage, message);
                     doEvent(new Event(EventType.MESSAGE_RECEIVE, message));
                     break;
@@ -281,7 +282,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                 case 61: {
                     long idUser = Math.abs(((Number) update.remove(0)).longValue());
                     int flags = ((Number) update.remove(0)).intValue();
-                    UserWrite status = new UserWrite(friends.get(idUser));
+                    UserWrite status = new UserWrite(loadContactFrom(idUser));
                     doEvent(new Event(EventType.FRIEND_WRITE, status));
                     break;
                 }
@@ -295,6 +296,25 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                 }
             }
         }
+    }
+
+    private Contact loadContactFrom(long idContact) {
+        if (friends.containsKey(idContact))
+            return friends.get(idContact);
+        Users usersApi = api.getUsers();
+        retrofit.Call<Result<Contact[]>> list = usersApi.list(String.valueOf(idContact), "", "nom");
+        Contact contact = null;
+        try {
+            contact = Result.call(list)[0];
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            logger.error("Невозможно получить пользователя по идентификатору", ex);
+        }
+
+        if (contact != null) {
+            friends.put(idContact, contact);
+        }
+        return contact;
     }
 
     protected enum EventType {

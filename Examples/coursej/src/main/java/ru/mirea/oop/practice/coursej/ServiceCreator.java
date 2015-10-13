@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import retrofit.Retrofit;
 
-final class ServiceCreator {
+public final class ServiceCreator {
     private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting().create();
 
