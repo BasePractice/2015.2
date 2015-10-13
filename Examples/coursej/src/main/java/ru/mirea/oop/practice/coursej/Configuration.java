@@ -1,9 +1,8 @@
 package ru.mirea.oop.practice.coursej;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import com.google.common.io.CharStreams;
+
+import java.io.*;
 
 public final class Configuration {
     private static final String HOME = System.getProperty("user.home");
@@ -16,4 +15,12 @@ public final class Configuration {
         return new File(HOME, fileName).getAbsolutePath();
     }
 
+    public static String loadKeyFrom(String fileName) {
+        try (InputStream stream = loadFrom(fileName)) {
+            return CharStreams.toString(new InputStreamReader(stream)).trim();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 }

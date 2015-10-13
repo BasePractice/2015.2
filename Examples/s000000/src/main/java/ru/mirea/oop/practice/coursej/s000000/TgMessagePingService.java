@@ -15,7 +15,7 @@ public final class TgMessagePingService extends ServiceExtension {
 
     @Override
     protected void sendEvent(Update update) {
-        logger.debug("Update: " + update);
+        logger.debug("Update: " + update.message);
     }
 
     @Override

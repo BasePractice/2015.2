@@ -4,6 +4,7 @@ package ru.mirea.oop.practice.coursej.tg.ext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.ClientFactory;
+import ru.mirea.oop.practice.coursej.Configuration;
 import ru.mirea.oop.practice.coursej.ext.Extension;
 import ru.mirea.oop.practice.coursej.tg.BotClient;
 import ru.mirea.oop.practice.coursej.tg.entities.Update;
@@ -19,7 +20,7 @@ public abstract class ServiceExtension implements Extension, Runnable {
     protected User owner;
 
     protected ServiceExtension() {
-        this.client = new BotClient("", ClientFactory.createOkClient());
+        this.client = new BotClient(Configuration.loadKeyFrom(".telegram"), ClientFactory.createOkClient());
     }
 
     @Override
@@ -71,6 +72,12 @@ public abstract class ServiceExtension implements Extension, Runnable {
             Update[] updates = waitUpdates();
             for (Update update : updates) {
                 sendEvent(update);
+                lastUpdate = update.id + 1;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -85,9 +92,11 @@ public abstract class ServiceExtension implements Extension, Runnable {
         }
     }
 
+    private Integer lastUpdate;
+
     private Update[] waitUpdates() {
         try {
-            return client.getUpdates();
+            return client.getUpdates(lastUpdate, null, 1);
         } catch (Exception ex) {
             logger.error("Ошибка при получении обновления", ex);
             return new Update[0];

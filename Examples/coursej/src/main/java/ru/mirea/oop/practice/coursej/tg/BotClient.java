@@ -4,13 +4,11 @@ import com.squareup.okhttp.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.Call;
-import retrofit.Retrofit;
+import ru.mirea.oop.practice.coursej.ServiceCreator;
 import ru.mirea.oop.practice.coursej.tg.entities.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public final class BotClient {
     private static final Logger logger = LoggerFactory.getLogger(BotClient.class);
@@ -22,16 +20,7 @@ public final class BotClient {
     }
 
     public BotClient(String token, OkHttpClient client, String serverUrl) {
-        try {
-            serverUrl = new URL(serverUrl).toExternalForm();
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException(ex);
-        }
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .client(client)
-                .baseUrl(serverUrl + token);
-        this.clientApi = builder.build()
-                .create(TgApi.class);
+        this.clientApi = ServiceCreator.createService(client, TgApi.class, serverUrl + token + "/");
     }
 
     public User getMe() throws IOException {
