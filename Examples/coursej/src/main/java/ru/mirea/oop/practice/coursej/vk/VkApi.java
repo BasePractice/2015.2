@@ -4,9 +4,13 @@ import com.squareup.okhttp.OkHttpClient;
 
 public interface VkApi {
 
+    long idOwner();
+
     OkHttpClient getClient();
 
     Users getUsers();
 
     Messages getMessages();
+
+    Friends getFriends();
 }

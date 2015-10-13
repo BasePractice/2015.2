@@ -8,21 +8,23 @@ import java.io.Writer;
 import java.util.Properties;
 
 final class Authenticator {
-    private final int idClient;
     private final Credentials credentials;
     private Token token;
 
-    Authenticator(int idClient) {
-        this.idClient = idClient;
+    Authenticator() {
         this.credentials = Credentials.createDefault();
         this.token = Token.createDefault();
+    }
+
+    public long idOwner() {
+        return token.idUser;
     }
 
     public void authenticate(OkHttpClient ok) throws Exception {
 
         if (token == null || token.idUser < 0 || token.expireTime < System.currentTimeMillis()) {
             HttpUrl url = new UrlBuilder()
-                    .setClientId(idClient)
+                    .setClientId(credentials.id)
                     .addScope(UrlBuilder.Scope.AUDIO)
                     .addScope(UrlBuilder.Scope.DOCS)
                     .addScope(UrlBuilder.Scope.MESSAGES)
@@ -50,7 +52,7 @@ final class Authenticator {
             }
             String location = processed.header("Location");
             if (!location.contains("__q_hash")) {
-                throw new Exception("");
+                throw new Exception("Hash not found");
             }
             request = new Request.Builder().url(location).build();
             response = ok.newCall(request).execute();
@@ -64,21 +66,25 @@ final class Authenticator {
                 throw new Exception("Must 302 code");
             }
             location = processed.header("Location");
+            location = location.replaceAll("#", "?");
             token = Token.parse(HttpUrl.parse(location));
             Token.save(token);
         }
         AccessTokenAuthenticator.setAccessToken(ok, token.accessToken);
-    }
+     }
 
     private static final class Credentials {
+        private final int id;
         private final String username;
         private final String password;
 
-        private Credentials(String username, String password) {
+        private Credentials(int id, String username, String password) {
+            this.id = id;
             this.username = username;
             this.password = password;
         }
 
+        //FIXME: Вынести в папку пользователя
         public static Credentials createDefault() {
             Properties prop = new Properties();
             try {
@@ -86,7 +92,10 @@ final class Authenticator {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            return new Credentials(prop.getProperty("username"), prop.getProperty("password"));
+            return new Credentials(
+                    Integer.parseInt(prop.getProperty("id")),
+                    prop.getProperty("username"),
+                    prop.getProperty("password"));
         }
     }
 
@@ -115,6 +124,10 @@ final class Authenticator {
             return new Token(accessToken, expireTime, idUser);
         }
 
+        static Token parse(String url) {
+            return parse(HttpUrl.parse(url.replace('#', '?')));
+        }
+
         @SuppressWarnings("unused")
         static void save(Token token, String fileName) {
             Properties prop = new Properties();
@@ -129,6 +142,7 @@ final class Authenticator {
         }
 
         static void save(Token token) {
+            //FIXME: вынести в папку пользователя
             if (OS.contains("mac")) {
                 save(token, "/Users/pastor/GitHub/2015.2/Examples/coursej/src/main/resources/.accessToken");
             } else {
