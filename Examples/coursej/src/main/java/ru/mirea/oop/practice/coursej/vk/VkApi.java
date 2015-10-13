@@ -9,4 +9,6 @@ public interface VkApi {
     Users getUsers();
 
     Messages getMessages();
+
+    Friends getFriends();
 }

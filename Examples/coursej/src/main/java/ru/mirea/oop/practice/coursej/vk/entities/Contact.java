@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public final class Contact {
-    public int uid;
+    public long uid;
     @SerializedName("first_name")
     public String firstName;
     @SerializedName("last_name")
