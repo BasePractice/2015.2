@@ -40,7 +40,17 @@ public final class VkApiImpl implements VkApi {
     }
 
     @Override
+    public Account setOnline() {
+        return ServiceCreator.createService(ok, Account.class, url);
+    }
+
+    @Override
     public Messages getMessages() {
+        return ServiceCreator.createService(ok, Messages.class, url);
+    }
+
+    @Override
+    public Messages setActivity() {
         return ServiceCreator.createService(ok, Messages.class, url);
     }
 
