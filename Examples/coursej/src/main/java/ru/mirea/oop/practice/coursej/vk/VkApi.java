@@ -17,4 +17,8 @@ public interface VkApi {
     Friends getFriends();
 
     Photos getMessagesUploadServer();
+
+    Messages setActivity();
+
+    Account setOnline();
 }
