@@ -14,5 +14,7 @@ public interface VkApi {
 
     Photos getPhotos();
 
+    Account getAccounts();
+
     Friends getFriends();
 }

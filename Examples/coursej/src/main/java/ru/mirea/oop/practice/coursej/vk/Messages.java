@@ -40,6 +40,6 @@ public interface Messages {
                                @Field("sticker_id") Integer isSticker);
 
     @GET("/method/messages.setActivity")
-    Call<Result<Integer>> setActivity(@Query("user_id") Long user_id,
+    Call<Result<Integer>> setActivity(@Query("user_id") Long idUser,
                                                  @Query("type") String type);
 }

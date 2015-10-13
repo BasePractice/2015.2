@@ -50,6 +50,11 @@ public final class VkApiImpl implements VkApi {
     }
 
     @Override
+    public Account getAccounts() {
+        return ServiceCreator.createService(ok, Account.class, url);
+    }
+
+    @Override
     public Friends getFriends() {
         return ServiceCreator.createService(ok, Friends.class, url);
     }
