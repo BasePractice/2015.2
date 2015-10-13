@@ -8,6 +8,8 @@ import java.util.concurrent.Future;
 
 public interface Extension extends Serializable {
 
+    String description();
+
     String name();
 
     long owner() throws IOException;

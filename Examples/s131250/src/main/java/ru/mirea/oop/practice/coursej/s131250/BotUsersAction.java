@@ -14,10 +14,11 @@ public class BotUsersAction {
     public static List<Long> users = new LinkedList<>();
 
     public static boolean isRegistered(long uid) {
-        if (users.contains(uid)) return true;
+        if (users.contains(uid))
+            return true;
         else {
             boolean isRegistered = false;
-            Scanner in = null;
+            Scanner in;
             try {
                 in = new Scanner(Configuration.loadFrom(".users"));
                 while (in.hasNextLine())
@@ -34,7 +35,7 @@ public class BotUsersAction {
 
     public static int getCount() {
         int count = 0;
-        Scanner in = null;
+        Scanner in;
         try {
             in = new Scanner(Configuration.loadFrom(".users"));
             while (in.hasNextLine()) {
@@ -49,7 +50,7 @@ public class BotUsersAction {
 
     public static void register(long uid) {
         users.add(uid);
-        PrintWriter file = null;
+        PrintWriter file;
         try {
             file = new PrintWriter(new FileOutputStream(Configuration.getFileName(".users"), true));
             file.println();

@@ -10,7 +10,7 @@ public final class TgMessagePingService extends ServiceExtension {
     private static final Logger logger = LoggerFactory.getLogger(TgMessagePingService.class);
 
     public TgMessagePingService() {
-
+        super("tg.services.EchoServer");
     }
 
     @Override
@@ -19,7 +19,7 @@ public final class TgMessagePingService extends ServiceExtension {
     }
 
     @Override
-    public String name() {
+    public String description() {
         return "Сервис пересылки сообщений \"Telegram\"";
     }
 

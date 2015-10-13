@@ -16,21 +16,28 @@ import java.util.concurrent.Future;
 abstract class AbstractExtension implements Extension {
     private static final Logger logger = LoggerFactory.getLogger(AbstractExtension.class);
     protected final VkApi api;
+    protected final String name;
     protected Contact owner;
     protected Future<?> started;
 
     private boolean isRunnings;
     private boolean isLoaded;
 
-    protected AbstractExtension(VkApi api) {
+    protected AbstractExtension(String name, VkApi api) {
         this.api = api;
+        this.name = name;
         this.isRunnings = false;
         this.isLoaded = false;
         this.owner = null;
     }
 
-    protected AbstractExtension() throws Exception {
-        this(VkApiImpl.load());
+    protected AbstractExtension(String name) throws Exception {
+        this(name, VkApiImpl.load());
+    }
+
+    @Override
+    public final String name() {
+        return name;
     }
 
     @Override

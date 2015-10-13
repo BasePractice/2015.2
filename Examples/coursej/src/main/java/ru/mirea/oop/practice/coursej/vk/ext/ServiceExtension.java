@@ -56,8 +56,8 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     private final int timeout;
     private volatile boolean isRunning;
 
-    protected ServiceExtension() throws Exception {
-        super();
+    protected ServiceExtension(String name) throws Exception {
+        super(name);
         this.timeout = DEFAULT_TIMEOUT;
         this.isRunning = true;
         this.ok = api.getClient().clone();

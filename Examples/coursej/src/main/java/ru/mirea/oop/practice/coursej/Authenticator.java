@@ -37,7 +37,7 @@ final class Authenticator {
                     .addScope(UrlBuilder.Scope.OFFLINE)
                     .build();
             Request request = new Request.Builder().url(url).build();
-            System.out.println(url.toString());
+            //System.out.println(url.toString());
             Response response = ok.newCall(request).execute();
             ResponseBody body = response.body();
             FormAction fa = FormAction.create(body.string());

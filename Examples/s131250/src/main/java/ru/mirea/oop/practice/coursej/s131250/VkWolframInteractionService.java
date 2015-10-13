@@ -15,7 +15,7 @@ public final class VkWolframInteractionService extends ServiceExtension {
     private final Messages msgApi;
 
     public VkWolframInteractionService() throws Exception {
-        super();
+        super("vk.services.Wolfram");
         this.msgApi = api.getMessages();
     }
 
@@ -222,7 +222,7 @@ public final class VkWolframInteractionService extends ServiceExtension {
     }
 
     @Override
-    public String name() {
+    public String description() {
         return "Сервис взаимодействия с WolframAlpha";
     }
 }
