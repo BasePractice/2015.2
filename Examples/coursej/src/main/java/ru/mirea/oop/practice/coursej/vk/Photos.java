@@ -14,7 +14,7 @@ public interface Photos {
     @FormUrlEncoded
     @POST("/method/photos.saveMessagesPhoto")
     Call<Result<Object>> saveMessagesPhoto(@Field("server") Integer server,
-                                           @Field("photos_list") String photos_list,
+                                           @Field("photos_list") String photoList,
                                            @Field("photo") String photo,
                                            @Field("hash") String hash);
 }

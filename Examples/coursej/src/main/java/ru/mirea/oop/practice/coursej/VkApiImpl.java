@@ -45,12 +45,7 @@ public final class VkApiImpl implements VkApi {
     }
 
     @Override
-    public Photos getMessagesUploadServer() {
-        return ServiceCreator.createService(ok, Photos.class, url);
-    }
-
-    @Override
-    public Photos saveMessagesPhoto() {
+    public Photos getPhotos() {
         return ServiceCreator.createService(ok, Photos.class, url);
     }
 

@@ -85,11 +85,10 @@ final class Authenticator {
             this.password = password;
         }
 
-        //FIXME: Вынести в папку пользователя
         public static Credentials createDefault() {
             Properties prop = new Properties();
             try {
-                prop.load(Credentials.class.getResourceAsStream("/.credentials"));
+                prop.load(Configuration.loadFrom(".credentials"));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -101,7 +100,6 @@ final class Authenticator {
             } catch (Exception ex) {
                 return null;
             }
-
         }
     }
 
@@ -148,18 +146,13 @@ final class Authenticator {
         }
 
         static void save(Token token) {
-            //FIXME: вынести в папку пользователя
-            if (OS.contains("mac")) {
-                save(token, "/Users/pastor/GitHub/2015.2/Examples/coursej/src/main/resources/.accessToken");
-            } else {
-                save(token, "D:\\GitHub\\2015.2\\Examples\\coursej\\src\\main\\resources\\.accessToken");
-            }
+            save(token, Configuration.getFileName(".accessToken"));
         }
 
         public static Token createDefault() {
             Properties prop = new Properties();
             try {
-                prop.load(Credentials.class.getResourceAsStream("/.accessToken"));
+                prop.load(Configuration.loadFrom(".accessToken"));
             } catch (Exception ex) {
                 return null;
             }

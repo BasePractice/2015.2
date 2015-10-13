@@ -243,20 +243,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                     long timestamp = ((Number) update.remove(0)).longValue();
                     String subject = (String) update.remove(0);
                     String text = (String) update.remove(0);
-                    Message message;
-                    if (friends.get(idFrom) != null) {
-                        message = new Message(idMessage, flags, friends.get(idFrom), timestamp, subject, text);}
-                    else {
-                        Users usersApi = api.getUsers();
-                        retrofit.Call<Result<Contact[]>> list = usersApi.list(String.valueOf(idFrom),"","nom");
-                        Contact user = null;
-                        try {
-                            user = Result.call(list)[0];
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        message = new Message(idMessage, flags, user, timestamp, subject, text);
-                    }
+                    Message message = new Message(idMessage, flags, loadContactFrom(idFrom), timestamp, subject, text);
                     messageCache.put(idMessage, message);
                     doEvent(new Event(EventType.MESSAGE_RECEIVE, message));
                     break;
@@ -295,20 +282,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                 case 61: {
                     long idUser = Math.abs(((Number) update.remove(0)).longValue());
                     int flags = ((Number) update.remove(0)).intValue();
-                    UserWrite status;
-                    if (friends.get(idUser) != null) {
-                        status = new UserWrite(friends.get(idUser));
-                    } else {
-                        Users usersApi = api.getUsers();
-                        retrofit.Call<Result<Contact[]>> list = usersApi.list(String.valueOf(idUser),"","nom");
-                        Contact user = null;
-                        try {
-                            user = Result.call(list)[0];
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        status = new UserWrite(user);
-                    }
+                    UserWrite status = new UserWrite(loadContactFrom(idUser));
                     doEvent(new Event(EventType.FRIEND_WRITE, status));
                     break;
                 }
@@ -322,6 +296,25 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
                 }
             }
         }
+    }
+
+    private Contact loadContactFrom(long idContact) {
+        if (friends.containsKey(idContact))
+            return friends.get(idContact);
+        Users usersApi = api.getUsers();
+        retrofit.Call<Result<Contact[]>> list = usersApi.list(String.valueOf(idContact), "", "nom");
+        Contact contact = null;
+        try {
+            contact = Result.call(list)[0];
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            logger.error("Невозможно получить пользователя по идентификатору", ex);
+        }
+
+        if (contact != null) {
+            friends.put(idContact, contact);
+        }
+        return contact;
     }
 
     protected enum EventType {
