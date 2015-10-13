@@ -1,7 +1,6 @@
 package ru.mirea.oop.practice.coursej;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.okhttp.MediaType;
@@ -11,7 +10,6 @@ import okio.Buffer;
 import retrofit.Converter;
 
 import java.io.*;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
@@ -31,7 +29,8 @@ final class CustomConverterFactory implements Converter.Factory {
         final TypeAdapter<?> adapter;
         /*if (type instanceof ParameterizedType) {
             adapter = gson.getAdapter(TypeToken.get(((ParameterizedType) type).getActualTypeArguments()[0]));
-        } else*/ {
+        } else*/
+        {
             adapter = gson.getAdapter(TypeToken.get(type));
         }
         return new CustomConverter<>(adapter);
@@ -70,6 +69,7 @@ final class CustomConverterFactory implements Converter.Factory {
                 typeAdapter.toJson(writer, value);
                 writer.flush();
             } catch (IOException e) {
+
                 throw new AssertionError(e); // Writing to Buffer does no I/O.
             }
             return RequestBody.create(MEDIA_TYPE, buffer.readByteString());

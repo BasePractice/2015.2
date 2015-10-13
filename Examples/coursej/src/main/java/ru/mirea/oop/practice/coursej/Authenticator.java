@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Properties;
+
 final class Authenticator {
     private final Credentials credentials;
     private Token token;
@@ -13,6 +14,10 @@ final class Authenticator {
     Authenticator() {
         this.credentials = Credentials.createDefault();
         this.token = Token.createDefault();
+    }
+
+    public long idOwner() {
+        return token.idUser;
     }
 
     public void authenticate(OkHttpClient ok) throws Exception {
@@ -47,7 +52,7 @@ final class Authenticator {
             }
             String location = processed.header("Location");
             if (!location.contains("__q_hash")) {
-                throw new Exception("");
+                throw new Exception("Hash not found");
             }
             request = new Request.Builder().url(location).build();
             response = ok.newCall(request).execute();
@@ -66,7 +71,7 @@ final class Authenticator {
             Token.save(token);
         }
         AccessTokenAuthenticator.setAccessToken(ok, token.accessToken);
-    }
+     }
 
     private static final class Credentials {
         private final int id;
@@ -117,6 +122,10 @@ final class Authenticator {
             value = url.queryParameter(USER_ID);
             long idUser = value == null ? -1 : Long.parseLong(value);
             return new Token(accessToken, expireTime, idUser);
+        }
+
+        static Token parse(String url) {
+            return parse(HttpUrl.parse(url.replace('#', '?')));
         }
 
         @SuppressWarnings("unused")
