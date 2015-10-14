@@ -1,11 +1,11 @@
 package ru.mirea.oop.practice.coursej.tg;
 
+import com.squareup.okhttp.RequestBody;
 import retrofit.Call;
 import retrofit.http.*;
 import ru.mirea.oop.practice.coursej.tg.entities.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public interface TgApi {
     @GET("getMe")
@@ -21,15 +21,26 @@ public interface TgApi {
     Call<Result<Message>> sendDocument(@Part("chat_id") Integer id,
                                        @Part("reply_to_message_id") Integer replyMessage,
                                        @Part("reply_markup") Reply reply,
-                                       @Part("document") InputStream stream) throws IOException;
+                                       @Part("document") RequestBody document) throws IOException;
 
-    @Multipart
+    /**
+     * @param id
+     * @param text
+     * @param parseMode    Markdown
+     * @param disable
+     * @param replyMessage
+     * @param reply
+     * @return
+     * @throws IOException
+     */
+    @FormUrlEncoded
     @POST("sendMessage")
-    Call<Result<Message>> sendMessage(@Part("chat_id") Integer id,
-                                      @Part("text") String text,
-                                      @Part("disable_web_page_preview") Boolean disable,
-                                      @Part("reply_to_message_id") Integer replyMessage,
-                                      @Part("reply_markup") Reply reply) throws IOException;
+    Call<Result<Message>> sendMessage(@Field("chat_id") Integer id,
+                                      @Field("text") String text,
+                                      @Field("parse_mode") String parseMode,
+                                      @Field("disable_web_page_preview") Boolean disable,
+                                      @Field("reply_to_message_id") Integer replyMessage,
+                                      @Field("reply_markup") Reply reply) throws IOException;
 
     @POST("sendChatAction")
     Call<Result<Boolean>> sendChatAction(@Query("chat_id") Integer id,

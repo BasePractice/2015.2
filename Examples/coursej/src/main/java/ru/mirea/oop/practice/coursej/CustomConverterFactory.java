@@ -43,6 +43,7 @@ final class CustomConverterFactory implements Converter.Factory {
         private final TypeAdapter<E> typeAdapter;
 
         private CustomConverter(TypeAdapter<E> typeAdapter) {
+
             this.typeAdapter = typeAdapter;
         }
 

@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
 
 public abstract class ServiceExtension implements Extension, Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ServiceExtension.class);
-    private final BotClient client;
+    protected final BotClient client;
     private final String name;
     private volatile boolean isRunning = false;
     protected User owner;

@@ -1,6 +1,8 @@
 package ru.mirea.oop.practice.coursej.tg;
 
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.Call;
@@ -8,7 +10,6 @@ import ru.mirea.oop.practice.coursej.ServiceCreator;
 import ru.mirea.oop.practice.coursej.tg.entities.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public final class BotClient {
     private static final Logger logger = LoggerFactory.getLogger(BotClient.class);
@@ -36,15 +37,16 @@ public final class BotClient {
     }
 
     public Message sendMessage(Integer id, String text, Reply reply) throws IOException {
-        return get(clientApi.sendMessage(id, text, null, null, reply));
+        return get(clientApi.sendMessage(id, text, "Markdown", null, null, reply));
     }
 
     public Boolean sendChatAction(Integer id, ChatAction action) throws IOException {
         return get(clientApi.sendChatAction(id, action));
     }
 
-    public Message sendDocument(Integer id, String fileName, InputStream stream) throws IOException {
-        return get(clientApi.sendDocument(id, null, null, stream));
+    public Message sendDocument(Integer id, String fileName, java.io.File file) throws IOException {
+        RequestBody requestBody = RequestBody.create(MediaType.parse(""), file);
+        return get(clientApi.sendDocument(id, null, null, requestBody));
     }
 
     private static <E> E get(Call<Result<E>> result) throws IOException {

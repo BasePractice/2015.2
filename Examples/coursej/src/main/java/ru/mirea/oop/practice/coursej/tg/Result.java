@@ -18,7 +18,7 @@ public final class Result<E> {
         Response<Result<E>> result = callable.execute();
         if (result.isSuccess() && result.body().result != null)
             return result.body().result;
-        if (!result.body().ok) {
+        if (result.body() != null && !result.body().ok) {
             throw new RuntimeException(result.message());
         }
         System.out.println(result.errorBody());

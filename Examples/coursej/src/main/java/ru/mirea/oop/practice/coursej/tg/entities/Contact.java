@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public final class Contact {
     @SerializedName("user_id")
-    public String id;
+    public Integer id;
     @SerializedName("first_name")
     public String firstName;
     @SerializedName("last_name")
