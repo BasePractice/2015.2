@@ -6,7 +6,7 @@ import com.squareup.okhttp.OkHttpClient;
 import retrofit.Retrofit;
 
 public final class ServiceCreator {
-    private static final Gson gson = new GsonBuilder()
+    public static final Gson gson = new GsonBuilder()
             .setPrettyPrinting().create();
 
     private ServiceCreator() {

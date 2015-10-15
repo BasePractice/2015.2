@@ -41,6 +41,18 @@ final class CustomConverterFactory implements Converter.Factory {
                     return value;
                 }
             };
+        } else if (typeName.equals(Integer.class.getCanonicalName())) {
+            return new Converter<Object>() {
+                @Override
+                public Object fromBody(ResponseBody body) throws IOException {
+                    return null;
+                }
+
+                @Override
+                public RequestBody toBody(Object value) {
+                    return RequestBody.create(MediaType.parse("text/plain"), value.toString());
+                }
+            };
         }
 
         /*if (type instanceof ParameterizedType) {
