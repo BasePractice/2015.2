@@ -217,11 +217,6 @@ public final class VkWolframInteractionService extends ServiceExtension {
     }
 
     @Override
-    protected boolean init() {
-        return true;
-    }
-
-    @Override
     public String description() {
         return "Сервис взаимодействия с WolframAlpha";
     }

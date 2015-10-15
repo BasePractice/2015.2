@@ -44,8 +44,8 @@ public final class BotClient {
         return get(clientApi.sendChatAction(id, action));
     }
 
-    public Message sendDocument(Integer id, String fileName, java.io.File file) throws IOException {
-        RequestBody requestBody = RequestBody.create(MediaType.parse(""), file);
+    public Message sendDocument(Integer id, String fileName, MediaType mediaType, java.io.File file) throws IOException {
+        RequestBody requestBody = RequestBody.create(mediaType, file);
         return get(clientApi.sendDocument(id, null, null, requestBody));
     }
 

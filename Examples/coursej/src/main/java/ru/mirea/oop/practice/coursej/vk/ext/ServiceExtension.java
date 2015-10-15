@@ -87,6 +87,12 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     }
 
     @Override
+    protected boolean init() throws Exception {
+        api.start();
+        return true;
+    }
+
+    @Override
     public final void run() {
         logger.info("Запущен сервис оповещения");
         try {

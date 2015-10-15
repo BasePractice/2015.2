@@ -95,7 +95,11 @@ abstract class AbstractExtension implements Extension {
     @Override
     public final void load() {
         if (!isLoaded())
-            isLoaded = init();
+            try {
+                isLoaded = init();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
     }
 
     @Override
@@ -107,5 +111,5 @@ abstract class AbstractExtension implements Extension {
 
     protected abstract void doStop() throws Exception;
 
-    protected abstract boolean init();
+    protected abstract boolean init() throws Exception;
 }

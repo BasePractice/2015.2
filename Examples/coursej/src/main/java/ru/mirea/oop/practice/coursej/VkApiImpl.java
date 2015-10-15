@@ -17,7 +17,6 @@ public final class VkApiImpl implements VkApi {
         this.url = url;
         this.ok = ClientFactory.createOkClient();
         this.authenticator = new Authenticator();
-        this.authenticator.authenticate(ok);
     }
 
     private VkApiImpl() throws Exception {
@@ -57,6 +56,11 @@ public final class VkApiImpl implements VkApi {
     @Override
     public Friends getFriends() {
         return ServiceCreator.createService(ok, Friends.class, url);
+    }
+
+    @Override
+    public void start() throws Exception {
+        this.authenticator.authenticate(ok);
     }
 
     public static synchronized VkApi load() throws Exception {

@@ -21,7 +21,7 @@ public final class Result<E> {
         if (result.body() != null && !result.body().ok) {
             throw new RuntimeException(result.message());
         }
-        System.out.println(result.errorBody());
+        System.out.println(result.errorBody().string());
         return null;
     }
 }

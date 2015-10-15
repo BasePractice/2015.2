@@ -103,7 +103,7 @@ public abstract class ServiceExtension implements Extension, Runnable {
 
     private Update[] waitUpdates() {
         try {
-            return client.getUpdates(lastUpdate, null, 1);
+            return client.getUpdates(lastUpdate, null, 10);
         } catch (Exception ex) {
             logger.error("Ошибка при получении обновления", ex);
             return new Update[0];

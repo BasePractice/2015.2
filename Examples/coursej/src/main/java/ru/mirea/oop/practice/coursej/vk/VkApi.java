@@ -17,4 +17,6 @@ public interface VkApi {
     Account getAccounts();
 
     Friends getFriends();
+
+    void start() throws Exception;
 }

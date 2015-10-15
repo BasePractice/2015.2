@@ -60,11 +60,6 @@ public final class VkMessagePingService extends ServiceExtension {
     }
 
     @Override
-    protected boolean init() {
-        return true;
-    }
-
-    @Override
     public String description() {
         return "Сервис пересылки сообщения \"Вконтакте\"";
     }

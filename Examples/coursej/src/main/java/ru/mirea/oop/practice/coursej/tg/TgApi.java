@@ -18,9 +18,9 @@ public interface TgApi {
 
     @Multipart
     @POST("sendDocument")
-    Call<Result<Message>> sendDocument(@Part("chat_id") Integer id,
-                                       @Part("reply_to_message_id") Integer replyMessage,
-                                       @Part("reply_markup") Reply reply,
+    Call<Result<Message>> sendDocument(@Query("chat_id") Integer id,
+                                       @Query("reply_to_message_id") Integer replyMessage,
+                                       @Query("reply_markup") Reply reply,
                                        @Part("document") RequestBody document) throws IOException;
 
     /**

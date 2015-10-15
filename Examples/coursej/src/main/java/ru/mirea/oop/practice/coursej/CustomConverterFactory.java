@@ -27,6 +27,22 @@ final class CustomConverterFactory implements Converter.Factory {
     @Override
     public Converter<?> get(Type type) {
         final TypeAdapter<?> adapter;
+
+        String typeName = type.getTypeName();
+        if (typeName.equals("com.squareup.okhttp.RequestBody")) {
+            return new Converter<RequestBody>() {
+                @Override
+                public RequestBody fromBody(ResponseBody body) throws IOException {
+                    throw new IOException("Unsupported convert");
+                }
+
+                @Override
+                public RequestBody toBody(RequestBody value) {
+                    return value;
+                }
+            };
+        }
+
         /*if (type instanceof ParameterizedType) {
             adapter = gson.getAdapter(TypeToken.get(((ParameterizedType) type).getActualTypeArguments()[0]));
         } else*/
