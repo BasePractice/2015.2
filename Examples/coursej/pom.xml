@@ -11,6 +11,12 @@
     <packaging>jar</packaging>
     <version>1.0.1</version>
     <name>Mirea.Oop.Practice.CourseJ</name>
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
 
     <build>
         <finalName>Mirea.Oop.Practice.Course</finalName>
