@@ -1,15 +1,7 @@
 package ru.mirea.oop.practice.coursej.tg;
 
 import com.google.gson.annotations.SerializedName;
-import com.squareup.okhttp.OkHttpClient;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import com.squareup.okhttp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.Call;
@@ -17,13 +9,12 @@ import ru.mirea.oop.practice.coursej.ServiceCreator;
 import ru.mirea.oop.practice.coursej.tg.entities.*;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public final class BotClient {
     private static final Logger logger = LoggerFactory.getLogger(BotClient.class);
     public final String url;
     private final TgApi clientApi;
+    private final OkHttpClient client;
 
     public BotClient(String token, OkHttpClient client) {
         this(token, client, "https://api.telegram.org/bot");
@@ -31,6 +22,7 @@ public final class BotClient {
 
     public BotClient(String token, OkHttpClient client, String serverUrl) {
         this.url = serverUrl + token + "/";
+        this.client = client;
         this.clientApi = ServiceCreator.createService(client, TgApi.class, serverUrl + token + "/");
     }
 
@@ -55,26 +47,23 @@ public final class BotClient {
     }
 
     public Message sendDocument(Integer id, java.io.File file) throws IOException {
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.addTextBody("chat_id", String.valueOf(id));
-        builder.addBinaryBody("document", file, ContentType.APPLICATION_OCTET_STREAM, file.getName());
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost(url + "sendDocument");
-        HttpEntity multipart = builder.build();
-        httppost.setEntity(multipart);
-        CloseableHttpResponse response = httpClient.execute(httppost);
-        if (response.getStatusLine().getStatusCode() == 200) {
-            HttpEntity entity = response.getEntity();
-            try {
-
-                InputStream content = entity.getContent();
-                ResultMessage resultMessage = ServiceCreator.gson.fromJson(new InputStreamReader(content), ResultMessage.class);
-                if (resultMessage == null)
-                    return null;
-                return resultMessage.result;
-            } finally {
-                EntityUtils.consume(entity);
-            }
+        MultipartBuilder builder = new MultipartBuilder();
+        builder.addFormDataPart(
+                "document",
+                file.getName(),
+                RequestBody.create(MediaType.parse("application/octet-stream"), file));
+        builder.addFormDataPart("chat_id", String.valueOf(id));
+        builder.type(MultipartBuilder.FORM);
+        RequestBody build = builder.build();
+        Request request = new Request.Builder()
+                .url(HttpUrl.parse(url).newBuilder().addPathSegment("sendDocument").build())
+                .post(build)
+                .build();
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            ResultMessage rm = ServiceCreator.gson.fromJson(response.body().charStream(), ResultMessage.class);
+            if (rm != null)
+                return rm.result;
         }
         return null;
     }
