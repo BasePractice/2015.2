@@ -26,8 +26,8 @@ public final class VkMessagePingService extends ServiceExtension {
                 Message msg = (Message) event.object;
                 Contact contact = msg.contact;
                 if (msg.isOutbox()) {
-                    logger.debug("Сообщение для " + Contact.viewerString(contact) +
-                            ", не следует на него отвечать оно исходящее");
+                    logger.debug("Сообщение для " + Contact.viewerString(contact)
+                            + ", не следует на него отвечать оно исходящее");
                     logger.debug("Текст сообщения: " + msg.text);
                     break;
                 }

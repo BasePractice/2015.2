@@ -12,6 +12,14 @@
     <version>1.0.1</version>
     <name>Mirea.Oop.Practice.CourseJ.S131250</name>
 
+    <developers>
+        <developer>
+            <id>Student</id>
+            <name>Суконкин Максим Владимирович</name>
+            <email>????????</email>
+        </developer>
+    </developers>
+
     <build>
         <finalName>Mirea.Oop.Practice.Course.S131250</finalName>
         <resources>

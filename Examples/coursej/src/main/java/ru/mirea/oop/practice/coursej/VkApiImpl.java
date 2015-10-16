@@ -10,12 +10,12 @@ public final class VkApiImpl implements VkApi {
 
     private final String url;
 
-    private final OkHttpClient ok;
+    private final OkHttpClient client;
     private final Authenticator authenticator;
 
     private VkApiImpl(String url) throws Exception {
         this.url = url;
-        this.ok = ClientFactory.createOkClient();
+        this.client = ClientFactory.createOkClient();
         this.authenticator = new Authenticator();
     }
 
@@ -30,37 +30,41 @@ public final class VkApiImpl implements VkApi {
 
     @Override
     public OkHttpClient getClient() {
-        return ok;
+        return client;
     }
 
     @Override
     public Users getUsers() {
-        return ServiceCreator.createService(ok, Users.class, url);
+        return service(Users.class);
     }
 
     @Override
     public Messages getMessages() {
-        return ServiceCreator.createService(ok, Messages.class, url);
+        return service(Messages.class);
     }
 
     @Override
     public Photos getPhotos() {
-        return ServiceCreator.createService(ok, Photos.class, url);
+        return service(Photos.class);
     }
 
     @Override
     public Account getAccounts() {
-        return ServiceCreator.createService(ok, Account.class, url);
+        return service(Account.class);
     }
 
     @Override
     public Friends getFriends() {
-        return ServiceCreator.createService(ok, Friends.class, url);
+        return service(Friends.class);
+    }
+
+    private <E> E service(Class<E> klass) {
+        return ServiceCreator.createService(client, klass, url);
     }
 
     @Override
     public void start() throws Exception {
-        this.authenticator.authenticate(ok);
+        this.authenticator.authenticate(client);
     }
 
     public static synchronized VkApi load() throws Exception {

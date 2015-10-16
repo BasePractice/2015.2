@@ -12,15 +12,18 @@
     <version>1.0.1</version>
     <name>Mirea.Oop.Practice.CourseJ.S000000</name>
 
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
     <build>
         <finalName>Mirea.Oop.Practice.Course.S000000</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
-                <!--<excludes>-->
-                <!--<exclude>.credentials</exclude>-->
-                <!--<exclude>.accessToken</exclude>-->
-                <!--</excludes>-->
             </resource>
         </resources>
         <testResources>
