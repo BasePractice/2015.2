@@ -77,5 +77,6 @@ git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch $FILE
 
 Как создать проект вашей курсовой
 =================================
-[Создание](https://github.com/BasePractice/2015.2/master/Videos/Create.flv)
-[Запуск](https://github.com/BasePractice/2015.2/master/Videos/Start.flv)
+[Создание](https://yadi.sk/d/d33U0tWujpScJ)
+
+[Запуск](https://yadi.sk/i/BNaBm1CAjpSeW)
