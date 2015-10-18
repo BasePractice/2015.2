@@ -13,6 +13,12 @@ git checkout master
 git merge upstream/master
 ```
 
+Удаление  файлов из commit
+==============
+```
+git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch $FILENAME' --prune-empty --tag-name-filter cat -- --all
+```
+
 Кусовая работа
 ==============
 
