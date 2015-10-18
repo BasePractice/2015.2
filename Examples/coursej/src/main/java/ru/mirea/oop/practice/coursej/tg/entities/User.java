@@ -1,7 +1,9 @@
 package ru.mirea.oop.practice.coursej.tg.entities;
 
 import com.google.gson.annotations.SerializedName;
+import lombok.ToString;
 
+@ToString
 public class User {
     @SerializedName("id")
     public Integer id;

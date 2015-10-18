@@ -1,9 +1,6 @@
 package ru.mirea.oop.practice.coursej;
 
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import okio.Buffer;
 
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -27,28 +24,28 @@ public final class ClientFactory {
         cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         client.setCookieHandler(cookieManager);
         client.setFollowRedirects(false);
-        client.interceptors().add(chain -> {
-            Request request = chain.request();
-            String string = bodyToString(request);
-            System.out.println(string);
-            return chain.proceed(request);
-        });
+//        client.interceptors().add(chain -> {
+//            Request request = chain.request();
+//            String string = bodyToString(request);
+//            System.out.println(string);
+//            return chain.proceed(request);
+//        });
         return client;
     }
-
-    private static String bodyToString(final Request request) {
-
-        try {
-            final Request copy = request.newBuilder().build();
-            final Buffer buffer = new Buffer();
-            RequestBody body = copy.body();
-            if (body != null) {
-                body.writeTo(buffer);
-                return copy.toString() + "\r\n" + buffer.readUtf8();
-            }
-            return copy.toString();
-        } catch (final Exception e) {
-            return "did not work";
-        }
-    }
+//
+//    private static String bodyToString(final Request request) {
+//
+//        try {
+//            final Request copy = request.newBuilder().build();
+//            final Buffer buffer = new Buffer();
+//            RequestBody body = copy.body();
+//            if (body != null) {
+//                body.writeTo(buffer);
+//                return copy.toString() + "\r\n" + buffer.readUtf8();
+//            }
+//            return copy.toString();
+//        } catch (final Exception e) {
+//            return "did not work";
+//        }
+//    }
 }

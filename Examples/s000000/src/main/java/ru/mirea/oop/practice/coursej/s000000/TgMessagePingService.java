@@ -7,7 +7,7 @@ import ru.mirea.oop.practice.coursej.tg.entities.Message;
 import ru.mirea.oop.practice.coursej.tg.entities.Update;
 import ru.mirea.oop.practice.coursej.tg.ext.ServiceExtension;
 
-import java.io.File;
+import java.io.InputStream;
 
 public final class TgMessagePingService extends ServiceExtension {
     private static final Logger logger = LoggerFactory.getLogger(TgMessagePingService.class);
@@ -21,20 +21,18 @@ public final class TgMessagePingService extends ServiceExtension {
         Message message = update.getMessage();
         if (message != null) {
             try {
-                String fileName = "/Users/pastor/Яндекс.Диск/iPyramid_TODO.txt";
-                Integer id = message.getFrom().id;
-                String text = message.getText();
-                File file = new File(fileName);
-                if (file.exists()) {
-                    Message document = client.sendDocument(id, file);
-                    System.out.println(document);
+                InputStream stream = TgMessagePingService.class.getResourceAsStream("/photos/safe_image.png");
+                Integer id = message.from.id;
+                if (stream != null) {
+                    Message document = client.sendPhoto(id, message.text, "safe_image.png", stream);
+                    logger.debug("Send message: " + document);
                 }
                 //client.sendMessage(id, text, null);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
-        logger.debug("Update: " + update.message);
+        //logger.debug("Update: " + update.message);
     }
 
     @Override
