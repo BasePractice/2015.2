@@ -2,8 +2,12 @@ package ru.mirea.oop.practice.coursej.starter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.ext.Extension;
+import ru.mirea.oop.practice.coursej.ext.BotsExtension;
+import ru.mirea.oop.practice.coursej.ext.MazeExtension;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -16,8 +20,35 @@ public final class Starter {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         Set<Future<?>> futures = new LinkedHashSet<>();
         Set<String> enabled = loadEnabled();
-        ServiceLoader<Extension> loader = ServiceLoader.load(Extension.class);
-        for (Extension extension : loader) {
+        startMazeExtensions(enabled);
+        startBotsExtensions(futures, enabled);
+
+        for (Future<?> future : futures) {
+            future.get();
+        }
+        futures.clear();
+        BotsExtension.executor.shutdown();
+    }
+
+    private static void startMazeExtensions(Set<String> enabled) throws IOException {
+        ServiceLoader<MazeExtension> loader = ServiceLoader.load(MazeExtension.class);
+        for (MazeExtension extension : loader) {
+            if (!enabled.contains(extension.name())) {
+                logger.debug("Сервис: \"" + extension.name() + "\" пропущен");
+                continue;
+            }
+            logger.debug("Запусксам: " + extension.name());
+            MazeExtension.Maze maze = extension.generateMaze(1000, 1000);
+            BufferedImage image = extension.createImage(maze);
+            File file = new File(extension.name() + ".png");
+            ImageIO.write(image, "PNG", file);
+            logger.debug("Сохраняем: " + file.getAbsolutePath());
+        }
+    }
+
+    private static void startBotsExtensions(Set<Future<?>> futures, Set<String> enabled) {
+        ServiceLoader<BotsExtension> loader = ServiceLoader.load(BotsExtension.class);
+        for (BotsExtension extension : loader) {
             if (!enabled.contains(extension.name())) {
                 logger.debug("Сервис: \"" + extension.name() + "\" пропущен");
                 continue;
@@ -35,12 +66,6 @@ public final class Starter {
             logger.debug("Сервис: \"" + extension.name() + "\" запустился");
             futures.add(future);
         }
-
-        for (Future<?> future : futures) {
-            future.get();
-        }
-        futures.clear();
-        Extension.executor.shutdown();
     }
 
     private static Set<String> loadEnabled() {

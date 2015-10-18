@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.Call;
 import ru.mirea.oop.practice.coursej.VkApiImpl;
-import ru.mirea.oop.practice.coursej.ext.Extension;
+import ru.mirea.oop.practice.coursej.ext.BotsExtension;
 import ru.mirea.oop.practice.coursej.vk.Result;
 import ru.mirea.oop.practice.coursej.vk.Users;
 import ru.mirea.oop.practice.coursej.vk.VkApi;
@@ -13,7 +13,7 @@ import ru.mirea.oop.practice.coursej.vk.entities.Contact;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-abstract class AbstractBotsExtension implements Extension {
+abstract class AbstractBotsExtension implements BotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(AbstractBotsExtension.class);
     protected final VkApi api;
     protected final String name;

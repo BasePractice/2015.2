@@ -7,7 +7,7 @@ public interface MazeExtension {
 
     String name();
 
-    Maze generateMaze(int width, int height);
+    Maze generateMaze(int rows, int cols);
 
     BufferedImage createImage(Maze maze);
 

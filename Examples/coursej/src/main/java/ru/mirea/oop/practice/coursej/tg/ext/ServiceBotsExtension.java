@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.ClientFactory;
 import ru.mirea.oop.practice.coursej.Configuration;
+import ru.mirea.oop.practice.coursej.ext.BotsExtension;
 import ru.mirea.oop.practice.coursej.tg.BotClient;
 import ru.mirea.oop.practice.coursej.tg.entities.Update;
 import ru.mirea.oop.practice.coursej.tg.entities.User;
@@ -12,7 +13,7 @@ import ru.mirea.oop.practice.coursej.tg.entities.User;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-public abstract class ServiceBotsExtension implements Extension, Runnable {
+public abstract class ServiceBotsExtension implements BotsExtension, Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class);
     protected final BotClient client;
     private final String name;
