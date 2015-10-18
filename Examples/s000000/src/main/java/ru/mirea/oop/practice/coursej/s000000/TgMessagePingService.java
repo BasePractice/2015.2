@@ -5,11 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.tg.entities.Message;
 import ru.mirea.oop.practice.coursej.tg.entities.Update;
-import ru.mirea.oop.practice.coursej.tg.ext.ServiceExtension;
+import ru.mirea.oop.practice.coursej.tg.ext.ServiceBotsExtension;
 
 import java.io.InputStream;
 
-public final class TgMessagePingService extends ServiceExtension {
+public final class TgMessagePingService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(TgMessagePingService.class);
 
     public TgMessagePingService() {

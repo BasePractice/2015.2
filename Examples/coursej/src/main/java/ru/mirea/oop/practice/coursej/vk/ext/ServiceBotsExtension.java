@@ -21,8 +21,8 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public abstract class ServiceExtension extends AbstractExtension implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(ServiceExtension.class);
+public abstract class ServiceBotsExtension extends AbstractBotsExtension implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class);
     private static final String FRIENDS_FIELDS = "nickname, " +
             "domain, " +
             "sex, " +
@@ -56,7 +56,7 @@ public abstract class ServiceExtension extends AbstractExtension implements Runn
     private final int timeout;
     private volatile boolean isRunning;
 
-    protected ServiceExtension(String name) throws Exception {
+    protected ServiceBotsExtension(String name) throws Exception {
         super(name);
         this.timeout = DEFAULT_TIMEOUT;
         this.isRunning = true;

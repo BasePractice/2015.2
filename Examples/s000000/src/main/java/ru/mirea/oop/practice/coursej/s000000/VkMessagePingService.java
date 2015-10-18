@@ -3,14 +3,14 @@ package ru.mirea.oop.practice.coursej.s000000;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.Call;
-import ru.mirea.oop.practice.coursej.vk.ext.ServiceExtension;
+import ru.mirea.oop.practice.coursej.vk.ext.ServiceBotsExtension;
 import ru.mirea.oop.practice.coursej.vk.Messages;
 import ru.mirea.oop.practice.coursej.vk.Result;
 import ru.mirea.oop.practice.coursej.vk.entities.Contact;
 
 import java.io.IOException;
 
-public final class VkMessagePingService extends ServiceExtension {
+public final class VkMessagePingService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkMessagePingService.class);
     private final Messages msgApi;
 

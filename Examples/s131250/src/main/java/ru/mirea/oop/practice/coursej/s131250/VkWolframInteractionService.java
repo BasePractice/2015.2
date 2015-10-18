@@ -6,11 +6,11 @@ import retrofit.Call;
 import ru.mirea.oop.practice.coursej.vk.Messages;
 import ru.mirea.oop.practice.coursej.vk.Result;
 import ru.mirea.oop.practice.coursej.vk.entities.Contact;
-import ru.mirea.oop.practice.coursej.vk.ext.ServiceExtension;
+import ru.mirea.oop.practice.coursej.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
 
-public final class VkWolframInteractionService extends ServiceExtension {
+public final class VkWolframInteractionService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkWolframInteractionService.class);
     private final Messages msgApi;
 

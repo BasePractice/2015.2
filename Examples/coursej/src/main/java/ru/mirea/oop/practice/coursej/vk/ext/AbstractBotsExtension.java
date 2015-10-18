@@ -13,8 +13,8 @@ import ru.mirea.oop.practice.coursej.vk.entities.Contact;
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-abstract class AbstractExtension implements Extension {
-    private static final Logger logger = LoggerFactory.getLogger(AbstractExtension.class);
+abstract class AbstractBotsExtension implements Extension {
+    private static final Logger logger = LoggerFactory.getLogger(AbstractBotsExtension.class);
     protected final VkApi api;
     protected final String name;
     protected Contact owner;
@@ -23,7 +23,7 @@ abstract class AbstractExtension implements Extension {
     private boolean isRunnings;
     private boolean isLoaded;
 
-    protected AbstractExtension(String name, VkApi api) {
+    protected AbstractBotsExtension(String name, VkApi api) {
         this.api = api;
         this.name = name;
         this.isRunnings = false;
@@ -31,7 +31,7 @@ abstract class AbstractExtension implements Extension {
         this.owner = null;
     }
 
-    protected AbstractExtension(String name) throws Exception {
+    protected AbstractBotsExtension(String name) throws Exception {
         this(name, VkApiImpl.load());
     }
 
