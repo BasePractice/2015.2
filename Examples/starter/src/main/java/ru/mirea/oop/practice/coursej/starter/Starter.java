@@ -38,7 +38,7 @@ public final class Starter {
                 continue;
             }
             logger.debug("Запусксам: " + extension.name());
-            MazeExtension.Maze maze = extension.generateMaze(1000, 1000);
+            MazeExtension.Maze maze = extension.generateMaze(10, 10);
             BufferedImage image = extension.createImage(maze);
             File file = new File(extension.name() + ".png");
             ImageIO.write(image, "PNG", file);

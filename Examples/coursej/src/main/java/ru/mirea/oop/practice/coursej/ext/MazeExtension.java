@@ -22,4 +22,9 @@ public interface MazeExtension {
             this.data = new char[rows][cols];
         }
     }
+
+    char SQUARE_LEFT = 1;
+    char SQUARE_UP = 2;
+    char SQUARE_RIGHT = 4;
+    char SQUARE_DOWN = 8;
 }
