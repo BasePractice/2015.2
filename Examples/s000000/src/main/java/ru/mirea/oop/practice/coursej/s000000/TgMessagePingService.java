@@ -3,9 +3,9 @@ package ru.mirea.oop.practice.coursej.s000000;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.tg.entities.Message;
-import ru.mirea.oop.practice.coursej.tg.entities.Update;
-import ru.mirea.oop.practice.coursej.tg.ext.ServiceBotsExtension;
+import ru.mirea.oop.practice.coursej.api.tg.entities.Message;
+import ru.mirea.oop.practice.coursej.api.tg.entities.Update;
+import ru.mirea.oop.practice.coursej.impl.tg.ext.ServiceBotsExtension;
 
 import java.io.InputStream;
 

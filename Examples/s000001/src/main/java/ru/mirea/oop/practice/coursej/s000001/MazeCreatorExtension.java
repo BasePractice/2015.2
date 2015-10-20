@@ -1,6 +1,6 @@
 package ru.mirea.oop.practice.coursej.s000001;
 
-import ru.mirea.oop.practice.coursej.maze.AbstractMazeExtension;
+import ru.mirea.oop.practice.coursej.impl.maze.AbstractMazeExtension;
 
 public final class MazeCreatorExtension extends AbstractMazeExtension {
     @Override

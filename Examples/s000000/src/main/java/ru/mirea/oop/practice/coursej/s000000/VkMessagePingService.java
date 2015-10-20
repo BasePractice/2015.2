@@ -2,17 +2,15 @@ package ru.mirea.oop.practice.coursej.s000000;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import retrofit.Call;
-import ru.mirea.oop.practice.coursej.vk.ext.ServiceBotsExtension;
-import ru.mirea.oop.practice.coursej.vk.Messages;
-import ru.mirea.oop.practice.coursej.vk.Result;
-import ru.mirea.oop.practice.coursej.vk.entities.Contact;
+import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
+import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
+import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
 
 public final class VkMessagePingService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkMessagePingService.class);
-    private final Messages msgApi;
+    private final MessagesApi msgApi;
 
     public VkMessagePingService() throws Exception {
         super("vk.services.EchoServer");
@@ -32,21 +30,21 @@ public final class VkMessagePingService extends ServiceBotsExtension {
                     break;
                 }
                 logger.debug("Получили сообщение от " + Contact.viewerString(contact));
-                Call<Result<Integer>> call = msgApi.send(
-                        contact.id,
-                        null,
-                        null,
-                        null,
-                        msg.text,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                );
+
                 try {
-                    Integer idMessage = Result.call(call);
+                    Integer idMessage = msgApi.send(
+                            contact.id,
+                            null,
+                            null,
+                            null,
+                            msg.text,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                    );
                     logger.debug("Сообщение отправлено " + idMessage);
                 } catch (IOException ex) {
                     logger.error("Ошибка отправки сообщения", ex);

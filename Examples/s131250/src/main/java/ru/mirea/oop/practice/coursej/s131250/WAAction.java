@@ -6,11 +6,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import retrofit.Call;
-import ru.mirea.oop.practice.coursej.vk.Photos;
-import ru.mirea.oop.practice.coursej.vk.Result;
-import ru.mirea.oop.practice.coursej.vk.VkApi;
-import ru.mirea.oop.practice.coursej.vk.entities.UploadServer;
+import ru.mirea.oop.practice.coursej.api.VkontakteApi;
+import ru.mirea.oop.practice.coursej.api.vk.PhotosApi;
+import ru.mirea.oop.practice.coursej.api.vk.entities.UploadServer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class WAAction {
-    public static WAMessage processWAMessage(String input, VkApi api) throws IOException {
+    public static WAMessage processWAMessage(String input, VkontakteApi api) throws Exception {
         ResponseBody waResponse = WARequestAction.getResponsefromWA(input);
         String baseImage = ImageBuilder.textWrite("VK Bot /WolframAlpha/ results");
         try {
@@ -51,9 +49,8 @@ public class WAAction {
         }
 
 
-        Photos userver = api.getPhotos();
-        Call<Result<UploadServer>> m2 = userver.getMessagesUploadServer();
-        UploadServer mu = Result.call(m2);
+        PhotosApi userver = api.getPhotos();
+        UploadServer mu = userver.getMessagesUploadServer();
         MediaType MEDIA_TYPE_MARKDOWN
                 = MediaType.parse("text/x-markdown; charset=utf-8");
         OkHttpClient client = new OkHttpClient();
@@ -77,9 +74,8 @@ public class WAAction {
         Integer serverS = obj2.getInt("server");
         String photoS = obj2.getString("photo");
         String hash = obj2.getString("hash");
-        Photos p = api.getPhotos();
-        Call<Result<Object>> pcall = p.saveMessagesPhoto(serverS, photoS, photoS, hash);
-        String p1 = Result.call(pcall).toString();
+        PhotosApi p = api.getPhotos();
+        String p1 = userver.saveMessagesPhoto(serverS, photoS, photoS, hash).toString();
         String mediaid = p1.split(", id=")[1].split(", aid")[0];
         String src_xxbig = "";
         String src_xxxbig = "";

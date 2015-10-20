@@ -2,17 +2,15 @@ package ru.mirea.oop.practice.coursej.s131250;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import retrofit.Call;
-import ru.mirea.oop.practice.coursej.vk.Messages;
-import ru.mirea.oop.practice.coursej.vk.Result;
-import ru.mirea.oop.practice.coursej.vk.entities.Contact;
-import ru.mirea.oop.practice.coursej.vk.ext.ServiceBotsExtension;
+import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
+import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
+import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
 
 public final class VkWolframInteractionService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkWolframInteractionService.class);
-    private final Messages msgApi;
+    private final MessagesApi msgApi;
 
     public VkWolframInteractionService() throws Exception {
         super("vk.services.Wolfram");
@@ -39,21 +37,21 @@ public final class VkWolframInteractionService extends ServiceBotsExtension {
                         String text = "Вы уже зарегистрированы как пользователь бота WolframAlpha! \n" +
                                 "Для отправки выражения на решение добавьте перед ним символы \"wi\". Например, \"wi integrate sin (x)\". Команды, не начинающиеся с этих символов, ботом игнорируются.\n" +
                                 "Возможности и примеры команд: http://www.wolframalpha.com/examples/.";
-                        Call<Result<Integer>> call = msgApi.send(
-                                contact.id,
-                                null,
-                                null,
-                                null,
-                                text,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                        );
+
                         try {
-                            Integer idMessage = Result.call(call);
+                            Integer idMessage = msgApi.send(
+                                    contact.id,
+                                    null,
+                                    null,
+                                    null,
+                                    text,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                            );
                             logger.debug("Сообщение отправлено " + idMessage);
                         } catch (IOException ex) {
                             logger.error("Ошибка отправки сообщения", ex);
@@ -63,21 +61,20 @@ public final class VkWolframInteractionService extends ServiceBotsExtension {
                         String text = "Вы успешно зарегистрированы как пользователь бота WolframAlpha!\n" +
                                 "Для отправки выражения на решение добавьте перед ним символы \"wi\". Например, \"wi integrate sin (x)\". Команды, не начинающиеся с этих символов, ботом игнорируются.\n" +
                                 "Возможности и примеры команд: http://www.wolframalpha.com/examples/.";
-                        Call<Result<Integer>> call = msgApi.send(
-                                contact.id,
-                                null,
-                                null,
-                                null,
-                                text,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                        );
                         try {
-                            Integer idMessage = Result.call(call);
+                            Integer idMessage = msgApi.send(
+                                    contact.id,
+                                    null,
+                                    null,
+                                    null,
+                                    text,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                            );
                             logger.debug("Сообщение отправлено " + idMessage);
                         } catch (IOException ex) {
                             logger.error("Ошибка отправки сообщения", ex);
@@ -125,7 +122,33 @@ public final class VkWolframInteractionService extends ServiceBotsExtension {
                                     "wi port 80\n" +
                                     "wi .pdf file format\n" +
                                     "wi parametric plot (sin 10t, sin 7t), t=0..2pi";
-                            Call<Result<Integer>> call = msgApi.send(
+
+                            try {
+                                Integer idMessage = msgApi.send(
+                                        contact.id,
+                                        null,
+                                        null,
+                                        null,
+                                        text,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                );
+                                logger.debug("Сообщение отправлено " + idMessage);
+                            } catch (IOException ex) {
+                                logger.error("Ошибка отправки сообщения", ex);
+                            }
+                        }
+                    }
+
+                    if (msg.text.equals("bot help")) {
+                        String text = "Справка по боту WolframAlpha.\nДля отправки выражения на решение добавьте перед ним символы \"wi\". Например, \"wi integrate sin (x)\". Команды, не начинающиеся с этих символов, ботом игнорируются.\nВозможности и примеры команд: http://www.wolframalpha.com/examples/.";
+
+                        try {
+                            Integer idMessage = msgApi.send(
                                     contact.id,
                                     null,
                                     null,
@@ -138,32 +161,6 @@ public final class VkWolframInteractionService extends ServiceBotsExtension {
                                     null,
                                     null
                             );
-                            try {
-                                Integer idMessage = Result.call(call);
-                                logger.debug("Сообщение отправлено " + idMessage);
-                            } catch (IOException ex) {
-                                logger.error("Ошибка отправки сообщения", ex);
-                            }
-                        }
-                    }
-
-                    if (msg.text.equals("bot help")) {
-                        String text = "Справка по боту WolframAlpha.\nДля отправки выражения на решение добавьте перед ним символы \"wi\". Например, \"wi integrate sin (x)\". Команды, не начинающиеся с этих символов, ботом игнорируются.\nВозможности и примеры команд: http://www.wolframalpha.com/examples/.";
-                        Call<Result<Integer>> call = msgApi.send(
-                                contact.id,
-                                null,
-                                null,
-                                null,
-                                text,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null,
-                                null
-                        );
-                        try {
-                            Integer idMessage = Result.call(call);
                             logger.debug("Сообщение отправлено " + idMessage);
                         } catch (IOException ex) {
                             logger.error("Ошибка отправки сообщения", ex);
@@ -185,21 +182,20 @@ public final class VkWolframInteractionService extends ServiceBotsExtension {
                         }
 
                         if (message != null) {
-                            Call<Result<Integer>> call = msgApi.send(
-                                    contact.id,
-                                    null,
-                                    null,
-                                    null,
-                                    message.text,
-                                    null,
-                                    null,
-                                    null,
-                                    message.attachment,
-                                    null,
-                                    null
-                            );
                             try {
-                                Integer idMessage = Result.call(call);
+                                Integer idMessage = msgApi.send(
+                                        contact.id,
+                                        null,
+                                        null,
+                                        null,
+                                        message.text,
+                                        null,
+                                        null,
+                                        null,
+                                        message.attachment,
+                                        null,
+                                        null
+                                );
                                 logger.debug("Сообщение отправлено " + idMessage);
                             } catch (IOException ex) {
                                 logger.error("Ошибка отправки сообщения", ex);
