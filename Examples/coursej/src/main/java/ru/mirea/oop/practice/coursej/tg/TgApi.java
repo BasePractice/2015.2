@@ -7,7 +7,7 @@ import ru.mirea.oop.practice.coursej.tg.entities.*;
 
 import java.io.IOException;
 
-public interface TgApi {
+interface TgApi {
     @GET("getMe")
     Call<Result<User>> getMe() throws IOException;
 

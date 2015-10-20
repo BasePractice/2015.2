@@ -6,13 +6,13 @@ import retrofit.Response;
 
 import java.io.IOException;
 
-public final class Result<E> {
+final class Result<E> {
     @SerializedName("ok")
     public Boolean ok;
     @SerializedName("result")
     public E result;
 
-    public static <E> E call(Call<Result<E>> callable) throws IOException {
+    static <E> E call(Call<Result<E>> callable) throws IOException {
         if (callable == null)
             return null;
         Response<Result<E>> result = callable.execute();
