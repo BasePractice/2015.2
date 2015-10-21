@@ -53,7 +53,7 @@ public class WAAction {
         UploadServer mu = userver.getMessagesUploadServer();
         MediaType MEDIA_TYPE_MARKDOWN
                 = MediaType.parse("text/x-markdown; charset=utf-8");
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = api.createClient();
         File file = new File(baseImage);
 
         RequestBody requestBody = new MultipartBuilder()
@@ -63,7 +63,7 @@ public class WAAction {
                 .build();
 
         Request request = new Request.Builder()
-                .url(mu.upload_url)
+                .url(mu.urlUpload)
                 .post(requestBody)
                 .build();
         Response resp2 = client.newCall(request).execute();
