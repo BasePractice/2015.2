@@ -21,9 +21,9 @@ public final class Document {
         public Document[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonArray array = (JsonArray) json;
-            JsonElement count = array.get(0);
-            Document[] documents = new Document[array.size() - 1];
-            for (int i = 1; i < array.size(); i++) {
+            int count = array.remove(0).getAsInt();
+            Document[] documents = new Document[count];
+            for (int i = 0; i < count; i++) {
                 JsonObject object = (JsonObject) array.get(i);
                 Document document = new Document();
                 document.id = object.get("did").getAsLong();
@@ -32,7 +32,7 @@ public final class Document {
                 document.size = object.get("size").getAsInt();
                 document.ext = object.get("ext").getAsString();
                 document.url = object.get("url").getAsString();
-                documents[i - 1] = document;
+                documents[i] = document;
             }
             return documents;
         }
