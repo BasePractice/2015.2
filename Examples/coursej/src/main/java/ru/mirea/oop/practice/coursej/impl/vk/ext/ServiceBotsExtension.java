@@ -59,7 +59,7 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
         super(name);
         this.timeout = DEFAULT_TIMEOUT;
         this.isRunning = true;
-        this.ok = api.getClient().clone();
+        this.ok = api.createClient();
         this.messages = api.getMessages();
         this.ok.setConnectTimeout(timeout, TimeUnit.MILLISECONDS);
     }

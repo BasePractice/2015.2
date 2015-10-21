@@ -23,7 +23,7 @@ final class Result<E> {
         Error error = result.body().error;
         if (error != null) {
             System.out.println("Error: " + error.errorCode + ", Message: " + error.errorMessage);
-            throw new RuntimeException(error.errorMessage);
+            throw new IOException(error.errorMessage);
         }
         System.out.println(result.errorBody());
         return null;

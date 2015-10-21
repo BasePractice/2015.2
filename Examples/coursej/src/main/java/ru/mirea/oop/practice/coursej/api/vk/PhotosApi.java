@@ -4,7 +4,7 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.UploadServer;
 
 import java.io.IOException;
 
-public interface PhotosApi {
+public interface PhotosApi extends ExternalCall {
     UploadServer getMessagesUploadServer() throws IOException;
 
     Object saveMessagesPhoto(Integer server,

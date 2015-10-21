@@ -1,10 +1,10 @@
 package ru.mirea.oop.practice.coursej.impl.vk;
 
 import com.squareup.okhttp.OkHttpClient;
-import ru.mirea.oop.practice.coursej.impl.ClientFactory;
-import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.vk.*;
+import ru.mirea.oop.practice.coursej.impl.ClientFactory;
+import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
@@ -54,13 +54,18 @@ public final class VkontakteApiImpl implements VkontakteApi {
     }
 
     @Override
+    public DocumentsApi getDocuments() throws Exception {
+        return getImpl(DocumentsApiImpl.class, Documents.class);
+    }
+
+    @Override
     public long idOwner() {
         return authenticator.idOwner();
     }
 
     //FIXME: Сделать конкурентным
     @SuppressWarnings("unchecked")
-    private <E, T> E getImpl(Class<E> klass, Class<T> inter) throws Exception {
+    private <E extends ExternalCall, T> E getImpl(Class<E> klass, Class<T> inter) throws Exception {
         if (!impl.containsKey(klass)) {
             Constructor<E> constructor = klass.getDeclaredConstructor(inter);
             T service = service(inter);
@@ -80,8 +85,8 @@ public final class VkontakteApiImpl implements VkontakteApi {
     }
 
     @Override
-    public OkHttpClient getClient() {
-        return client;
+    public OkHttpClient createClient() {
+        return client.clone();
     }
 
     public static synchronized VkontakteApi load() throws Exception {

@@ -8,5 +8,5 @@ public interface CommonApi {
 
     void start() throws Exception;
 
-    OkHttpClient getClient();
+    OkHttpClient createClient();
 }

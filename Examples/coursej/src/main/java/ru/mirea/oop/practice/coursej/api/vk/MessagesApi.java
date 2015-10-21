@@ -5,7 +5,7 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.LongPollData;
 
 import java.io.IOException;
 
-public interface MessagesApi {
+public interface MessagesApi extends ExternalCall {
     LongPollData getLongPollServer(Boolean useSsl,
                                    Boolean needPts) throws IOException;
 
