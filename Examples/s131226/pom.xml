@@ -7,23 +7,28 @@
         <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>starter</artifactId>
+    <artifactId>s131226</artifactId>
     <packaging>jar</packaging>
     <version>1.0.1</version>
-    <name>Mirea.Oop.Practice.CourseJ.Starter</name>
+    <name>Mirea.Oop.Practice.CourseJ.S131226</name>
 
-    <licenses>
-        <license>
-            <name>The MIT License</name>
-            <url>https://opensource.org/licenses/MIT</url>
-        </license>
-    </licenses>
+    <developers>
+        <developer>
+            <id>eXq</id>
+            <name>Александров Степан</name>
+            <email>cntgfy123@gmail.com</email>
+        </developer>
+    </developers>
 
     <build>
-        <finalName>Mirea.Oop.Practice.Course.Starter</finalName>
+        <finalName>Mirea.Oop.Practice.Course.S131226</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
+                <!--<excludes>-->
+                <!--<exclude>.credentials</exclude>-->
+                <!--<exclude>.accessToken</exclude>-->
+                <!--</excludes>-->
             </resource>
         </resources>
         <testResources>
@@ -37,12 +42,15 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <jarName>Mirea.Oop.Practice.Course.Starter</jarName>
+                    <jarName>Mirea.Oop.Practice.Course.S131226</jarName>
                     <archive>
                         <index>true</index>
                         <manifest>
                             <addClasspath>true</addClasspath>
                         </manifest>
+                        <manifestEntries>
+                            <Export-Package>ru.mirea.oop.practice.coursej.s131226.VkShopMonitor</Export-Package>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
@@ -84,29 +92,6 @@
         </dependency>
 
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s000000</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s000001</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131250</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131226</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.squareup.retrofit</groupId>
             <artifactId>retrofit</artifactId>
         </dependency>
@@ -137,9 +122,27 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20150729</version>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.9</version>
+        </dependency>
+
     </dependencies>
 </project>
