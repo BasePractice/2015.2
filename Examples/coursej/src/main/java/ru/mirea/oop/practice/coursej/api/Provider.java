@@ -1,5 +1,7 @@
 package ru.mirea.oop.practice.coursej.api;
 
-public interface LazyGetter<T> {
+public interface Provider<T> {
     T get();
+
+    void put(T value);
 }

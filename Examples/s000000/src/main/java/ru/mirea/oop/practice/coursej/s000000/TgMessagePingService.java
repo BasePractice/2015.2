@@ -24,7 +24,7 @@ public final class TgMessagePingService extends ServiceBotsExtension {
                 InputStream stream = TgMessagePingService.class.getResourceAsStream("/photos/safe_image.png");
                 Integer id = message.from.id;
                 if (stream != null) {
-                    Message document = client.sendPhoto(id, message.text, "safe_image.png", stream);
+                    Message document = client.get().sendPhoto(id, message.text, "safe_image.png", stream);
                     logger.debug("Send message: " + document);
                 }
                 //client.sendMessage(id, text, null);

@@ -6,8 +6,10 @@ import com.squareup.okhttp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit.Call;
-import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
+import ru.mirea.oop.practice.coursej.Configuration;
 import ru.mirea.oop.practice.coursej.api.tg.entities.*;
+import ru.mirea.oop.practice.coursej.impl.ClientFactory;
+import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -21,6 +23,10 @@ public final class BotClient {
     public final String url;
     private final TgApi clientApi;
     private final OkHttpClient client;
+
+    public BotClient() {
+        this(Configuration.loadKeyFrom(".telegram"), ClientFactory.createOkClient());
+    }
 
     public BotClient(String token, OkHttpClient client) {
         this(token, client, "https://api.telegram.org/bot");

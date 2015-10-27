@@ -3,25 +3,25 @@ package ru.mirea.oop.practice.coursej.impl.tg.ext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.impl.ClientFactory;
-import ru.mirea.oop.practice.coursej.Configuration;
+import ru.mirea.oop.practice.coursej.api.Provider;
 import ru.mirea.oop.practice.coursej.api.ext.BotsExtension;
-import ru.mirea.oop.practice.coursej.impl.tg.BotClient;
 import ru.mirea.oop.practice.coursej.api.tg.entities.Update;
 import ru.mirea.oop.practice.coursej.api.tg.entities.User;
+import ru.mirea.oop.practice.coursej.impl.ProviderImpl;
+import ru.mirea.oop.practice.coursej.impl.tg.BotClient;
 
 import java.io.IOException;
 import java.util.concurrent.Future;
 
 public abstract class ServiceBotsExtension implements BotsExtension, Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class);
-    protected final BotClient client;
+    protected final Provider<BotClient> client;
     private final String name;
     private volatile boolean isRunning = false;
     protected User owner;
 
     protected ServiceBotsExtension(String name) {
-        this.client = new BotClient(Configuration.loadKeyFrom(".telegram"), ClientFactory.createOkClient());
+        this.client = new ProviderImpl<>(BotClient.class);
         this.name = name;
     }
 
@@ -93,7 +93,7 @@ public abstract class ServiceBotsExtension implements BotsExtension, Runnable {
 
     private void fetchOwner() {
         try {
-            owner = client.getMe();
+            owner = client.get().getMe();
         } catch (Exception ex) {
             logger.error("", ex);
         }
@@ -103,7 +103,7 @@ public abstract class ServiceBotsExtension implements BotsExtension, Runnable {
 
     private Update[] waitUpdates() {
         try {
-            return client.getUpdates(lastUpdate, null, 10);
+            return client.get().getUpdates(lastUpdate, null, 10);
         } catch (Exception ex) {
             logger.error("Ошибка при получении обновления", ex);
             return new Update[0];

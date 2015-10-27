@@ -1,9 +1,11 @@
 package ru.mirea.oop.practice.coursej.impl.vk;
 
 import com.squareup.okhttp.OkHttpClient;
+import ru.mirea.oop.practice.coursej.api.Provider;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.vk.*;
 import ru.mirea.oop.practice.coursej.impl.ClientFactory;
+import ru.mirea.oop.practice.coursej.impl.ProviderImpl;
 import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 
 import java.lang.reflect.Constructor;
@@ -21,7 +23,7 @@ public final class VkontakteApiImpl implements VkontakteApi {
     private VkontakteApiImpl(String url) throws Exception {
         this.url = url;
         this.client = ClientFactory.createOkClient();
-        this.authenticator = new Authenticator();
+        this.authenticator = new Authenticator(new GetterImpl());
     }
 
     private VkontakteApiImpl() throws Exception {
@@ -87,6 +89,19 @@ public final class VkontakteApiImpl implements VkontakteApi {
     @Override
     public OkHttpClient createClient() {
         return client.clone();
+    }
+
+    private static final class GetterImpl implements Getter {
+
+        @Override
+        public Provider<Token> getToken() {
+            return new ProviderImpl<>(Token.class);
+        }
+
+        @Override
+        public Provider<Credentials> getCredentials() {
+            return new ProviderImpl<>(Credentials.class);
+        }
     }
 
     public static synchronized VkontakteApi load() throws Exception {
