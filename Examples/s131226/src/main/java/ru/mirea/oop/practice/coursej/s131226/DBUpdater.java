@@ -1,4 +1,4 @@
-package ru.mirea.oop.practice.coursej.s131226.parser.dbupdater;
+package ru.mirea.oop.practice.coursej.s131226;
 
 public interface DBUpdater extends Runnable {
 

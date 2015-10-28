@@ -1,10 +1,10 @@
-package ru.mirea.oop.practice.coursej.s131226.parser.parsers;
+package ru.mirea.oop.practice.coursej.s131226.parsers;
 
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.mirea.oop.practice.coursej.s131226.Parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,40 +12,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-final class KazanchikParser implements Parser {
-    public static final String TABLE_NAME = "kazanchik";
+final class FissmanNetParser implements Parser {
+    public static final String TABLE_NAME = "FissmanNet";
+    public static final String ADRESS = "http://www.fissman.net";
 
     private static int formatArticle(String articleStr) {
         if (articleStr.equals("")) {
-            return 0;
-        } else {
-            articleStr = articleStr.replaceAll("\\D", "");
-            if (articleStr.length() > 4) {
-                articleStr = articleStr.substring(0, 4);
-            }
+            articleStr = "0";
         }
-        if (articleStr.equals("")) {
-            return 0;
+        if (articleStr.length() > 3) {
+            articleStr = articleStr.substring(0, 4);
+
         }
         return Integer.parseInt(articleStr);
+
+
     }
 
     private static int formatPrice(String priceStr) {
         if (priceStr.equals("")) {
-            return 0;
+            priceStr = "0";
         }
-
-        priceStr = priceStr.replaceAll("\\D", "");
-
+        priceStr = priceStr.replaceAll(" ", "");
+        priceStr = priceStr.replaceAll("руб", "");
         return Integer.parseInt(priceStr);
+
     }
 
     @Override
     public List<String> parseLinks() {
         List<String> links = new ArrayList<>();
-        for (int i = 1; i < 42; i++) {
-            String link = "http://www.kazanchik.ru/category/fissman/" + i + "/";
-            links.add(link);
+
+        try {
+            Document document = Jsoup.connect("http://www.fissman.net/shop/CID_43.html").timeout(15000).get();
+            Elements elements = document.select("div.podcatalog_forma").select("td.pod_c");
+            for (Element div : elements) {
+                String link = div.select("a").attr("href");
+                link = link.replaceAll(".html", "_ALL.html");
+                link = ADRESS + link;
+                links.add(link);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         System.out.println("количество запросов для " + this.getClass().getName() + " " + links.size());
         return links;
@@ -53,25 +62,24 @@ final class KazanchikParser implements Parser {
 
     @Override
     public Prices parsePrices() {
+
         Map<Integer, Integer> pairs = new HashMap<>();
         for (String link : parseLinks()) {
             try {
                 Document document = Jsoup.connect(link).timeout(15000).get();
-                Elements elements = document.select(".vitrine").select(".product");
-
+                Elements elements = document.select(".panel_r");
+                Elements elements1 = document.select(".panel_l");
+                elements.addAll(elements1);
                 for (Element element : elements) {
-                    int article = formatArticle(element.select(".product-name-link").attr("href"));
                     int price = formatPrice(element.select(".price").text());
+                    int article = formatArticle(element.select(".product_name").attr("title"));
                     pairs.put(article, price);
                 }
-            } catch (HttpStatusException e404) {
-                System.out.println("404 " + link);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return new Prices(TABLE_NAME, pairs);
-
     }
 
     @Override

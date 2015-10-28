@@ -1,8 +1,7 @@
-package ru.mirea.oop.practice.coursej.s131226.parser.dbupdater;
+package ru.mirea.oop.practice.coursej.s131226;
 
 
-import ru.mirea.oop.practice.coursej.s131226.parser.parsers.Parser;
-import ru.mirea.oop.practice.coursej.s131226.parser.parsers.Prices;
+import ru.mirea.oop.practice.coursej.s131226.parsers.Prices;
 
 import java.util.Date;
 import java.util.List;

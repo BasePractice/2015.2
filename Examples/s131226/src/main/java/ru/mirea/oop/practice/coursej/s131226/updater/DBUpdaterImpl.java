@@ -1,11 +1,13 @@
-package ru.mirea.oop.practice.coursej.s131226.parser.dbupdater;
+package ru.mirea.oop.practice.coursej.s131226.updater;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.s131226.parser.data.DbHelper;
-import ru.mirea.oop.practice.coursej.s131226.parser.parsers.Parser;
-import ru.mirea.oop.practice.coursej.s131226.parser.parsers.ParserCollections;
-import ru.mirea.oop.practice.coursej.s131226.parser.parsers.Prices;
+import ru.mirea.oop.practice.coursej.s131226.DBUpdater;
+import ru.mirea.oop.practice.coursej.s131226.ParserThread;
+import ru.mirea.oop.practice.coursej.s131226.helper.DbHelper;
+import ru.mirea.oop.practice.coursej.s131226.Parser;
+import ru.mirea.oop.practice.coursej.s131226.parsers.ParserCollections;
+import ru.mirea.oop.practice.coursej.s131226.parsers.Prices;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

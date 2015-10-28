@@ -1,9 +1,11 @@
-package ru.mirea.oop.practice.coursej.s131226.parser.parsers;
+package ru.mirea.oop.practice.coursej.s131226.parsers;
 
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.mirea.oop.practice.coursej.s131226.Parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,14 +13,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-final class Superpovar implements Parser {
-    public static final String TABLE_NAME = "superpovar";
+final class KazanchikParser implements Parser {
+    public static final String TABLE_NAME = "kazanchik";
 
     private static int formatArticle(String articleStr) {
         if (articleStr.equals("")) {
             return 0;
         } else {
             articleStr = articleStr.replaceAll("\\D", "");
+            if (articleStr.length() > 4) {
+                articleStr = articleStr.substring(0, 4);
+            }
         }
         if (articleStr.equals("")) {
             return 0;
@@ -30,47 +35,38 @@ final class Superpovar implements Parser {
         if (priceStr.equals("")) {
             return 0;
         }
-        priceStr = priceStr.replaceAll("руб.*", "");
+
         priceStr = priceStr.replaceAll("\\D", "");
-        if (priceStr.equals("")) {
-            return 0;
-        }
+
         return Integer.parseInt(priceStr);
     }
 
     @Override
     public List<String> parseLinks() {
-
         List<String> links = new ArrayList<>();
-        try {
-            Document document = Jsoup.connect("http://superpovar.ru/catalog/25-FISSMAN.htm").timeout(15000).get();
-            Elements elements = document.select(".open").select("li");
-            for (Element a : elements) {
-                String link = a.select("a").attr("href");
-                links.add(link);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
+        for (int i = 1; i < 42; i++) {
+            String link = "http://www.kazanchik.ru/category/fissman/" + i + "/";
+            links.add(link);
         }
         System.out.println("количество запросов для " + this.getClass().getName() + " " + links.size());
         return links;
-
     }
 
     @Override
     public Prices parsePrices() {
-
         Map<Integer, Integer> pairs = new HashMap<>();
         for (String link : parseLinks()) {
             try {
                 Document document = Jsoup.connect(link).timeout(15000).get();
-                Elements elements = document.select(".item");
+                Elements elements = document.select(".vitrine").select(".product");
+
                 for (Element element : elements) {
-                    int article = formatArticle(element.select(".art").text());
+                    int article = formatArticle(element.select(".product-name-link").attr("href"));
                     int price = formatPrice(element.select(".price").text());
                     pairs.put(article, price);
                 }
+            } catch (HttpStatusException e404) {
+                System.out.println("404 " + link);
             } catch (IOException e) {
                 e.printStackTrace();
             }

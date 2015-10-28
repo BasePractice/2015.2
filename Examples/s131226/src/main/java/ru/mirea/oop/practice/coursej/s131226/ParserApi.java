@@ -1,4 +1,4 @@
-package ru.mirea.oop.practice.coursej.s131226.parser;
+package ru.mirea.oop.practice.coursej.s131226;
 
 public interface ParserApi {
     String getDBState();

@@ -1,9 +1,10 @@
-package ru.mirea.oop.practice.coursej.s131226.parser.parsers;
+package ru.mirea.oop.practice.coursej.s131226.parsers;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.mirea.oop.practice.coursej.s131226.Parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,40 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-final class FissmanNetParser implements Parser {
-    public static final String TABLE_NAME = "FissmanNet";
-    public static final String ADRESS = "http://www.fissman.net";
-
-    private static int formatArticle(String articleStr) {
-        if (articleStr.equals("")) {
-            articleStr = "0";
-        }
-        if (articleStr.length() > 3) {
-            articleStr = articleStr.substring(0, 4);
-
-        }
-        return Integer.parseInt(articleStr);
-
-
-    }
-
-    private static int formatPrice(String priceStr) {
-        if (priceStr.equals("")) {
-            priceStr = "0";
-        }
-        priceStr = priceStr.replaceAll(" ", "");
-        priceStr = priceStr.replaceAll("руб", "");
-        return Integer.parseInt(priceStr);
-
-    }
+final class Fissman4youParser implements Parser {
+    public static final String TABLE_NAME = "fissman4you";
+    public static final String ADRESS = "http://fissman4you.ru";
 
     @Override
     public List<String> parseLinks() {
         List<String> links = new ArrayList<>();
 
         try {
-            Document document = Jsoup.connect("http://www.fissman.net/shop/CID_43.html").timeout(15000).get();
-            Elements elements = document.select("div.podcatalog_forma").select("td.pod_c");
+            Document document = Jsoup.connect("http://fissman4you.ru/shop/CID_37.html").timeout(10000).get();
+            Elements elements = document.select("div.podcatalog_div");
             for (Element div : elements) {
                 String link = div.select("a").attr("href");
                 link = link.replaceAll(".html", "_ALL.html");
@@ -57,6 +35,7 @@ final class FissmanNetParser implements Parser {
         }
         System.out.println("количество запросов для " + this.getClass().getName() + " " + links.size());
         return links;
+
     }
 
     @Override
@@ -70,9 +49,11 @@ final class FissmanNetParser implements Parser {
                 Elements elements1 = document.select(".panel_l");
                 elements.addAll(elements1);
                 for (Element element : elements) {
-                    int price = formatPrice(element.select(".price").text());
-                    int article = formatArticle(element.select(".product_name").attr("title"));
-                    pairs.put(article, price);
+                    int price = formatPrice(element.select(".tovarThree_price4").text());
+                    int article = formatArticle(element.select(".tovarTwo_name").select("a").attr("title"));
+                    if (article != 0 || price != 0) {
+                        pairs.put(article, price);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -85,4 +66,27 @@ final class FissmanNetParser implements Parser {
     public String getName() {
         return TABLE_NAME;
     }
+
+    private static int formatArticle(String articleStr) {
+        if (articleStr.length() > 3) {
+            articleStr = articleStr.substring(0, 4);
+        }
+        if (articleStr.equals("")) {
+            return 0;
+        } else {
+            return Integer.parseInt(articleStr.replaceAll("\\D", ""));
+        }
+
+    }
+
+    private static int formatPrice(String priceStr) {
+        priceStr = priceStr.replaceAll("\\.00", "");
+        priceStr = priceStr.replaceAll("\\D", "");
+        if (priceStr.equals("")) {
+            return 0;
+        } else {
+            return Integer.parseInt(priceStr);
+        }
+    }
 }
+

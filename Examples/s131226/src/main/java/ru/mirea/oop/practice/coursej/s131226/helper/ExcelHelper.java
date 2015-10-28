@@ -1,4 +1,4 @@
-package ru.mirea.oop.practice.coursej.s131226.parser.data;
+package ru.mirea.oop.practice.coursej.s131226.helper;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;

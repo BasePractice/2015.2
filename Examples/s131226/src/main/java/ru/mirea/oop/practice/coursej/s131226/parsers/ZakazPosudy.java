@@ -1,4 +1,6 @@
-package ru.mirea.oop.practice.coursej.s131226.parser.parsers;
+package ru.mirea.oop.practice.coursej.s131226.parsers;
+
+import ru.mirea.oop.practice.coursej.s131226.Parser;
 
 import java.util.List;
 
