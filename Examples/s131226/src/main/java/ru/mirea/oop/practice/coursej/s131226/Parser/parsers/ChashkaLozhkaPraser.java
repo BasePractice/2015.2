@@ -8,14 +8,15 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ChashkaLozhkaPraser implements Parser {
     public static final String TABLE_NAME = "chashkalozhka";
 
     @Override
-    public ArrayList<String> parseLinks() {
-        ArrayList<String> links = new ArrayList<>();
+    public List<String> parseLinks() {
+        List<String> links = new ArrayList<>();
         try {
             Document documentForPage = Jsoup.connect("http://xn--80aaaxscfy0fl.xn--p1ai/fissman?limit=2000&page=1").timeout(15000).get();
             Elements elements = documentForPage.select(".name");

@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KupitfissmanParser implements Parser {
@@ -34,9 +35,9 @@ public class KupitfissmanParser implements Parser {
     }
 
     @Override
-    public ArrayList<String> parseLinks() {
-        ArrayList<String> catLinks = new ArrayList<>();
-        ArrayList<String> links = new ArrayList<>();
+    public List<String> parseLinks() {
+        List<String> catLinks = new ArrayList<>();
+        List<String> links = new ArrayList<>();
         try {
             Document document = Jsoup.connect("http://kupitfissman.ru/").timeout(15000).get();
             Elements elements = document.select(".btn-group").select("a");

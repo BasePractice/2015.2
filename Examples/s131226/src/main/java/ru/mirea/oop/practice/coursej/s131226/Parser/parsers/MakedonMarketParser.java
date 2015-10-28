@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MakedonMarketParser implements Parser {
@@ -36,8 +37,8 @@ public class MakedonMarketParser implements Parser {
 
     @Override
 
-    public ArrayList<String> parseLinks() {
-        ArrayList<String> links = new ArrayList<>();
+    public List<String> parseLinks() {
+        List<String> links = new ArrayList<>();
         try {
             Document document = Jsoup.connect("http://www.makedon-market.ru/search/?search_field=FISSMAN&page=1").timeout(15000).get();
             Elements elementsLinks = document.select("div.navigation-pages").select("a");

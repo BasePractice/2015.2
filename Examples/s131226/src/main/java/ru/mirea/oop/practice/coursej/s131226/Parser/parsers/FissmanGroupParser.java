@@ -7,6 +7,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FissmanGroupParser implements Parser {
@@ -15,8 +16,8 @@ public class FissmanGroupParser implements Parser {
     public static final String TABLE_NAME = "fissmangroup";
 
     @Override
-    public ArrayList<String> parseLinks() {
-        ArrayList<String> links = new ArrayList<>();
+    public List<String> parseLinks() {
+        List<String> links = new ArrayList<>();
         Document document;
         try {
 

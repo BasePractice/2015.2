@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FissmanPosudaParser implements Parser {
@@ -46,8 +47,8 @@ public class FissmanPosudaParser implements Parser {
     }
 
     @Override
-    public ArrayList<String> parseLinks() {
-        ArrayList<String> catLinks = new ArrayList<>();
+    public List<String> parseLinks() {
+        List<String> catLinks = new ArrayList<>();
         try {
             Document document = Jsoup.connect("http://www.fissmanposuda.ru/").timeout(15000).get();
             Elements elements = document.select(".cpt_category_tree").select(".parent");
@@ -59,7 +60,7 @@ public class FissmanPosudaParser implements Parser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ArrayList<String> links = new ArrayList<>();
+        List<String> links = new ArrayList<>();
         for (String catLink : catLinks) {
             try {
                 Document document = Jsoup.connect(catLink).timeout(15000).get();

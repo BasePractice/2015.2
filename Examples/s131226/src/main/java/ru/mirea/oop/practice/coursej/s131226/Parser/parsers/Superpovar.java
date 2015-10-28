@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Superpovar implements Parser {
@@ -38,9 +39,9 @@ public class Superpovar implements Parser {
     }
 
     @Override
-    public ArrayList<String> parseLinks() {
+    public List<String> parseLinks() {
 
-        ArrayList<String> links = new ArrayList<>();
+        List<String> links = new ArrayList<>();
         try {
             Document document = Jsoup.connect("http://superpovar.ru/catalog/25-FISSMAN.htm").timeout(15000).get();
             Elements elements = document.select(".open").select("li");

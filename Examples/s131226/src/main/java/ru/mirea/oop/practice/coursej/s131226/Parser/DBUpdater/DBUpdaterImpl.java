@@ -23,7 +23,7 @@ public class DBUpdaterImpl implements DBUpdater {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-        ArrayList<Parser> parsers = new ArrayList<>();
+        List<Parser> parsers = new ArrayList<>();
         parsers.add(new FissmanPosudaParser());
         parsers.add(new ChashkaLozhkaPraser());
         parsers.add(new Fissman4youParser());
@@ -36,8 +36,8 @@ public class DBUpdaterImpl implements DBUpdater {
         parsers.add(new Superpovar());
         parsers.add(new KazanchikParser());
         parsers.add(new KupitfissmanParser());
-        ArrayList<ParserThread> threads = new ArrayList<>();
-        List<Prices> pricesList = Collections.synchronizedList(new ArrayList<Prices>());
+        List<ParserThread> threads = new ArrayList<>();
+        List<Prices> pricesList = Collections.synchronizedList(new ArrayList<>());
         for (Parser parser : parsers) {
             ParserThread thread = new ParserThread(parser, pricesList);
             thread.start();

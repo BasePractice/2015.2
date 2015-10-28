@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FismartParser implements Parser {
@@ -15,8 +16,8 @@ public class FismartParser implements Parser {
     public static final String TABLE_NAME = "Fismart";
 
     @Override
-    public ArrayList<String> parseLinks() {
-        ArrayList<String> links = new ArrayList<>();
+    public List<String> parseLinks() {
+        List<String> links = new ArrayList<>();
         try {
             Document document = Jsoup.connect("http://fismart.ru/").timeout(15000).get();
             Elements elements = document.select(".has_inn");

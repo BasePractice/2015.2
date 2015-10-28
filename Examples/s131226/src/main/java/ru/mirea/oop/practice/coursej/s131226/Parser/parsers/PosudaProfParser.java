@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -38,8 +39,8 @@ public class PosudaProfParser implements Parser {
     }
 
     @Override
-    public ArrayList parseLinks() {
-        return null;
+    public List<String> parseLinks() {
+        return new ArrayList<>();
     }
 
     @Override

@@ -1,11 +1,11 @@
 package ru.mirea.oop.practice.coursej.s131226.parser.parsers;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ZakazPosudy implements Parser {
 
     @Override
-    public ArrayList parseLinks() {
+    public List<String> parseLinks() {
         return null;
     }
 

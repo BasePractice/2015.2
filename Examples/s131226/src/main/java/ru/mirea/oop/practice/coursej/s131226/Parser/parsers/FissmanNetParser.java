@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FissmanNetParser implements Parser {
@@ -38,8 +39,8 @@ public class FissmanNetParser implements Parser {
     }
 
     @Override
-    public ArrayList<String> parseLinks() {
-        ArrayList<String> links = new ArrayList<>();
+    public List<String> parseLinks() {
+        List<String> links = new ArrayList<>();
 
         try {
             Document document = Jsoup.connect("http://www.fissman.net/shop/CID_43.html").timeout(15000).get();

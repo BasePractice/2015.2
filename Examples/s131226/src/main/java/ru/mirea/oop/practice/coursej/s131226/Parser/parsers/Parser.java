@@ -1,13 +1,13 @@
 package ru.mirea.oop.practice.coursej.s131226.parser.parsers;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 public interface Parser {
 
 
-    ArrayList parseLinks();
+    List<String> parseLinks();
 
     Prices parsePrices();
 

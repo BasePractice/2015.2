@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KazanchikParser implements Parser {
@@ -40,8 +41,8 @@ public class KazanchikParser implements Parser {
     }
 
     @Override
-    public ArrayList<String> parseLinks() {
-        ArrayList<String> links = new ArrayList<>();
+    public List<String> parseLinks() {
+        List<String> links = new ArrayList<>();
         for (int i = 1; i < 42; i++) {
             String link = "http://www.kazanchik.ru/category/fissman/" + i + "/";
             links.add(link);
