@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FissmanInfoParser implements Parser {
+final class FissmanInfoParser implements Parser {
     public static final String TABLE_NAME = "fissmaninfo";
 
     private static int formatArticle(String articleStr) {

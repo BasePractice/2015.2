@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class PosudaProfParser implements Parser {
+final class PosudaProfParser implements Parser {
     public static final String TABLE_NAME = "PosudaProf";
 
     private static int formatArticle(String articleStr) {

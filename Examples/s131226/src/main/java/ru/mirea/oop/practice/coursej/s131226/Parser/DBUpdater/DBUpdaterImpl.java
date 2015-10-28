@@ -3,7 +3,9 @@ package ru.mirea.oop.practice.coursej.s131226.parser.dbupdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.s131226.parser.data.DbHelper;
-import ru.mirea.oop.practice.coursej.s131226.parser.parsers.*;
+import ru.mirea.oop.practice.coursej.s131226.parser.parsers.Parser;
+import ru.mirea.oop.practice.coursej.s131226.parser.parsers.ParserCollections;
+import ru.mirea.oop.practice.coursej.s131226.parser.parsers.Prices;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,18 +26,7 @@ public class DBUpdaterImpl implements DBUpdater {
             e.printStackTrace();
         }
         List<Parser> parsers = new ArrayList<>();
-        parsers.add(new FissmanPosudaParser());
-        parsers.add(new ChashkaLozhkaPraser());
-        parsers.add(new Fissman4youParser());
-        parsers.add(new FissmanGroupParser());
-        parsers.add(new FissmanInfoParser());
-        parsers.add(new FissmanNetParser());
-        parsers.add(new MakedonMarketParser());
-        parsers.add(new PosudaProfParser());
-        parsers.add(new FismartParser());
-        parsers.add(new Superpovar());
-        parsers.add(new KazanchikParser());
-        parsers.add(new KupitfissmanParser());
+        ParserCollections.setParsers(parsers);
         List<ParserThread> threads = new ArrayList<>();
         List<Prices> pricesList = Collections.synchronizedList(new ArrayList<>());
         for (Parser parser : parsers) {

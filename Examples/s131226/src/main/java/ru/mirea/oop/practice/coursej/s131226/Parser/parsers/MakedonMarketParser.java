@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MakedonMarketParser implements Parser {
+final class MakedonMarketParser implements Parser {
     public static final String TABLE_NAME = "makedonshop";
 
     private static int formatArticle(String articleStr) {

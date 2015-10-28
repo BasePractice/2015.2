@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Superpovar implements Parser {
+final class Superpovar implements Parser {
     public static final String TABLE_NAME = "superpovar";
 
     private static int formatArticle(String articleStr) {

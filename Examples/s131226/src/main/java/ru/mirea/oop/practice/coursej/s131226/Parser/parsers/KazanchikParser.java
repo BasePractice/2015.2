@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class KazanchikParser implements Parser {
+final class KazanchikParser implements Parser {
     public static final String TABLE_NAME = "kazanchik";
 
     private static int formatArticle(String articleStr) {

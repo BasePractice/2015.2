@@ -2,7 +2,7 @@ package ru.mirea.oop.practice.coursej.s131226.parser.parsers;
 
 import java.util.List;
 
-public class ZakazPosudy implements Parser {
+final class ZakazPosudy implements Parser {
 
     @Override
     public List<String> parseLinks() {

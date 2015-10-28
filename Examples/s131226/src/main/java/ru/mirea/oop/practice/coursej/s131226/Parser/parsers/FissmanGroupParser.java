@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FissmanGroupParser implements Parser {
+final class FissmanGroupParser implements Parser {
     public static final String SHOWALL = "?SHOWALL_3=1";
     public static final String ADRESS = "http://fissman-group.ru";
     public static final String TABLE_NAME = "fissmangroup";

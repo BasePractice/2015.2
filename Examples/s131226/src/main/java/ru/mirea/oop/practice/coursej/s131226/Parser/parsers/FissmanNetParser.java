@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FissmanNetParser implements Parser {
+final class FissmanNetParser implements Parser {
     public static final String TABLE_NAME = "FissmanNet";
     public static final String ADRESS = "http://www.fissman.net";
 

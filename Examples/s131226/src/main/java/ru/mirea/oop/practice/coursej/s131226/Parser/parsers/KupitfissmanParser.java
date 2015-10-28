@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class KupitfissmanParser implements Parser {
+final class KupitfissmanParser implements Parser {
     public static final String TABLE_NAME = "kupitfissman";
     public static final String ADRESS = "http://kupitfissman.ru";
 
