@@ -28,7 +28,7 @@ public class ExcelHelper {
         XSSFWorkbook wb = new XSSFWorkbook();
         String lastDBName = null;
         try {
-            DbHelper.Conn();
+            DbHelper.conn();
             DbHelper.statmt = DbHelper.conn.createStatement();
             DbHelper.resSet = DbHelper.statmt.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table';");
 

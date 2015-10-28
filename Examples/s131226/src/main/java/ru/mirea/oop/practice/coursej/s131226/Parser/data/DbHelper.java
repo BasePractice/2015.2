@@ -18,7 +18,7 @@ public class DbHelper {
 
 
     // --------ПОДКЛЮЧЕНИЕ К БАЗЕ ДАННЫХ--------
-    public synchronized void Conn() throws ClassNotFoundException, SQLException {
+    public synchronized void conn() throws ClassNotFoundException, SQLException {
         this.conn = null;
         Class.forName("org.sqlite.JDBC");
         conn = DriverManager.getConnection("jdbc:sqlite:TEST2.db");
@@ -39,7 +39,7 @@ public class DbHelper {
     // --------Создание таблицы--------
 
 
-    public synchronized String CreateSumTable(String[] sites) throws SQLException {
+    public synchronized String createSumTable(String[] sites) throws SQLException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String date = dateFormat.format(new Date());
         String tableName = "sum" + date;
@@ -56,7 +56,7 @@ public class DbHelper {
     }
 
     // --------Заполнение таблицы--------
-    public synchronized void WriteSumDB(List<Prices> pricesList) throws SQLException {
+    public synchronized void writeSumDB(List<Prices> pricesList) throws SQLException {
 
         String siteNames = "";
         String[] sites = new String[pricesList.size()];
@@ -64,7 +64,7 @@ public class DbHelper {
             sites[i] = pricesList.get(i).getSitename();
             siteNames = siteNames + ", " + pricesList.get(i).getSitename();
         }
-        String tableName = CreateSumTable(sites);
+        String tableName = createSumTable(sites);
 
         Set<Integer> articles = new HashSet<>();
         for (Prices prices : pricesList) {
@@ -102,7 +102,7 @@ public class DbHelper {
 
 
     // --------Закрытие--------
-    public void CloseDB() throws ClassNotFoundException, SQLException {
+    public void closeDB() throws ClassNotFoundException, SQLException {
 
         statmt.close();
         resSet.close();

@@ -21,7 +21,7 @@ public class DBUpdaterImpl implements DBUpdater {
         Date date = new Date();
         DbHelper myDbHelper = new DbHelper();
         try {
-            myDbHelper.Conn();
+            myDbHelper.conn();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -44,7 +44,7 @@ public class DBUpdaterImpl implements DBUpdater {
             logger.debug("Парсинг " + thread.parser.getName() + " завершен");
         }
         try {
-            myDbHelper.WriteSumDB(pricesList);
+            myDbHelper.writeSumDB(pricesList);
         } catch (SQLException e) {
             e.printStackTrace();
         }

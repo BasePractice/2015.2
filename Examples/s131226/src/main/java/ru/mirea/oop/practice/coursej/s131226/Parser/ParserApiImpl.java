@@ -22,9 +22,9 @@ public class ParserApiImpl implements ParserApi {
     @Override
     public String getDBState() {
         try {
-            dbHelper.Conn();
+            dbHelper.conn();
             String dbState = dbHelper.getDBState();
-            dbHelper.CloseDB();
+            dbHelper.closeDB();
             return dbState;
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
