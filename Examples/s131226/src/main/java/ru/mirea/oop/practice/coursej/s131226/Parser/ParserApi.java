@@ -1,6 +1,4 @@
-package ru.mirea.oop.practice.coursej.s131226.Parser;
-
-import ru.mirea.oop.practice.coursej.api.tg.entities.File;
+package ru.mirea.oop.practice.coursej.s131226.parser;
 
 public interface ParserApi {
     String getDBState();

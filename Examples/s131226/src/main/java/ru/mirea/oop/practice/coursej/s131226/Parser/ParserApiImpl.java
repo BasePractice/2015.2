@@ -1,10 +1,10 @@
-package ru.mirea.oop.practice.coursej.s131226.Parser;
+package ru.mirea.oop.practice.coursej.s131226.parser;
 
 
-import ru.mirea.oop.practice.coursej.s131226.Parser.DBUpdater.DBUpdater;
-import ru.mirea.oop.practice.coursej.s131226.Parser.DBUpdater.DBUpdaterImpl;
-import ru.mirea.oop.practice.coursej.s131226.Parser.data.DbHelper;
-import ru.mirea.oop.practice.coursej.s131226.Parser.data.ExcelHelper;
+import ru.mirea.oop.practice.coursej.s131226.parser.dbupdater.DBUpdater;
+import ru.mirea.oop.practice.coursej.s131226.parser.dbupdater.DBUpdaterImpl;
+import ru.mirea.oop.practice.coursej.s131226.parser.data.DbHelper;
+import ru.mirea.oop.practice.coursej.s131226.parser.data.ExcelHelper;
 
 import java.io.File;
 import java.sql.SQLException;

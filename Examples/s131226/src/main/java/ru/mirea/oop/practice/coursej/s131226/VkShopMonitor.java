@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
-import ru.mirea.oop.practice.coursej.s131226.Parser.ParserApi;
-import ru.mirea.oop.practice.coursej.s131226.Parser.ParserApiImpl;
+import ru.mirea.oop.practice.coursej.s131226.parser.ParserApi;
+import ru.mirea.oop.practice.coursej.s131226.parser.ParserApiImpl;
 
 public final class VkShopMonitor extends ServiceBotsExtension {
     public static final String HELP_MESSAGE = "Здесь скоро появится инструкция по работе с ботом, но пока ее нет =(";

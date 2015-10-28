@@ -1,13 +1,7 @@
 package ru.mirea.oop.practice.coursej.s131226;
 
-import com.squareup.okhttp.*;
-import org.json.JSONObject;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
-import ru.mirea.oop.practice.coursej.api.vk.DocumentsApi;
 import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
-import ru.mirea.oop.practice.coursej.api.vk.entities.UploadServer;
-import ru.mirea.oop.practice.coursej.s131226.Parser.ParserApi;
-import ru.mirea.oop.practice.coursej.s131226.Parser.ParserApiImpl;
 
 import java.io.File;
 import java.io.IOException;

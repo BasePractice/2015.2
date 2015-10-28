@@ -1,6 +1,6 @@
-package ru.mirea.oop.practice.coursej.s131226.Parser.data;
+package ru.mirea.oop.practice.coursej.s131226.parser.data;
 
-import ru.mirea.oop.practice.coursej.s131226.Parser.parsers.Prices;
+import ru.mirea.oop.practice.coursej.s131226.parser.parsers.Prices;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;

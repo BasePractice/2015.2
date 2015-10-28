@@ -1,9 +1,9 @@
-package ru.mirea.oop.practice.coursej.s131226.Parser.DBUpdater;
+package ru.mirea.oop.practice.coursej.s131226.parser.dbupdater;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.s131226.Parser.data.DbHelper;
-import ru.mirea.oop.practice.coursej.s131226.Parser.parsers.*;
+import ru.mirea.oop.practice.coursej.s131226.parser.data.DbHelper;
+import ru.mirea.oop.practice.coursej.s131226.parser.parsers.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

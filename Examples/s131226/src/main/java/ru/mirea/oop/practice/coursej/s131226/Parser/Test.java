@@ -1,11 +1,9 @@
-package ru.mirea.oop.practice.coursej.s131226.Parser;
+package ru.mirea.oop.practice.coursej.s131226.parser;
 
-import ru.mirea.oop.practice.coursej.api.VkontakteApi;
-import ru.mirea.oop.practice.coursej.api.vk.DocumentsApi;
-import ru.mirea.oop.practice.coursej.s131226.Parser.data.DbHelper;
-import ru.mirea.oop.practice.coursej.s131226.Parser.data.ExcelHelper;
-import ru.mirea.oop.practice.coursej.s131226.Parser.parsers.*;
-import ru.mirea.oop.practice.coursej.s131226.Parser.parsers.Parser;
+import ru.mirea.oop.practice.coursej.s131226.parser.data.DbHelper;
+import ru.mirea.oop.practice.coursej.s131226.parser.data.ExcelHelper;
+import ru.mirea.oop.practice.coursej.s131226.parser.parsers.*;
+import ru.mirea.oop.practice.coursej.s131226.parser.parsers.Parser;
 
 import java.io.File;
 import java.io.IOException;
