@@ -1,11 +1,12 @@
 package ru.mirea.oop.practice.coursej.impl.vk;
 
-import com.google.gson.JsonParser;
 import com.squareup.okhttp.*;
 import retrofit.Call;
 import ru.mirea.oop.practice.coursej.api.vk.DocumentsApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Document;
+import ru.mirea.oop.practice.coursej.api.vk.entities.DocumentUploaded;
 import ru.mirea.oop.practice.coursej.api.vk.entities.UploadServer;
+import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,11 +39,18 @@ final class DocumentsApiImpl implements DocumentsApi {
                 .post(requestBody)
                 .build();
         Response response = client.newCall(request).execute();
-        String responseBody = response.body().string();
-        String fileStr = new JsonParser().parse(responseBody).getAsJsonObject().get("file").getAsString();
-        Call<Result<Document>> call = iter.saveDocument(fileStr);
+        /**FIXME: Проверить */
+        if (!response.isSuccessful()) {
+            Result result = ServiceCreator.gson.fromJson(
+                    response.body().charStream(),
+                    Result.class);
+            throw new IOException(result.error.errorMessage);
+        }
+        /**FIXME: Проверить на работоспособность, поправить и удалить комментарий */
+        DocumentUploaded uploaded = ServiceCreator.gson.fromJson(response.body().charStream(), DocumentUploaded.class);
+        Call<Result<Document>> call = iter.saveDocument(uploaded.file);
         return Result.call(call);
-}
+    }
 
     @Override
     public Integer delete(Document document) throws IOException {

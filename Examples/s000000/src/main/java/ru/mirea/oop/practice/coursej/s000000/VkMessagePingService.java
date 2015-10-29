@@ -2,8 +2,10 @@ package ru.mirea.oop.practice.coursej.s000000;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mirea.oop.practice.coursej.api.vk.DocumentsApi;
 import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
+import ru.mirea.oop.practice.coursej.api.vk.entities.Document;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
