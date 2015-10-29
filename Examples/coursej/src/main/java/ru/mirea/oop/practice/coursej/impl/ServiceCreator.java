@@ -9,6 +9,7 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.Document;
 public final class ServiceCreator {
     public static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(Document[].class, new Document.ArrayDeserializer())
+            .registerTypeAdapter(Document.class, new Document.DocumentDeserializer())
             .setPrettyPrinting().create();
 
     private ServiceCreator() {

@@ -1,11 +1,24 @@
 package ru.mirea.oop.practice.coursej.impl.vk;
 
 import retrofit.Call;
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit.http.*;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Document;
+import ru.mirea.oop.practice.coursej.api.vk.entities.UploadServer;
 
 interface Documents {
+    @GET("/method/docs.getUploadServer")
+    Call<Result<UploadServer>> getDocumentsUploadServer();
+
+    @GET("method/docs.delete")
+    Call<Result<Integer>> delete(@Query("did") Long id,
+                                 @Query("oid") Long idOwner);
+
+
+    @FormUrlEncoded
+    @POST("/method/docs.save")
+
+    Call<Result<Document>> saveDocument(@Field("file") String file);
+
     @GET("/method/docs.get")
     Call<Result<Document[]>> list(@Query("count") Integer count,
                                   @Query("offset") Integer offset,
