@@ -9,8 +9,7 @@ import java.io.IOException;
 public interface DocumentsApi extends ExternalCall {
     UploadServer getDocumentsUploadServer() throws IOException;
 
-    /**TODO: Можно переименовать метод просто в uploadDocument */
-    Document uploadAndSaveDocument(File file, String mediaType) throws IOException;
+    boolean uploadDocument(File file) throws IOException;
 
     Integer delete(Document document) throws IOException;
 
@@ -18,5 +17,5 @@ public interface DocumentsApi extends ExternalCall {
                     Integer offset,
                     Integer idOwner) throws IOException;
 
-
+    Document[] id(String docs) throws IOException;
 }

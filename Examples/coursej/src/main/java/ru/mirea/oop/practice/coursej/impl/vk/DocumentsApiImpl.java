@@ -10,6 +10,8 @@ import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 final class DocumentsApiImpl implements DocumentsApi {
     private final Documents iter;
@@ -25,33 +27,35 @@ final class DocumentsApiImpl implements DocumentsApi {
     }
 
     @Override
-    public Document uploadAndSaveDocument(File file, String mediaType) throws IOException {
-
+    public boolean uploadDocument(File file) throws IOException {
+        String type = Files.probeContentType(Paths.get(file.getAbsolutePath()));
+        if (type == null)
+            type = "application/octet-stream";
         UploadServer uploadServer = this.getDocumentsUploadServer();
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new MultipartBuilder()
                 .type(MultipartBuilder.FORM)
                 .addFormDataPart("file", file.getName(),
-                        RequestBody.create(MediaType.parse(mediaType), file))
+                        RequestBody.create(MediaType.parse(type), file))
                 .build();
         Request request = new Request.Builder()
                 .url(uploadServer.urlUpload)
                 .post(requestBody)
                 .build();
         Response response = client.newCall(request).execute();
-        /**FIXME: Проверить */
         if (!response.isSuccessful()) {
             Result result = ServiceCreator.gson.fromJson(
                     response.body().charStream(),
                     Result.class);
             throw new IOException(result.error.errorMessage);
         }
-        /**FIXME: Проверить на работоспособность, поправить и удалить комментарий */
-        String documentUploadedString = response.body().string();
-        System.out.println(documentUploadedString);
-        DocumentUploaded uploaded = ServiceCreator.gson.fromJson(documentUploadedString, DocumentUploaded.class);
-        Call<Result<Document>> call = iter.saveDocument(uploaded.file);
-        return Result.call(call);
+        DocumentUploaded uploaded = ServiceCreator.gson.fromJson(response.body().string(), DocumentUploaded.class);
+        if (uploaded.file == null)
+            throw new IOException("Файл " + file.getAbsolutePath() + " не найден");
+        Call<Result<Document[]>> call = iter.saveDocument(uploaded.file, null, null);
+        /** FIXME: Не возвращает список объектов созданных. Может написать в поддержку? */
+        Result.call(call);
+        return true;
     }
 
     @Override
@@ -64,6 +68,12 @@ final class DocumentsApiImpl implements DocumentsApi {
     @Override
     public Document[] list(Integer count, Integer offset, Integer idOwner) throws IOException {
         Call<Result<Document[]>> call = iter.list(count, offset, idOwner);
+        return Result.call(call);
+    }
+
+    @Override
+    public Document[] id(String docs) throws IOException {
+        Call<Result<Document[]>> call = iter.id(docs);
         return Result.call(call);
     }
 

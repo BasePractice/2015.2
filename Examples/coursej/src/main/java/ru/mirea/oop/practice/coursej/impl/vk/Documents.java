@@ -16,11 +16,15 @@ interface Documents {
 
     @FormUrlEncoded
     @POST("/method/docs.save")
-
-    Call<Result<Document>> saveDocument(@Field("file") String file);
+    Call<Result<Document[]>> saveDocument(@Field("file") String file,
+                                          @Field("title") String title,
+                                          @Field("tags") String tags);
 
     @GET("/method/docs.get")
     Call<Result<Document[]>> list(@Query("count") Integer count,
                                   @Query("offset") Integer offset,
                                   @Query("owner_id") Integer idOwner);
+
+    @GET("/method/docs.getById")
+    Call<Result<Document[]>> id(@Query("docs") String docs);
 }

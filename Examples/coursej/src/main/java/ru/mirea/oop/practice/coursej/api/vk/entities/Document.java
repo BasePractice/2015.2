@@ -24,6 +24,8 @@ public final class Document {
             //int count = array.remove(0).getAsInt();  сюда нам прилетает общее кол-во документов пользователя, что не
             // имеет практической пользы
             // т. к. в методе list мы указываем параметр count который может отлечатся от этого значения
+            if (array.size() == 0)
+                return new Document[0];
             Document[] documents = new Document[array.size() - 1];
             for (int i = 1; i < array.size(); i++) {// соответственно начинаем разбирать json с 1, а не 0 элемента
                 JsonObject object = (JsonObject) array.get(i);
