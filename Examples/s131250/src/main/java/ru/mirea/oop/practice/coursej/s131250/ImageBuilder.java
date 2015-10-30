@@ -1,5 +1,7 @@
 package ru.mirea.oop.practice.coursej.s131250;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.Configuration;
 
 import javax.imageio.ImageIO;
@@ -11,137 +13,96 @@ import java.net.URL;
 import java.util.Random;
 
 
-public class ImageBuilder {
+class ImageBuilder {
+    private static final Logger logger = LoggerFactory.getLogger(ImageBuilder.class);
+    private static final int TEXT_FONT_SIZE = 14;
+    private static final int TITLE_FONT_SIZE = 16;
+    private static final String IMAGE_TITLE = "VK Bot /WolframAlpha/ results";
+    private static final String IMAGE_FILE_TYPE = "gif";
+    private static final String IMAGE_FILE_EXTENSION = ".gif";
+    private String fileName;
 
 
-    public static String textWrite(String im1, String text) {
-        Random rnd = new Random(System.currentTimeMillis());
+    public ImageBuilder() {
+        Random rnd = new Random();
         int number = rnd.nextInt(Integer.MAX_VALUE);
-        try {
-            BufferedImage img1 = ImageIO.read(new File(im1));
-            Graphics2D g2d = img1.createGraphics();
-            g2d.setFont(new Font("Serif", Font.BOLD, 14));
-            FontMetrics fm = g2d.getFontMetrics();
-            int x = fm.stringWidth(text);
-            int y = fm.getHeight();
+        BufferedImage img = new BufferedImage(80, 20, BufferedImage.TYPE_INT_ARGB);
+        FontMetrics imgMetrics = getImageMetrics(img,true);
 
-            BufferedImage result = new BufferedImage(
-                    img1.getWidth() + x, img1.getHeight() + y + 5, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d2 = result.createGraphics();
-            g2d2.drawImage(img1, 0, 0, null);
-            g2d2.setPaint(Color.black);
-            g2d2.setFont(new Font("Serif", Font.PLAIN, 14));
-            g2d2.drawString(text, 0, img1.getHeight() + y);
-            g2d2.dispose();
-            ImageIO.write(result, "gif", new File(Configuration.getFileName(number + ".gif")));
+        BufferedImage result = new BufferedImage(
+                imgMetrics.stringWidth(IMAGE_TITLE), imgMetrics.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d2 = result.createGraphics();
+        g2d2.drawImage(img, 0, 0, null);
+        g2d2.setPaint(Color.black);
+        g2d2.setFont(new Font(Font.SERIF, Font.BOLD, TITLE_FONT_SIZE));
+        g2d2.drawString(IMAGE_TITLE, 0, imgMetrics.getHeight());
+        g2d2.dispose();
+        try {
+            ImageIO.write(result, IMAGE_FILE_TYPE, new File(Configuration.getFileName(number + IMAGE_FILE_EXTENSION)));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        File file = new File(im1);
-        if (!file.delete()) {
-            System.out.println("File delete error");
-        }
-
-        return Configuration.getFileName(number + ".gif");
+        fileName = number + IMAGE_FILE_EXTENSION;
     }
 
+    private FontMetrics getImageMetrics(BufferedImage img, boolean isTitle) {
+        Graphics2D g2d = img.createGraphics();
+        if (isTitle) {g2d.setFont(new Font(Font.SERIF, Font.BOLD, TITLE_FONT_SIZE));} else
+        {g2d.setFont(new Font(Font.SERIF, Font.BOLD, TEXT_FONT_SIZE));}
+        return g2d.getFontMetrics();
+    }
 
-    public static String textWrite(String text) {
-        Random rnd = new Random(System.currentTimeMillis());
+    public void writeTextOnImage(String text) throws IOException {
+        Random rnd = new Random();
         int number = rnd.nextInt(Integer.MAX_VALUE);
-        try {
-            BufferedImage img = new BufferedImage(80, 20, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d = img.createGraphics();
-            g2d.setPaint(Color.red);
-            g2d.setFont(new Font("Serif", Font.BOLD, 16));
-            FontMetrics fm = g2d.getFontMetrics();
-            int x = fm.stringWidth(text);
-            int y = fm.getHeight();
+        BufferedImage img = ImageIO.read(new File(Configuration.getFileName(fileName)));
+        FontMetrics imgMetrics = getImageMetrics(img,false);
 
-            BufferedImage result = new BufferedImage(
-                    x, y, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d2 = result.createGraphics();
-            g2d2.drawImage(img, 0, 0, null);
-            g2d2.setPaint(Color.black);
-            g2d2.setFont(new Font("Serif", Font.BOLD, 16));
-            g2d2.drawString(text, 0, y);
-            g2d2.dispose();
-            ImageIO.write(result, "gif", new File(Configuration.getFileName(number + ".gif")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        BufferedImage result = new BufferedImage(
+                img.getWidth() + imgMetrics.stringWidth(text), img.getHeight() + imgMetrics.getHeight() + 5, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d2 = result.createGraphics();
+        g2d2.drawImage(img, 0, 0, null);
+        g2d2.setPaint(Color.black);
+        g2d2.setFont(new Font(Font.SERIF, Font.PLAIN, TEXT_FONT_SIZE));
+        g2d2.drawString(text, 0, img.getHeight() + imgMetrics.getHeight());
+        g2d2.dispose();
+        ImageIO.write(result, IMAGE_FILE_TYPE, new File(Configuration.getFileName(number + IMAGE_FILE_EXTENSION)));
 
 
-        return Configuration.getFileName(number + ".gif");
+        File file = new File(Configuration.getFileName(fileName));
+        if (!file.delete()) {logger.error("Ошибка удаления файла "+Configuration.getFileName(fileName));}
+
+        fileName = number + IMAGE_FILE_EXTENSION;
     }
 
-    public static String combImages(String im1, String im2) {
-        Random rnd = new Random(System.currentTimeMillis());
+
+    public void pasteImageFromURL(String imageURL) throws Exception {
+        Random rnd = new Random();
         int number = rnd.nextInt(Integer.MAX_VALUE);
-        try {
-            BufferedImage img1 = ImageIO.read(new File(im1));
-            BufferedImage img2 = ImageIO.read(new File(im2));
+        BufferedImage img1 = ImageIO.read(new File(Configuration.getFileName(fileName)));
+        BufferedImage img2 = ImageIO.read(new URL(imageURL));
 
-            int h, w;
-            h = img1.getHeight() + img2.getHeight();
-            if (img1.getWidth() > img2.getWidth()) {
-                w = img1.getWidth();
-            } else {
-                w = img2.getWidth();
-            }
-
-            BufferedImage im = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            im.getGraphics().drawImage(img1, 0, 0, null);
-            im.getGraphics().drawImage(img2, 0, img1.getHeight(), null);
-
-            ImageIO.write(im, "gif", new File(Configuration.getFileName(number + ".gif")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File file = new File(im1);
-        if (!file.delete()) {
-            System.out.println("File delete error");
+        int h, w;
+        h = img1.getHeight() + img2.getHeight();
+        if (img1.getWidth() > img2.getWidth()) {
+            w = img1.getWidth();
+        } else {
+            w = img2.getWidth();
         }
 
-        File file2 = new File(im2);
-        if (!file2.delete()) {
-            System.out.println("File delete error");
-        }
+        BufferedImage im = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        im.getGraphics().drawImage(img1, 0, 0, null);
+        im.getGraphics().drawImage(img2, 0, img1.getHeight(), null);
 
-        return Configuration.getFileName(number + ".gif");
+        ImageIO.write(im, IMAGE_FILE_TYPE, new File(Configuration.getFileName(number + IMAGE_FILE_EXTENSION)));
+
+        File file = new File(Configuration.getFileName(fileName));
+        if (!file.delete()) {logger.error("Ошибка удаления файла " + Configuration.getFileName(fileName));}
+
+        fileName =  number + IMAGE_FILE_EXTENSION;
     }
 
-
-    public static String combImagesfromURL(String im1, String im2) {
-        Random rnd = new Random(System.currentTimeMillis());
-        int number = rnd.nextInt(Integer.MAX_VALUE);
-        try {
-            BufferedImage img1 = ImageIO.read(new File(im1));
-            BufferedImage img2 = ImageIO.read(new URL(im2));
-
-            int h, w;
-            h = img1.getHeight() + img2.getHeight();
-            if (img1.getWidth() > img2.getWidth()) {
-                w = img1.getWidth();
-            } else {
-                w = img2.getWidth();
-            }
-
-            BufferedImage im = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            im.getGraphics().drawImage(img1, 0, 0, null);
-            im.getGraphics().drawImage(img2, 0, img1.getHeight(), null);
-
-            ImageIO.write(im, "gif", new File(Configuration.getFileName(number + ".gif")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        File file = new File(im1);
-        if (!file.delete()) {
-            System.out.println("File delete error");
-        }
-
-        return Configuration.getFileName(number + ".gif");
+    public String getFullFileName() {
+        return Configuration.getFileName(fileName);
     }
-
 }
