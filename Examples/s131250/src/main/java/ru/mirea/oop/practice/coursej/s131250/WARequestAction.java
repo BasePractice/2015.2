@@ -1,6 +1,7 @@
 package ru.mirea.oop.practice.coursej.s131250;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.ResponseBody;
 import org.apache.commons.httpclient.util.URIUtil;
@@ -11,6 +12,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class WARequestAction {
+    private static final Logger logger = LoggerFactory.getLogger(WAAction.class);
     private static String appid = "";
 
     public static ResponseBody getResponsefromWA(String input) {
@@ -32,7 +34,7 @@ public class WARequestAction {
                 .build();
         WARequest service = retrofit.create(WARequest.class);
         try {
-            System.out.println("REQUEST TO WA FOR INPUT " + URIUtil.encodeAll(input));
+            logger.debug("Отправляем WA запрос " + URIUtil.encodeAll(input));
             return WARequestImpl.doWARequest(service, URIUtil.encodeAll(input), appid);
         } catch (Exception e) {
             e.printStackTrace();
