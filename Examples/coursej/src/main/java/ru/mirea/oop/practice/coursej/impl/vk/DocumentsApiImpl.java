@@ -47,7 +47,9 @@ final class DocumentsApiImpl implements DocumentsApi {
             throw new IOException(result.error.errorMessage);
         }
         /**FIXME: Проверить на работоспособность, поправить и удалить комментарий */
-        DocumentUploaded uploaded = ServiceCreator.gson.fromJson(response.body().charStream(), DocumentUploaded.class);
+        String documentUploadedString = response.body().string();
+        System.out.println(documentUploadedString);
+        DocumentUploaded uploaded = ServiceCreator.gson.fromJson(documentUploadedString, DocumentUploaded.class);
         Call<Result<Document>> call = iter.saveDocument(uploaded.file);
         return Result.call(call);
     }
