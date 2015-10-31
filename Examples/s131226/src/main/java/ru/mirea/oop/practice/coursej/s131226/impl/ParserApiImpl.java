@@ -3,12 +3,15 @@ package ru.mirea.oop.practice.coursej.s131226.impl;
 
 import ru.mirea.oop.practice.coursej.s131226.DBUpdater;
 import ru.mirea.oop.practice.coursej.s131226.ParserApi;
+import ru.mirea.oop.practice.coursej.s131226.parsers.Prices;
 import ru.mirea.oop.practice.coursej.s131226.updater.DBUpdaterImpl;
 import ru.mirea.oop.practice.coursej.s131226.helper.DbHelper;
 import ru.mirea.oop.practice.coursej.s131226.helper.ExcelHelper;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParserApiImpl implements ParserApi {
     private DbHelper dbHelper;
@@ -38,27 +41,33 @@ public class ParserApiImpl implements ParserApi {
         return excelHelper.exportReport();
     }
 
+
     @Override
-    public File getChanges() {
-        return excelHelper.exportChanges();
+    public String getShortReport(){
+        List<Prices> differences = new ArrayList<>();
+        try {
+            differences = dbHelper.getDifferences();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        differences.remove(0);
+        String shortReport="";
+        for (Prices prices : differences) {
+            shortReport += prices.getSitename() + " цен ниже нормы:" + prices.getPricesMap().size() + "\n";
+        }
+        return shortReport;
     }
 
-    @Override
-    public String getShortReport() {
-        return null;
-    }
 
     @Override
-    public String getShortChanges() {
-        return null;
-
-    }
-
-    @Override
-    public synchronized void updateDB() throws InterruptedException {
+    public synchronized void updateDB() {
         DBUpdater updater = new DBUpdaterImpl();
         Thread update = new Thread(updater);
         update.start();
-        update.join();
+        try {
+            update.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

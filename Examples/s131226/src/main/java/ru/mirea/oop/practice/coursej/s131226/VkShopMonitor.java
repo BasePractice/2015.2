@@ -8,7 +8,13 @@ import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 import ru.mirea.oop.practice.coursej.s131226.impl.ParserApiImpl;
 
 public final class VkShopMonitor extends ServiceBotsExtension {
-    public static final String HELP_MESSAGE = "Здесь скоро появится инструкция по работе с ботом, но пока ее нет =(";
+    public static final String HELP_MESSAGE =
+            "На данный  момент бот знает команды:\n" +
+                    "бот help\n" +
+                    "бот полный отчет\n" +
+                    "бот краткий отчет\n" +
+                    "бот обнови БД\n" +
+                    "бот состояние БД";
     private static final Logger logger = LoggerFactory.getLogger(VkShopMonitor.class);
     private final MessagesApi msgApi;
     private final ParserApi parser;
@@ -33,15 +39,12 @@ public final class VkShopMonitor extends ServiceBotsExtension {
                         break;
                     }
                     case "бот краткий отчет": {
+                        outgoingMessage.setText(parser.getShortReport());
                         break;
                     }
                     case "бот полный отчет": {
-                        try {
-                            outgoingMessage.setAttachment(parser.getReport());
-                            outgoingMessage.setText("Полный отчет");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        outgoingMessage.setAttachment(parser.getReport());
+                        outgoingMessage.setText("Полный отчет");
                         break;
                     }
                     case "бот изменения": {
@@ -51,15 +54,11 @@ public final class VkShopMonitor extends ServiceBotsExtension {
                         outgoingMessage.setText("начинаю обновление БД, это займет некоторое время \n" +
                                 "дождитесь уведомления о завершении");
                         outgoingMessage.send(msgApi);
-                        try {
-                            parser.updateDB();
-                            outgoingMessage.setText("Обновление прошло нормально");
-                        } catch (InterruptedException e) {
-                            outgoingMessage.setText("База не обновилась =(");
-                        }
+                        parser.updateDB();
+                        outgoingMessage.setText("Обновление прошло нормально");
                         break;
                     }
-                    case "бот состояние базы": {
+                    case "бот состояние БД": {
                         outgoingMessage.setText(parser.getDBState());
                         break;
                     }
