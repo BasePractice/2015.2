@@ -5,7 +5,7 @@ public interface ParserApi {
 
     java.io.File getReport();
 
-    String getShortReport();
+    String getChanges();
 
     void updateDB();
 

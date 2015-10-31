@@ -38,18 +38,17 @@ public final class VkShopMonitor extends ServiceBotsExtension {
                         outgoingMessage.setText(HELP_MESSAGE);
                         break;
                     }
-                    case "бот краткий отчет": {
-                        outgoingMessage.setText(parser.getShortReport());
-                        break;
-                    }
+
                     case "бот полный отчет": {
                         outgoingMessage.setAttachment(parser.getReport());
                         outgoingMessage.setText("Полный отчет");
                         break;
                     }
-                    case "бот изменения": {
+                    case "бот краткий отчет": {
+                        outgoingMessage.setText(parser.getChanges());
                         break;
                     }
+
                     case "бот обнови БД": {
                         outgoingMessage.setText("начинаю обновление БД, это займет некоторое время \n" +
                                 "дождитесь уведомления о завершении");
@@ -78,6 +77,7 @@ public final class VkShopMonitor extends ServiceBotsExtension {
                         break;
                     }
                 }
+
             }
         }
     }

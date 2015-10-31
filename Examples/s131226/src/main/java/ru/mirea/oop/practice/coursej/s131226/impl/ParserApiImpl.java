@@ -3,10 +3,10 @@ package ru.mirea.oop.practice.coursej.s131226.impl;
 
 import ru.mirea.oop.practice.coursej.s131226.DBUpdater;
 import ru.mirea.oop.practice.coursej.s131226.ParserApi;
-import ru.mirea.oop.practice.coursej.s131226.parsers.Prices;
-import ru.mirea.oop.practice.coursej.s131226.updater.DBUpdaterImpl;
 import ru.mirea.oop.practice.coursej.s131226.helper.DbHelper;
 import ru.mirea.oop.practice.coursej.s131226.helper.ExcelHelper;
+import ru.mirea.oop.practice.coursej.s131226.parsers.Prices;
+import ru.mirea.oop.practice.coursej.s131226.updater.DBUpdaterImpl;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -27,8 +27,13 @@ public class ParserApiImpl implements ParserApi {
     public String getDBState() {
         try {
             dbHelper.conn();
-            String dbState = dbHelper.getDBState();
+            List<String> tables = dbHelper.getDBState();
             dbHelper.closeDB();
+            String dbState = "На данный момент в базе содержатся следующие таблицы: \n";
+            for (String table : tables) {
+                dbState += table + "\n";
+
+            }
             return dbState;
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -42,20 +47,54 @@ public class ParserApiImpl implements ParserApi {
     }
 
 
+
     @Override
-    public String getShortReport(){
-        List<Prices> differences = new ArrayList<>();
+    public String getChanges() {
         try {
-            differences = dbHelper.getDifferences();
-        } catch (SQLException | ClassNotFoundException e) {
+            List<String> tables = dbHelper.getDBState();
+            List<List<Prices>> list = new ArrayList<>();
+            for (String table : tables) {
+                list.add(dbHelper.getDifferences(table));
+            }
+            String[] siteNames = new String[list.get(0).size()];
+            for (int i = 0; i <list.get(0).size() ; i++) {
+                siteNames[i] = list.get(0).get(i).getSitename();
+
+            }
+            String[] changes = new String[siteNames.length];
+            int i = 0;
+            for (String siteName : siteNames) {
+                changes[i] =siteName+": ";
+                for (List<Prices> list1 : list) {
+                    boolean contains=false;
+                    for (Prices prices : list1) {
+                        if (prices.getSitename().equals(siteName)) {
+                            changes[i]+="->"+prices.getPricesMap().size();
+                            contains = true;
+                        }
+                    }
+                    if (!contains) {
+                        changes[i]+="->нет";
+                    }
+                }
+                i++;
+            }
+            String allChanges = "Изменения \n";
+            for (String tabel : tables) {
+                allChanges +="->"+ tabel;
+
+            }
+            allChanges += "\n для fissmanposuda приведено общее количество товаров \n";
+            for (String s : changes) {
+                allChanges += s + "\n";
+            }
+            return allChanges;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        differences.remove(0);
-        String shortReport="";
-        for (Prices prices : differences) {
-            shortReport += prices.getSitename() + " цен ниже нормы:" + prices.getPricesMap().size() + "\n";
-        }
-        return shortReport;
+        return null;
     }
 
 
