@@ -17,14 +17,14 @@ final class KupitfissmanParser implements Parser {
     public static final String ADRESS = "http://kupitfissman.ru";
 
     private static int formatArticle(String articleStr) {
-        if (articleStr.equals("")) {
-            return 0;
-        } else {
-            articleStr = articleStr.replaceAll("FISSMAN\\D", "");
-            articleStr = articleStr.replaceAll("\\D", "");
+
+        articleStr = articleStr.replaceAll("\\D", "");
+        if (articleStr.length() > 4) {
             articleStr = articleStr.substring(0, 4);
+            return Integer.parseInt(articleStr);
         }
-        return Integer.parseInt(articleStr);
+        return 0;
+
     }
 
     private static int formatPrice(String priceStr) {
@@ -41,10 +41,13 @@ final class KupitfissmanParser implements Parser {
         List<String> links = new ArrayList<>();
         try {
             Document document = Jsoup.connect("http://kupitfissman.ru/").timeout(15000).get();
-            Elements elements = document.select(".btn-group").select("a");
+            Elements elements = document.select(".col-sm-3").select("a");
             for (Element a : elements) {
-                String link = ADRESS + a.attr("href");
-                catLinks.add(link);
+                String link = a.attr("href");
+                if (link.contains("http")) {
+                    catLinks.add(link);
+                }
+
             }
             for (String catLink : catLinks) {
                 document = Jsoup.connect(catLink).timeout(15000).get();
