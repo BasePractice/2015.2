@@ -15,7 +15,7 @@ public interface DocumentsApi extends ExternalCall {
 
     Document[] list(Integer count,
                     Integer offset,
-                    Integer idOwner) throws IOException;
+                    Long idOwner) throws IOException;
 
     Document[] id(String docs) throws IOException;
 }

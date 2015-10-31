@@ -66,7 +66,7 @@ final class DocumentsApiImpl implements DocumentsApi {
 
 
     @Override
-    public Document[] list(Integer count, Integer offset, Integer idOwner) throws IOException {
+    public Document[] list(Integer count, Integer offset, Long idOwner) throws IOException {
         Call<Result<Document[]>> call = iter.list(count, offset, idOwner);
         return Result.call(call);
     }
