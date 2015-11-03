@@ -19,8 +19,8 @@ import java.util.*;
  */
 public final class VkStatistic extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkStatistic.class);
-    private static Map<Long, ArrayList<Session>> MapSession = new HashMap<>();
-    private final Map<Long, Contact> friendsMap = new HashMap<>();
+    private static final  Map<Long, ArrayList<Session>> MapSession = new HashMap<>();
+    private static final Map<Long, Contact> friendsMap = new HashMap<>();
     private final MessagesApi msgApi;
     boolean alreadySend = false;
     private static final String FRIENDS_FIELDS = "nickname, " +
@@ -57,35 +57,10 @@ public final class VkStatistic extends ServiceBotsExtension {
 
     @Override
     protected void doEvent(Event event) {
-
         SimpleDateFormat dt = new SimpleDateFormat("HH:mm");
-        if (MapSession.isEmpty()) {
-            try {
-                friendsMap.clear();
-                FriendsApi friendsApi = api.getFriends();
-                Contact[] contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
-                for (Contact contact : contacts) {
-                    friendsMap.put(contact.id, contact);
-                }
-            } catch (Exception e) {
-                logger.error("Ошибка получения списка друзей");
-            }
 
-            for (Map.Entry<Long, Contact> friend : friendsMap.entrySet()) {
-                if (friend.getValue().online == 1) {
-                    Session session = new Session(new Date());
-                    ArrayList<Session> arrayList = new ArrayList<>();
-                    arrayList.add(session);
-                    MapSession.put(friend.getValue().id, arrayList);
-                    logger.debug(friend.getValue().lastName + " - онлайн");
-                } else {
-                    ArrayList<Session> arrayList = new ArrayList<>();
-                    MapSession.put(friend.getValue().id, arrayList);
-                    logger.debug(friend.getValue().lastName + " - оффлайн");
-                }
-            }
-
-
+        if(MapSession.isEmpty()) {
+            firstPutOfFriends();
         }
 
         switch (event.type) {
@@ -96,13 +71,11 @@ public final class VkStatistic extends ServiceBotsExtension {
 
                 Session session = new Session(new Date());
                 if (MapSession.get(key).isEmpty()) {
-                    ArrayList<Session> sessions = new ArrayList<>();
-                    sessions.add(session);
-                    MapSession.put(key, sessions);
+                    MapSession.get(key).add(session);
                 } else {
                     try {
                         int index = MapSession.get(key).size() - 1;
-                        if (MapSession.get(key).get(index).end == null) {
+                        if (MapSession.get(key).get(index).getEnd() == null) {
                             MapSession.get(key).remove(index);
                             MapSession.get(key).add(session);
                         } else {
@@ -113,7 +86,7 @@ public final class VkStatistic extends ServiceBotsExtension {
                     }
 
                 }
-                logger.debug(event.object + " вошел в " + dt.format(MapSession.get(key).get(MapSession.get(key).size() - 1).begin));
+                logger.debug(event.object + " вошел в " + dt.format(MapSession.get(key).get(MapSession.get(key).size() - 1).getBegin()));
 
                 break;
 
@@ -122,131 +95,85 @@ public final class VkStatistic extends ServiceBotsExtension {
             case FRIEND_OFFLINE: {
                 UserOffline userOffline = (UserOffline) event.object;
                 Long key = userOffline.getContact().id;
-                int index = MapSession.get(key).size();
-                index -= 1;
-                try {
-                    if (MapSession.get(key).get(index).begin == null) {
+                int index = MapSession.get(key).size() - 1;
+                String name = ((UserOffline) event.object).getContact().firstName + " " + ((UserOffline) event.object).getContact().lastName;
+                if (MapSession.get(key).get(index).getBegin() == null) {
                         break;
                     }
-                } catch (Exception e) {
-
-                }
                 MapSession.get(key).get(index).setEnd(new Date());
-                logger.debug(((UserOffline) event.object).getContact().firstName +  " " + ((UserOffline) event.object).getContact().lastName + " вышел в " + dt.format(MapSession.get(key).get(MapSession.get(key).size() - 1).end));
+                logger.debug(name + " вышел в " + dt.format(MapSession.get(key).get(MapSession.get(key).size() - 1).getEnd()));
                 break;
             }
 
 
             case MESSAGE_RECEIVE: {
-
                 if (alreadySend) {
                     alreadySend = false;
                     break;
                 }
                 Message msg = (Message) event.object;
                 Contact contact = msg.contact;
-                if (contact.id == owner.id && msg.text.contains("bot get")) {
-                    String date = "";
-                    String message = msg.text;
-                    try {
-                        Date date1 = new Date(msg.text.split(" ")[msg.text.split(" ").length - 1]);
-                        message = message.substring(0, message.lastIndexOf(" "));
-                        date = msg.text.split(" ")[msg.text.split(" ").length - 1];
-                    } catch (Exception e) {
-                        logger.error("даты нет");
-                    }
-                    String text = null;
-                    if (message.split(": ")[1].equals("всех")) {
-                        text = "Статисткика всех пользователй " + date;
-                    } else {
-
-                        String[] arr = message.split(": ")[1].split(", ");
-                        String people = "";
-                        for (String humanName : arr) {
-                            people += humanName + ", ";
-                            text = "Статистика пользователей: " + people.substring(0, people.length() - 2) + " " + date;
+                String text = null;
+                Attachment attachment = null;
+                if (contact.id == owner.id) {
+                    if (msg.text.contains("bot get")) {
+                        text = parse(msg.text);
+                        try {
+                             attachment = new Attachment(MapSession, friendsMap, api , msg.text);
+                        } catch (Exception e) {
+                            logger.error("Ошибка получения документа");
                         }
+                    } else if (msg.text.equals("help")) {
+                        text = "Запрос состоит имеет ввид\n1)bot get: Иван Иванов\n2)bog get: всех\n3)bot get: Иванов Иван, Иванова Ивана 10/04/2015\n";
                     }
-
-
-                    String attachment = null;
                     try {
-                        attachment = Attachment.getAttachment(MapSession, api, msg.text, friendsMap);
+                        Integer idMessage = msgApi.send(
+                                contact.id,
+                                null,
+                                null,
+                                null,
+                                text,
+                                null,
+                                null,
+                                null,
+                                attachment.getAttachmentName(),
+                                null,
+                                null
+
+                        );
+                        logger.debug("Сообщение отправлено " + idMessage);
+
+                        alreadySend = true;
+
+                    } catch (IOException ex) {
+                        logger.error("Ошибка отправки сообщения", ex);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.debug("Ошибка attachment");
                     }
-
-                try {
-                    Integer idMessage = msgApi.send(
-                            contact.id,
-                            null,
-                            null,
-                            null,
-                            text,
-                            null,
-                            null,
-                            null,
-                            attachment,
-                            null,
-                            null
-
-                    );
-                    logger.debug("Сообщение отправлено " + idMessage);
-                    alreadySend = true;
-                } catch (IOException ex) {
-                    logger.error("Ошибка отправки сообщения", ex);
                 }
             }
-            else if (msg.text.equals("help")) {
-                String text = "Запрос состоит имеет ввид\n1)bot get: Иван Иванов\n2)bog get: всех\n3)bot get: Иванов Иван, Иванова Ивана 10/04/2015\n";
-                try {
-                    Integer idMessage = msgApi.send(
-                            contact.id,
-                            null,
-                            null,
-                            null,
-                            text,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null
 
-                    );
-                    logger.debug("Сообщение отправлено " + idMessage);
-                    alreadySend = true;
-                } catch (IOException ex) {
-                    logger.error("Ошибка отправки сообщения", ex);
-                }
-            }
             break;
-        }
+
         case TIMEOUT: {
-            try {
-                friendsMap.clear();
-                FriendsApi friendsApi = api.getFriends();
-                Contact[] contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
-                for (Contact contact : contacts) {
-                    friendsMap.put(contact.id, contact);
-                }
-            } catch (Exception e) {
-                logger.debug("Ошибка получение списка друзей");
-            }
+            putFriendsMap();
+
             for (Map.Entry<Long, Contact> current : friendsMap.entrySet()) {
                 Long key = current.getValue().id;
-                try {
+              //  try {
                     if (!MapSession.get(key).isEmpty()) {
-                        if ((MapSession.get(key).get(MapSession.get(key).size() - 1).end == null) && current.getValue().online == 0) {
-                            MapSession.get(key).get(MapSession.get(key).size() - 1).setEnd(new Date());
-                        } else if ((MapSession.get(key).get(MapSession.get(key).size() - 1).begin == null) && current.getValue().online == 1) {
+                        int index = MapSession.get(key).size() - 1;
+                        Session lastSession = MapSession.get(key).get(index);
+                        if ((lastSession.getEnd() == null) && current.getValue().online == 0) {
+                            lastSession.setEnd(new Date());
+                        } else if ((lastSession.getBegin() == null) && current.getValue().online == 1) {
                             Session session = new Session(new Date());
                             MapSession.get(key).add(session);
                         }
                     }
-                } catch (Exception e) {
-                    logger.error("Ошибка timeout");
-                }
+               // } catch (Exception e) {
+                //    logger.error("Ошибка timeout");
+                //}
             }
         }
 
@@ -259,42 +186,75 @@ public final class VkStatistic extends ServiceBotsExtension {
 
     }
 
+
+
     @Override
     public String description() {
         return  "Сервис статистики пользователей \"Вконтакте\"";
     }
 
+    public  void firstPutOfFriends() {
 
-    public static class Session {
-        private Date begin;
-        private Date end;
-        private Date session;
-        public Session(Date begin) {
-            this.begin = begin;
-        }
+            putFriendsMap();
 
-
-        public void setBegin(Date begin) {
-            this.begin = begin;
-        }
-
-        public void setEnd(Date end) {
-            this.end = end;
-            this.session = new Date(begin.getYear(), begin.getMonth(), begin.getDay(), end.getHours() - begin.getHours(), end.getMinutes() - begin.getMinutes(), 0);
-        }
-
-        public Date getBegin() {
-            return begin;
-        }
-
-        public Date getEnd() {
-            return end;
-        }
-
-        public Date getSession() {
-            return session;
-        }
+            for (Map.Entry<Long, Contact> friend : friendsMap.entrySet()) {
+                ArrayList<Session> arrayList = new ArrayList<>();
+                if (friend.getValue().online == 1) {
+                    Session session = new Session(new Date());
+                    arrayList.add(session);
+                    MapSession.put(friend.getValue().id, arrayList);
+                    logger.debug(friend.getValue().lastName + " - онлайн");
+                } else {
+                    MapSession.put(friend.getValue().id, arrayList);
+                    logger.debug(friend.getValue().lastName + " - оффлайн");
+                }
+            }
 
     }
+
+    public void putFriendsMap() {
+        try {
+            friendsMap.clear();
+            FriendsApi friendsApi = api.getFriends();
+            Contact[] contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
+            for (Contact contact : contacts) {
+                friendsMap.put(contact.id, contact);
+            }
+        } catch (Exception e) {
+            logger.error("Ошибка получения списка друзей");
+        }
+    }
+
+    private String parse(String msg) {
+      try {
+          String date = "";
+          String text = "";
+          try {
+              Date date1 = new Date(msg.split(" ")[msg.split(" ").length - 1]);
+              date = msg.split(" ")[msg.split(" ").length - 1];
+          } catch (Exception e) {
+              logger.error("даты нет");
+          }
+
+          if (msg.split(": ")[1].equals("всех")) {
+              text = "Статисткика всех пользователй " + (date.isEmpty() ? "" : " за" + date);
+          } else {
+              String withoutDate = msg.substring(0, msg.lastIndexOf(" "));
+              String[] arr = withoutDate.split(": ")[1].split(", ");
+              String people = "";
+              for (String humanName : arr) {
+                  people += humanName + ", ";
+                  text = "Статистика пользователей: " + people.substring(0, people.length() - 2) + (date.isEmpty() ? "" : " за " + date);
+              }
+          }
+          return text;
+      } catch (Exception e) {
+          logger.error("Ошибка ввода");
+      }
+      return null;
+    }
+
+
+
 }
 

@@ -18,38 +18,120 @@ import java.io.IOException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
 
 /**
  * Created by aleksejpluhin on 17.10.15.
+ * 1. Date -> ZonedDateTime
+ * 2. isDate -> не static
+ * 3. Часть параметров перенести в поля и инициализировать в конструкторе
+ * 4. В parseDate использовать SimpleDateFormat/DateTimeFormatter
  */
 public class Attachment {
     private static final Logger logger = LoggerFactory.getLogger(Attachment.class);
-    public static final String REPORTS_DIRECTORY = System.getProperty("user.home") + "/reports";
+    private static final String REPORTS_DIRECTORY = System.getProperty("user.home") + "/reports";
     private static int WIDTH = 4;
 
+    private  boolean isDate = false;
+    private Map<Long, ArrayList<Session>> mapSession;
+    private Map<Long, Contact> friendsMap;
+    private VkontakteApi api;
+    private String msg;
 
-    public static String getAttachment(Map<Long, ArrayList<VkStatistic.Session>> listMap, VkontakteApi api, String msg, Map<Long, Contact> friendsMap) throws Exception {
+    public Attachment(Map<Long, ArrayList<Session>> mapSession, Map<Long, Contact> friendsMap, VkontakteApi api, String msg) {
+        this.mapSession = mapSession;
+        this.friendsMap = friendsMap;
+        this.api = api;
+        this.msg = msg;
+    }
+
+    public String getAttachmentName() throws Exception {
         DocumentsApi documents = api.getDocuments();
-        File file = createFile(listMap, msg, friendsMap);
+        File file = createFile();
         boolean document = documents.uploadDocument(file);
 
         return null;
     }
 
-    public static File createFile(Map<Long, ArrayList<VkStatistic.Session>> listMap, String msg, Map<Long, Contact> friendsMap) throws FileNotFoundException {
+    public File createFile() throws FileNotFoundException {
         SimpleDateFormat dateFormat_input = new SimpleDateFormat("dd/MM HH:mm");
         SimpleDateFormat dateFormat_output = new SimpleDateFormat("HH:mm");
         SimpleDateFormat dateFormat_forFile = new SimpleDateFormat("dd-MM");
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet();
-        boolean isDate = false;
-        CreationHelper createHelper = workbook.getCreationHelper();
         sheet.setDefaultColumnWidth(11);
 
+        sheet.createRow(0);
+        sheet.createRow(1);
+
+        Date date = parseDate(msg);
         ArrayList<String> arrayOfPeople = new ArrayList<>();
+            if (!msg.split(": ")[1].equals("всех")) {
+                arrayOfPeople = queryOfPeople(msg);
+            }
+
+        int index = 2;
+        int column = 0;
+
+        for (Map.Entry<Long, ArrayList<Session>> currentMan : mapSession.entrySet()) {
+            String key = friendsMap.get(currentMan.getKey()).firstName + " " + friendsMap.get(currentMan.getKey()).lastName;
+            if (msg.contains("bot get: всех") || arrayOfPeople.contains(key)) {
+                Row row;
+
+                row = sheet.getRow(0);
+                row.createCell(column).setCellValue(currentMan.getKey());
+                row.createCell(column + 1).setCellValue(friendsMap.get(currentMan.getKey()).firstName);
+                row.createCell(column + 2).setCellValue(friendsMap.get(currentMan.getKey()).lastName);
+
+                row = sheet.getRow(1);
+                row.createCell(column).setCellValue("Вход");
+                row.createCell(column + 1).setCellValue("Выход");
+                row.createCell(column + 2).setCellValue("Сессия");
+                for (int i = 0; i < currentMan.getValue().size(); i++) {
+
+                    if (sheet.getLastRowNum() >= index) {
+                        row = sheet.getRow(index);
+                    } else {
+                        row = sheet.createRow(index);
+                    }
+                    try {
+                        if((!isDate) || (isDate && (date.getDay() == currentMan.getValue().get(i).getBegin().getDay() || date.getDay() == currentMan.getValue().get(i).getEnd().getDay())))
+                        {
+                            row.createCell(column).setCellValue(dateFormat_input.format(currentMan.getValue().get(i).getBegin()));
+                            row.createCell(column + 1).setCellValue(dateFormat_output.format(currentMan.getValue().get(i).getEnd()));
+                            row.createCell(column + 2).setCellValue(dateFormat_output.format(currentMan.getValue().get(i).getSession()));
+                            index++;
+                        }
+                    } catch (Exception e) {
+                        break;
+                    }
+
+
+                }
+                column += WIDTH;
+                index = 2;
+            }
+        }
+        isDate = false;
+
+        String fileName = dateFormat_forFile.format(new Date()) + ".xlsx";
+        File file = new File(REPORTS_DIRECTORY, fileName);
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            workbook.write(fileOutputStream);
+        } catch (IOException e) {
+            logger.debug("Ошибка записи");
+        }
+
+
+
+        return file;
+    }
+
+    private  Date parseDate(String msg) {
         Date date = null;
         try {
             String[] str = msg.split(" ")[msg.split(" ").length -1].split("/");
@@ -61,80 +143,17 @@ public class Attachment {
         catch (Exception e) {
             logger.error("Даты нет в запросе");
         }
-            if (!msg.contains("все")) {
-                arrayOfPeople = queryOfPeople(msg);
-            }
-
-        int index = 2;
-        int column = 0;
-        Row zeroRow = sheet.createRow(0);
-        sheet.createRow(1);
-        sheet.createRow(2);
-        CellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setDataFormat(
-                createHelper.createDataFormat().getFormat("dd/MM/yyyy"));
-        Cell cell = zeroRow.createCell(0);
-        cell.setCellValue(new Date());
-        cell.setCellStyle(cellStyle);
-
-        for (Map.Entry<Long, ArrayList<VkStatistic.Session>> currentMan : listMap.entrySet()) {
-            String key = friendsMap.get(currentMan.getKey()).firstName + " " + friendsMap.get(currentMan.getKey()).lastName;
-            if (msg.equals("bot get: всех") || arrayOfPeople.contains(key)) {
-                Row row;
-                row = sheet.getRow(1);
-                row.createCell(column).setCellValue(currentMan.getKey());
-                row.createCell(column + 1).setCellValue(friendsMap.get(currentMan.getKey()).firstName);
-                row.createCell(column + 2).setCellValue(friendsMap.get(currentMan.getKey()).lastName);
-                row = sheet.getRow(2);
-                row.createCell(column).setCellValue("Вход");
-                row.createCell(column + 1).setCellValue("Выход");
-                row.createCell(column + 2).setCellValue("Сессия");
-                index++;
-                for (int i = 0; i < currentMan.getValue().size(); i++) {
-                    Row row1;
-                    if (sheet.getLastRowNum() >= index) {
-                        row1 = sheet.getRow(index);
-                    } else {
-                        row1 = sheet.createRow(index);
-                    }
-                    try {
-                        if((!isDate) || (isDate && (date.getDay() == currentMan.getValue().get(i).getBegin().getDay() || date.getDay() == currentMan.getValue().get(i).getEnd().getDay())))
-                        {
-                            System.out.println("---");
-                            row1.createCell(column).setCellValue(dateFormat_input.format(currentMan.getValue().get(i).getBegin()));
-                            row1.createCell(column + 1).setCellValue(dateFormat_output.format(currentMan.getValue().get(i).getEnd()));
-                            row1.createCell(column + 2).setCellValue(dateFormat_output.format(currentMan.getValue().get(i).getSession()));
-                        }
-                    } catch (Exception e) {
-                        break;
-                    }
-                    index++;
-
-                }
-                column += WIDTH;
-                index = 2;
-            }
-        }
-
-        String fileName = dateFormat_forFile.format(new Date()) + ".xlsx";
-        FileOutputStream fileOutputStream = new FileOutputStream(REPORTS_DIRECTORY + "/" +  fileName);
-        try {
-            workbook.write(fileOutputStream);
-        } catch (IOException e) {
-            logger.debug("Ошибка записи");
-        }
-
-        File file = new File(REPORTS_DIRECTORY, fileName);
-
-        return file;
+        return date;
     }
+
     public static ArrayList<String> queryOfPeople(String msg) {
-        String[] arr = msg.split(": ")[1].split(", ");
+        String withoutDate = msg.substring(0, msg.lastIndexOf(" "));
+        String[] arr = withoutDate.split(": ")[1].split(", ");
         ArrayList<String> listOfPeople = new ArrayList<>();
-        for(int i = 0; i < arr.length; i++) {
-            listOfPeople.add(arr[i]);
-        }
+        Collections.addAll(listOfPeople, arr);
         return listOfPeople;
     }
+
+
 
 }
