@@ -357,6 +357,10 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
             this.platform = platform;
         }
 
+        public Contact getContact() {
+            return contact;
+        }
+
         @Override
         public String toString() {
             return contact.firstName + " " + contact.lastName;
@@ -385,6 +389,10 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
         protected UserOffline(Contact contact, boolean isAway) {
             this.contact = contact;
             this.isAway = isAway;
+        }
+
+        public Contact getContact() {
+            return contact;
         }
 
         @Override
