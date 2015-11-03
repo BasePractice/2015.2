@@ -25,15 +25,16 @@ import java.util.Map;
 
 /**
  * Created by aleksejpluhin on 17.10.15.
- * 1. Date -> ZonedDateTime
- * 2. isDate -> не static
- * 3. Часть параметров перенести в поля и инициализировать в конструкторе
- * 4. В parseDate использовать SimpleDateFormat/DateTimeFormatter
+
  */
 public class Attachment {
     private static final Logger logger = LoggerFactory.getLogger(Attachment.class);
     private static final String REPORTS_DIRECTORY = System.getProperty("user.home") + "/reports";
     private static int WIDTH = 4;
+
+    private static final SimpleDateFormat dateFormat_input = new SimpleDateFormat("dd/MM HH:mm");
+    private static final SimpleDateFormat dateFormat_output = new SimpleDateFormat("HH:mm");
+    private static final SimpleDateFormat dateFormat_forFile = new SimpleDateFormat("dd-MM");
 
     private  boolean isDate = false;
     private Map<Long, ArrayList<Session>> mapSession;
@@ -57,9 +58,6 @@ public class Attachment {
     }
 
     public File createFile() throws FileNotFoundException {
-        SimpleDateFormat dateFormat_input = new SimpleDateFormat("dd/MM HH:mm");
-        SimpleDateFormat dateFormat_output = new SimpleDateFormat("HH:mm");
-        SimpleDateFormat dateFormat_forFile = new SimpleDateFormat("dd-MM");
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet();
         sheet.setDefaultColumnWidth(11);
@@ -105,7 +103,7 @@ public class Attachment {
                             row.createCell(column + 2).setCellValue(dateFormat_output.format(currentMan.getValue().get(i).getSession()));
                             index++;
                         }
-                    } catch (Exception e) {
+                    } catch (NullPointerException e) {
                         break;
                     }
 
@@ -117,6 +115,13 @@ public class Attachment {
         }
         isDate = false;
 
+        File file = writeFile(workbook);
+
+
+        return file;
+    }
+
+    public static File writeFile(Workbook workbook) {
         String fileName = dateFormat_forFile.format(new Date()) + ".xlsx";
         File file = new File(REPORTS_DIRECTORY, fileName);
 
@@ -125,11 +130,9 @@ public class Attachment {
         } catch (IOException e) {
             logger.debug("Ошибка записи");
         }
-
-
-
         return file;
     }
+
 
     private  Date parseDate(String msg) {
         Date date = null;
@@ -137,7 +140,6 @@ public class Attachment {
             String[] str = msg.split(" ")[msg.split(" ").length -1].split("/");
             date = new Date(Integer.parseInt(str[2]) - 1900 ,Integer.parseInt(str[1]) - 1,Integer.parseInt(str[0]));
             msg = msg.substring(0,msg.lastIndexOf(" "));
-            System.out.println(date);
             isDate = true;
         }
         catch (Exception e) {
