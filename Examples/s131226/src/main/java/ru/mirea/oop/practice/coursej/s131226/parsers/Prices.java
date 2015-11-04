@@ -18,4 +18,12 @@ public class Prices {
     public Map<Integer, Integer> getPricesMap() {
         return pricesMap;
     }
+
+    public void addValue(Integer key, Integer value) {
+        pricesMap.put(key, value);
+    }
+
+    public void remove(Integer key) {
+        pricesMap.remove(key);
+    }
 }
