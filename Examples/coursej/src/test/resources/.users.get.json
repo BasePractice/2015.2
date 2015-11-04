@@ -1,0 +1,131 @@
+{
+  "response": [
+    {
+      "uid": 6658522,
+      "first_name": "Андрей",
+      "last_name": "Хлебников",
+      "sex": 2,
+      "domain": "pastoroff",
+      "screen_name": "pastoroff",
+      "bdate": "6.4.1983",
+      "city": 4292,
+      "country": 1,
+      "timezone": 3,
+      "photo_50": "http:\/\/cs1363.vk.me\/u6658522\/e_41a92ce6.jpg",
+      "photo_100": "http:\/\/cs1363.vk.me\/u6658522\/d_1ed5182f.jpg",
+      "photo_max": "http:\/\/cs1363.vk.me\/u6658522\/d_1ed5182f.jpg",
+      "photo_200_orig": "http:\/\/cs1363.vk.me\/u6658522\/a_bcada9de.jpg",
+      "photo_max_orig": "http:\/\/cs1363.vk.me\/u6658522\/a_bcada9de.jpg",
+      "has_mobile": 1,
+      "friend_status": 0,
+      "online": 1,
+      "can_post": 1,
+      "can_see_all_posts": 1,
+      "can_see_audio": 1,
+      "can_write_private_message": 1,
+      "mobile_phone": "8(926)*****42",
+      "home_phone": "",
+      "site": "",
+      "status": "",
+      "last_seen": {
+        "time": 1442091747,
+        "platform": 7
+      },
+      "common_count": 119,
+      "counters": {
+        "albums": 6,
+        "videos": 212,
+        "audios": 1338,
+        "notes": 5,
+        "photos": 258,
+        "groups": 138,
+        "gifts": 1,
+        "friends": 119,
+        "online_friends": 12,
+        "user_photos": 10,
+        "user_videos": 4,
+        "followers": 8,
+        "subscriptions": 4,
+        "pages": 61
+      },
+      "occupation": {
+        "type": "university",
+        "id": 238,
+        "name": "МИРЭА"
+      },
+      "career": [],
+      "military": [
+        {
+          "unit": "48428",
+          "unit_id": 13015,
+          "country_id": 1,
+          "from": 2001,
+          "until": 2003
+        },
+        {
+          "unit": "01904 (154 Отдельный комендантский полк)",
+          "unit_id": 128000,
+          "country_id": 1,
+          "from": 2001,
+          "until": 2001
+        },
+        {
+          "unit": "93970",
+          "unit_id": 2032,
+          "country_id": 1,
+          "from": 2004,
+          "until": 2009
+        }
+      ],
+      "university": 238,
+      "university_name": "МИРЭА",
+      "faculty": 948,
+      "faculty_name": "Институт информационных технологий",
+      "graduation": 2009,
+      "education_form": "Заочное отделение",
+      "education_status": "Выпускник (специалист)",
+      "relation": 0,
+      "personal": {
+        "political": 3,
+        "religion": "Атеист(иногда)"
+      },
+      "interests": "",
+      "music": "",
+      "activities": "",
+      "movies": "IT Crowd",
+      "tv": "",
+      "books": "человек",
+      "games": "жизнь",
+      "universities": [
+        {
+          "id": 238,
+          "country": 1,
+          "city": 4292,
+          "name": "МГТУ МИРЭА",
+          "faculty": 948,
+          "faculty_name": "Институт информационных технологий",
+          "chair": 1808314,
+          "chair_name": "Интеллектуальных технологий и систем",
+          "graduation": 2009,
+          "education_form": "Заочное отделение",
+          "education_status": "Выпускник (специалист)"
+        }
+      ],
+      "schools": [
+        {
+          "id": "56230",
+          "country": 1,
+          "city": 4292,
+          "name": "Алабинская средняя школа",
+          "year_from": 1990,
+          "year_to": 2000,
+          "year_graduated": 2000,
+          "class": "в"
+        }
+      ],
+      "about": "Свободный художник и холодный философ.",
+      "relatives": [],
+      "quotes": ""
+    }
+  ]
+}
