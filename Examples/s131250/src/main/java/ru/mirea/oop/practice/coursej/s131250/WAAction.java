@@ -1,7 +1,7 @@
 package ru.mirea.oop.practice.coursej.s131250;
 
+import com.google.gson.Gson;
 import com.squareup.okhttp.*;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -13,6 +13,7 @@ import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.vk.PhotosApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.UploadServer;
 
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -22,8 +23,7 @@ public class WAAction {
     private static final Logger logger = LoggerFactory.getLogger(WAAction.class);
     private ImageBuilder currentImage;
     private VkontakteApi api;
-    //FIXME: Переименовать
-    private String VkPhotoOptions;
+    private String vkPhotoOptions;
     private WAMessage waMessage;
 
     public WAAction(VkontakteApi api) {
@@ -97,22 +97,42 @@ public class WAAction {
 
         if (!file.delete()) {logger.error("Ошибка удаления файла "+ Configuration.getFileName(file.getName()));}
         if (!resp2.isSuccessful()) {logger.error("Unexpected code "+ resp2);}
-        String photo = resp2.body().string();
-        JSONObject obj2 = new JSONObject(photo);
-        Integer serverS = obj2.getInt("server");
-        String photoS = obj2.getString("photo");
-        String hash = obj2.getString("hash");
-        VkPhotoOptions = photosApi.saveMessagesPhoto(serverS, photoS, photoS, hash).toString();
+
+        Gson gson = new Gson();
+        VkImageGson gsonObject = gson.fromJson(resp2.body().string(), VkImageGson.class);
+        Integer serverS = gsonObject.getServer();
+        String photoS = gsonObject.getPhoto();
+        String hash = gsonObject.getHash();
+        vkPhotoOptions = photosApi.saveMessagesPhoto(serverS, photoS, photoS, hash).toString();
+    }
+
+    private class VkImageGson {
+        private Integer server;
+        private String photo;
+        private String hash;
+
+        public Integer getServer() {
+            return server;
+        }
+
+        public String getPhoto() {
+            return photo;
+        }
+
+        public String getHash() {
+            return hash;
+        }
+
     }
 
     private void generateWAMessage() throws IOException {
-        String mediaId = VkPhotoOptions.split(", id=")[1].split(", aid")[0];
+        String mediaId = vkPhotoOptions.split(", id=")[1].split(", aid")[0];
         String srcXxBig = "";
         String srcXxxBig = "";
         String messageText = "";
         try {
-            srcXxBig = VkPhotoOptions.split(", src_xxbig=")[1].split(", ")[0];
-            srcXxxBig = VkPhotoOptions.split(", src_xxxbig=")[1].split(", ")[0];
+            srcXxBig = vkPhotoOptions.split(", src_xxbig=")[1].split(", ")[0];
+            srcXxxBig = vkPhotoOptions.split(", src_xxxbig=")[1].split(", ")[0];
         } catch (Exception ignored) {
         }
         if (!srcXxBig.equals("")) {

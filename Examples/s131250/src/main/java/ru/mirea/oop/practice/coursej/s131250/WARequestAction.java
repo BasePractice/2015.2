@@ -4,15 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.ResponseBody;
-import org.apache.commons.httpclient.util.URIUtil;
 import retrofit.Retrofit;
 import ru.mirea.oop.practice.coursej.Configuration;
 
+import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class WARequestAction {
-    private static final Logger logger = LoggerFactory.getLogger(WAAction.class);
+    private static final Logger logger = LoggerFactory.getLogger(WARequestAction.class);
     private static String appid = "";
 
     public static ResponseBody getResponsefromWA(String input) {
@@ -34,8 +34,8 @@ public class WARequestAction {
                 .build();
         WARequest service = retrofit.create(WARequest.class);
         try {
-            logger.debug("Отправляем WA запрос " + URIUtil.encodeAll(input));
-            return WARequestImpl.doWARequest(service, URIUtil.encodeAll(input), appid);
+            logger.debug("Отправляем WA запрос " + URLEncoder.encode(input, "UTF-8"));
+            return WARequestImpl.doWARequest(service, URLEncoder.encode(input, "UTF-8"), appid);
         } catch (Exception e) {
             e.printStackTrace();
         }
