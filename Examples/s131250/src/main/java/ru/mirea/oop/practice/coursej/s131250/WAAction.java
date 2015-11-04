@@ -22,6 +22,7 @@ public class WAAction {
     private static final Logger logger = LoggerFactory.getLogger(WAAction.class);
     private ImageBuilder currentImage;
     private VkontakteApi api;
+    //FIXME: Переименовать
     private String VkPhotoOptions;
     private WAMessage waMessage;
 
