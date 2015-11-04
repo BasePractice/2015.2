@@ -10,6 +10,7 @@ import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -22,7 +23,7 @@ public final class VkStatistic extends ServiceBotsExtension {
     private static final Map<Long, ArrayList<Session>> MapSession = new HashMap<>();
     private static final Map<Long, Contact> friendsMap = new HashMap<>();
     private final MessagesApi msgApi;
-    private static final SimpleDateFormat formatForOutput = new SimpleDateFormat("HH:mm");
+    private static final ThreadLocal<DateFormat> threadFormat = new ThreadLocal<>();
     private static boolean alreadySend = false;
     private static final String FRIENDS_FIELDS = "nickname, " +
             "domain, " +
@@ -53,6 +54,15 @@ public final class VkStatistic extends ServiceBotsExtension {
     public VkStatistic() throws Exception {
         super("vk.services.VkStatistic");
         this.msgApi = api.getMessages();
+    }
+
+    private static DateFormat getFormat() {
+        DateFormat format = threadFormat.get();
+        if (format == null) {
+            format = new SimpleDateFormat("HH:mm");
+            threadFormat.set(format);
+        }
+        return format;
     }
 
 
@@ -193,7 +203,7 @@ public final class VkStatistic extends ServiceBotsExtension {
             }
 
         }
-        logger.debug(event.object + " вошел в " + formatForOutput.format(MapSession.get(key).get(MapSession.get(key).size() - 1).getBegin()));
+        logger.debug(event.object + " вошел в " + getFormat().format(MapSession.get(key).get(MapSession.get(key).size() - 1).getBegin()));
 
     }
 
@@ -206,7 +216,7 @@ public final class VkStatistic extends ServiceBotsExtension {
             return;
         }
         MapSession.get(key).get(index).setEnd(new Date());
-        logger.debug(name + " вышел в " + formatForOutput.format(MapSession.get(key).get(MapSession.get(key).size() - 1).getEnd()));
+        logger.debug(name + " вышел в " + getFormat().format(MapSession.get(key).get(MapSession.get(key).size() - 1).getEnd()));
     }
 
     public void eventMessageReceive(Event event) {
