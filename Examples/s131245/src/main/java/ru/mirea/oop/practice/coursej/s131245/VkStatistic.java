@@ -20,7 +20,8 @@ import java.util.*;
  */
 public final class VkStatistic extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkStatistic.class);
-    private static final Map<Long, ArrayList<Session>> MapSession = new HashMap<>();
+    //FIXME: Зачем static поле?
+    private static final Map<Long, ArrayList<Session>> mapSession = new HashMap<>();
     private static final Map<Long, Contact> friendsMap = new HashMap<>();
     private final MessagesApi msgApi;
     private static final ThreadLocal<DateFormat> threadFormat = new ThreadLocal<>();
@@ -48,7 +49,7 @@ public final class VkStatistic extends ServiceBotsExtension {
             "universities";
 
     static {
-        MapSession.clear();
+        mapSession.clear();
     }
 
     public VkStatistic() throws Exception {
@@ -69,7 +70,7 @@ public final class VkStatistic extends ServiceBotsExtension {
     @Override
     protected void doEvent(Event event) {
 
-        if (MapSession.isEmpty()) {
+        if (mapSession.isEmpty()) {
             firstPutOfFriends();
         }
 
@@ -120,10 +121,10 @@ public final class VkStatistic extends ServiceBotsExtension {
             if (friend.getValue().online == 1) {
                 Session session = new Session(new Date());
                 arrayList.add(session);
-                MapSession.put(friend.getValue().id, arrayList);
+                mapSession.put(friend.getValue().id, arrayList);
                 logger.debug(friend.getValue().lastName + " - онлайн");
             } else {
-                MapSession.put(friend.getValue().id, arrayList);
+                mapSession.put(friend.getValue().id, arrayList);
                 logger.debug(friend.getValue().lastName + " - оффлайн");
             }
         }
@@ -143,14 +144,15 @@ public final class VkStatistic extends ServiceBotsExtension {
         }
     }
 
+    /**FIXME: Разобраться в логике работы */
     public String parse(String msg) {
         try {
             String date = "";
             String text = "";
             String withoutDate = "";
             try {
-                Date date1 = new Date(msg.split(" ")[msg.split(" ").length - 1]);
-                date = msg.split(" ")[msg.split(" ").length - 1];
+                String[] split = msg.split(" ");
+                date = split[split.length - 1];
                 withoutDate = msg.substring(0, msg.lastIndexOf(" "));
                 msg = msg.substring(0, msg.lastIndexOf(" "));
             } catch (Exception e) {
@@ -187,36 +189,36 @@ public final class VkStatistic extends ServiceBotsExtension {
         Long key = userOnline.getContact().id;
 
         Session session = new Session(new Date());
-        if (MapSession.get(key).isEmpty()) {
-            MapSession.get(key).add(session);
+        if (mapSession.get(key).isEmpty()) {
+            mapSession.get(key).add(session);
         } else {
             try {
-                int index = MapSession.get(key).size() - 1;
-                if (MapSession.get(key).get(index).getEnd() == null) {
-                    MapSession.get(key).remove(index);
-                    MapSession.get(key).add(session);
+                int index = mapSession.get(key).size() - 1;
+                if (mapSession.get(key).get(index).getEnd() == null) {
+                    mapSession.get(key).remove(index);
+                    mapSession.get(key).add(session);
                 } else {
                     throw new Exception();
                 }
             } catch (Exception e) {
-                MapSession.get(key).add(session);
+                mapSession.get(key).add(session);
             }
 
         }
-        logger.debug(event.object + " вошел в " + getFormat().format(MapSession.get(key).get(MapSession.get(key).size() - 1).getBegin()));
+        logger.debug(event.object + " вошел в " + getFormat().format(mapSession.get(key).get(mapSession.get(key).size() - 1).getBegin()));
 
     }
 
     public void eventOffline(Event event) {
         UserOffline userOffline = (UserOffline) event.object;
         Long key = userOffline.getContact().id;
-        int index = MapSession.get(key).size() - 1;
+        int index = mapSession.get(key).size() - 1;
         String name = ((UserOffline) event.object).getContact().firstName + " " + ((UserOffline) event.object).getContact().lastName;
-        if (MapSession.get(key).get(index).getBegin() == null) {
+        if (mapSession.get(key).get(index).getBegin() == null) {
             return;
         }
-        MapSession.get(key).get(index).setEnd(new Date());
-        logger.debug(name + " вышел в " + getFormat().format(MapSession.get(key).get(MapSession.get(key).size() - 1).getEnd()));
+        mapSession.get(key).get(index).setEnd(new Date());
+        logger.debug(name + " вышел в " + getFormat().format(mapSession.get(key).get(mapSession.get(key).size() - 1).getEnd()));
     }
 
     public void eventMessageReceive(Event event) {
@@ -226,14 +228,14 @@ public final class VkStatistic extends ServiceBotsExtension {
         }
         Message msg = (Message) event.object;
         Contact contact = msg.contact;
-        String text = null;
+        String text;
         Attachment attachment;
         String attachmentName = null;
         if (contact.id == owner.id) {
             if (msg.text.contains("bot get")) {
                 text = parse(msg.text);
                 try {
-                    attachment = new Attachment(MapSession, friendsMap, api, msg.text);
+                    attachment = new Attachment(mapSession, friendsMap, api, msg.text);
                     attachmentName = attachment.getAttachmentName();
                 } catch (Exception e) {
                     logger.error("Ошибка получения документа");
@@ -279,14 +281,14 @@ public final class VkStatistic extends ServiceBotsExtension {
         for (Map.Entry<Long, Contact> current : friendsMap.entrySet()) {
             Long key = current.getValue().id;
 
-            if (!MapSession.get(key).isEmpty()) {
-                int index = MapSession.get(key).size() - 1;
-                Session lastSession = MapSession.get(key).get(index);
+            if (!mapSession.get(key).isEmpty()) {
+                int index = mapSession.get(key).size() - 1;
+                Session lastSession = mapSession.get(key).get(index);
                 if ((lastSession.getEnd() == null) && current.getValue().online == 0) {
                     lastSession.setEnd(new Date());
                 } else if ((lastSession.getBegin() == null) && current.getValue().online == 1) {
                     Session session = new Session(new Date());
-                    MapSession.get(key).add(session);
+                    mapSession.get(key).add(session);
                 }
             }
 

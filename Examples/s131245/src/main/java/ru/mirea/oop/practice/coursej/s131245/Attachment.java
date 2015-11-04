@@ -23,10 +23,9 @@ import java.util.Date;
 import java.util.Map;
 
 
-/**
- * Created by aleksejpluhin on 17.10.15.
-
- */
+//FIXME: Разобраться в логике.
+//SimpleDateFormat не потокобезопасен - сделать его таковым.
+//Разбить на классы в соответствии с логикой
 public class Attachment {
     private static final Logger logger = LoggerFactory.getLogger(Attachment.class);
     private static final String REPORTS_DIRECTORY = System.getProperty("user.home") + "/reports";

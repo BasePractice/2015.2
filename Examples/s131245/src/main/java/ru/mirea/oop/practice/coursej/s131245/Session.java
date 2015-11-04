@@ -2,10 +2,8 @@ package ru.mirea.oop.practice.coursej.s131245;
 
 import java.util.Date;
 
-/**
- * Created by aleksejpluhin on 31.10.15.
- */
-public  class Session {
+/**FIXME: Разобраться в логике. Сделать все поля final */
+public final class Session {
     private Date begin;
     private Date end;
     private Date session;
@@ -13,8 +11,8 @@ public  class Session {
         this.begin = begin;
     }
 
-//method Duration
 
+    /** FIXME: Избавится от deprecated методов */
     public void setEnd(Date end) {
         this.end = end;
         this.session = new Date(begin.getYear(), begin.getMonth(), begin.getDay(), end.getHours() - begin.getHours(), end.getMinutes() - begin.getMinutes(), 0);
