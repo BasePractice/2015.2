@@ -8,6 +8,8 @@ import java.util.*;
 import java.util.Date;
 
 
+/** FIXME: Переписать в соответствии с хорошими манерами использования JDBC */
+//ЗЫ: Использовать Repository конструкцию
 public class DbHelper {
     private Connection conn;
     private Statement statmt;
