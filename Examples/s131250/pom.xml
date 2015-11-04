@@ -121,20 +121,6 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-        <!--FIXME: Избавиться от httpclient. Использовать okhttp -->
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
-        </dependency>
-
-        <!--FIXME: Избавиться от json. Использовать Gson -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20150729</version>
-        </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
