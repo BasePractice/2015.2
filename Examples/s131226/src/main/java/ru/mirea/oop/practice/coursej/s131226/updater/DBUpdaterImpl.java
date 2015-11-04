@@ -3,9 +3,9 @@ package ru.mirea.oop.practice.coursej.s131226.updater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.s131226.DBUpdater;
+import ru.mirea.oop.practice.coursej.s131226.Parser;
 import ru.mirea.oop.practice.coursej.s131226.ParserThread;
 import ru.mirea.oop.practice.coursej.s131226.helper.DbHelper;
-import ru.mirea.oop.practice.coursej.s131226.Parser;
 import ru.mirea.oop.practice.coursej.s131226.parsers.ParserCollections;
 import ru.mirea.oop.practice.coursej.s131226.parsers.Prices;
 
@@ -31,6 +31,25 @@ public class DBUpdaterImpl implements DBUpdater {
         ParserCollections.setParsers(parsers);
         List<ParserThread> threads = new ArrayList<>();
         List<Prices> pricesList = Collections.synchronizedList(new ArrayList<>());
+        /**
+         * FIXME: Много потоков. Лучше что-то типа ExecutorService
+
+         ExecutorService service = Executors.newFixedThreadPool(5);
+         List<CompletableFuture<Prices>> futures = new ArrayList<>();
+         for (Parser parser : parsers) {
+             CompletableFuture<Prices> future = CompletableFuture.supplyAsync(parser::parsePrices, service);
+             futures.add(future);
+         }
+         service.shutdown();
+         for (CompletableFuture<Prices> future: futures) {
+             try {
+                 pricesList.add(future.get());
+             } catch (Exception e) {
+                 e.printStackTrace();
+             }
+         }
+
+         */
         for (Parser parser : parsers) {
             ParserThread thread = new ParserThread(parser, pricesList);
             thread.start();
