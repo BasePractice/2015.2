@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DBUpdaterImpl implements DBUpdater {
     private static final Logger logger = LoggerFactory.getLogger(DBUpdaterImpl.class);
@@ -48,6 +50,9 @@ public class DBUpdaterImpl implements DBUpdater {
                  e.printStackTrace();
              }
          }
+
+         FIXME: Можно и при помощи Streams
+         pricesList = parsers.stream().parallel().map(Parser::parsePrices).collect(Collectors.toList());
 
          */
         for (Parser parser : parsers) {
