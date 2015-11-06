@@ -10,8 +10,9 @@ import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -21,11 +22,11 @@ import java.util.*;
 public final class VkStatistic extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkStatistic.class);
     //FIXME: Зачем static поле?
-    private static final Map<Long, ArrayList<Session>> mapSession = new HashMap<>();
-    private static final Map<Long, Contact> friendsMap = new HashMap<>();
+    private final Map<Long, ArrayList<Session>> mapSession = new HashMap<>();
+    private final Map<Long, Contact> friendsMap = new HashMap<>();
     private final MessagesApi msgApi;
-    private static final ThreadLocal<DateFormat> threadFormat = new ThreadLocal<>();
-    private static boolean alreadySend = false;
+    private boolean alreadySend = false;
+    private static final ThreadLocal<DateTimeFormatter> threadFormat = new ThreadLocal<>();
     private static final String FRIENDS_FIELDS = "nickname, " +
             "domain, " +
             "sex, " +
@@ -48,7 +49,9 @@ public final class VkStatistic extends ServiceBotsExtension {
             "can_post, " +
             "universities";
 
-    static {
+
+
+    {
         mapSession.clear();
     }
 
@@ -56,11 +59,11 @@ public final class VkStatistic extends ServiceBotsExtension {
         super("vk.services.VkStatistic");
         this.msgApi = api.getMessages();
     }
-
-    private static DateFormat getFormat() {
-        DateFormat format = threadFormat.get();
+    //Если DateTimeFormatter thread-safe - нужен ли class ThreadLocal
+    private static DateTimeFormatter getFormat() {
+        DateTimeFormatter format = threadFormat.get();
         if (format == null) {
-            format = new SimpleDateFormat("HH:mm");
+            format =  DateTimeFormatter.ofPattern("HH:mm");
             threadFormat.set(format);
         }
         return format;
@@ -119,7 +122,7 @@ public final class VkStatistic extends ServiceBotsExtension {
         for (Map.Entry<Long, Contact> friend : friendsMap.entrySet()) {
             ArrayList<Session> arrayList = new ArrayList<>();
             if (friend.getValue().online == 1) {
-                Session session = new Session(new Date());
+                Session session = new Session(LocalDateTime.now());
                 arrayList.add(session);
                 mapSession.put(friend.getValue().id, arrayList);
                 logger.debug(friend.getValue().lastName + " - онлайн");
@@ -144,7 +147,10 @@ public final class VkStatistic extends ServiceBotsExtension {
         }
     }
 
+
     /**FIXME: Разобраться в логике работы */
+    //Логика в Parser
+    /*
     public String parse(String msg) {
         try {
             String date = "";
@@ -180,15 +186,16 @@ public final class VkStatistic extends ServiceBotsExtension {
         }
         return null;
     }
+    */
 
 
 
 
-    public static void eventOnline(Event event) {
+    public  void eventOnline(Event event) {
         UserOnline userOnline = (UserOnline) event.object;
         Long key = userOnline.getContact().id;
 
-        Session session = new Session(new Date());
+        Session session = new Session(LocalDateTime.now());
         if (mapSession.get(key).isEmpty()) {
             mapSession.get(key).add(session);
         } else {
@@ -217,7 +224,7 @@ public final class VkStatistic extends ServiceBotsExtension {
         if (mapSession.get(key).get(index).getBegin() == null) {
             return;
         }
-        mapSession.get(key).get(index).setEnd(new Date());
+        mapSession.get(key).get(index).setEnd(LocalDateTime.now());
         logger.debug(name + " вышел в " + getFormat().format(mapSession.get(key).get(mapSession.get(key).size() - 1).getEnd()));
     }
 
@@ -226,6 +233,8 @@ public final class VkStatistic extends ServiceBotsExtension {
             alreadySend = false;
             return;
         }
+
+
         Message msg = (Message) event.object;
         Contact contact = msg.contact;
         String text;
@@ -233,13 +242,14 @@ public final class VkStatistic extends ServiceBotsExtension {
         String attachmentName = null;
         if (contact.id == owner.id) {
             if (msg.text.contains("bot get")) {
-                text = parse(msg.text);
+                   text = "Ошибка ввода";
                 try {
-                    attachment = new Attachment(mapSession, friendsMap, api, msg.text);
+                    Parser parser = new Parser(msg.text);
+                    text = parser.getMsg();
+                    attachment = new Attachment(mapSession, friendsMap, api, parser);
                     attachmentName = attachment.getAttachmentName();
                 } catch (Exception e) {
                     logger.error("Ошибка получения документа");
-                    e.printStackTrace();
                 }
             } else if (msg.text.equals("help")) {
                 text = "Запрос состоит имеет ввид\n1)bot get: Иван Иванов\n2)bog get: всех\n3)bot get: Иванов Иван, Иванова Ивана 10/04/2015\n";
@@ -285,9 +295,9 @@ public final class VkStatistic extends ServiceBotsExtension {
                 int index = mapSession.get(key).size() - 1;
                 Session lastSession = mapSession.get(key).get(index);
                 if ((lastSession.getEnd() == null) && current.getValue().online == 0) {
-                    lastSession.setEnd(new Date());
+                    lastSession.setEnd(LocalDateTime.now());
                 } else if ((lastSession.getBegin() == null) && current.getValue().online == 1) {
-                    Session session = new Session(new Date());
+                    Session session = new Session(LocalDateTime.now());
                     mapSession.get(key).add(session);
                 }
             }

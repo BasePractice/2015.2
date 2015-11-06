@@ -1,32 +1,35 @@
 package ru.mirea.oop.practice.coursej.s131245;
 
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 
 /**FIXME: Разобраться в логике. Сделать все поля final */
 public final class Session {
-    private Date begin;
-    private Date end;
-    private Date session;
-    public Session(Date begin) {
+    private final LocalDateTime begin;
+    private LocalDateTime end;
+    private Duration session;
+
+    public Session(LocalDateTime begin) {
         this.begin = begin;
     }
 
-
     /** FIXME: Избавится от deprecated методов */
-    public void setEnd(Date end) {
+    //Заменено на LocalDateTime и Duration
+    public void setEnd(LocalDateTime end) {
         this.end = end;
-        this.session = new Date(begin.getYear(), begin.getMonth(), begin.getDay(), end.getHours() - begin.getHours(), end.getMinutes() - begin.getMinutes(), 0);
+        this.session = Duration.between(begin, end);
     }
 
-    public Date getBegin() {
+    public LocalDateTime getBegin() {
         return begin;
     }
 
-    public Date getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public Date getSession() {
+    public Duration getSession() {
         return session;
     }
 
