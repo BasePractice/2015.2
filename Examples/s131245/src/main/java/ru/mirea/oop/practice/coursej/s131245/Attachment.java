@@ -24,13 +24,13 @@ import java.util.Map;
 
 
 //FIXME: Разобраться в логике.
-//SimpleDateFormat не потокобезопасен - сделать его таковым.
-//Разбить на классы в соответствии с логикой
+//SimpleDateFormat не потокобезопасен - сделать его таковым; Заменен на DateTimeFormatter
+//Разбить на классы в соответствии с логикой; Вытащена вся логика парсера, что еще?
 public class Attachment {
     private static final Logger logger = LoggerFactory.getLogger(Attachment.class);
     private static final String REPORTS_DIRECTORY = System.getProperty("user.home") + "/reports";
     private static int WIDTH = 4;
-
+//DateTimeFormatter - thread-safe
     private static final DateTimeFormatter dateFormat_input = DateTimeFormatter.ofPattern("dd/MM HH:mm");
     private static final DateTimeFormatter dateFormat_output = DateTimeFormatter.ofPattern("HH:mm");
     private static final DateTimeFormatter dateFormat_forFile =  DateTimeFormatter.ofPattern("dd-MM");
@@ -63,7 +63,7 @@ public class Attachment {
         sheet.setDefaultColumnWidth(11);
         sheet.createRow(0);
         sheet.createRow(1);
-
+        //Вызов из Parser возможнной даты и возможный список людей
         LocalDate date = parser.getDate();
         ArrayList<String> arrayOfPeople = parser.getQueryOfPeople();
 
@@ -72,7 +72,10 @@ public class Attachment {
         int column = 0;
 
         for (Map.Entry<Long, ArrayList<Session>> currentMan : mapSession.entrySet()) {
+            //Проход по списку контактов и заполнение каждого в отдельности по столбцам
+
             String key = friendsMap.get(currentMan.getKey()).firstName + " " + friendsMap.get(currentMan.getKey()).lastName;
+            //Либо часть людей заполняется, либо все
             if (parser.getMsg().contains("Статистика всех пользователей") || arrayOfPeople.contains(key)) {
                 Row row;
 
@@ -84,7 +87,8 @@ public class Attachment {
                 row = sheet.getRow(1);
                 row.createCell(column).setCellValue("Вход");
                 row.createCell(column + 1).setCellValue("Выход");
-                row.createCell(column + 2).setCellValue("Сессия");
+                row.createCell(column + 2).setCellValue("Сессия, мин");
+                //Проверка на наличие следующей строки
                 for (int i = 0; i < currentMan.getValue().size(); i++) {
 
                     if (sheet.getLastRowNum() >= index) {
@@ -93,11 +97,12 @@ public class Attachment {
                         row = sheet.createRow(index);
                     }
                     try {
+                        //При отсутствие даты, проверяем конкретную сессию на совпадение с заданной датой
                         if((!parser.isDate()) || (parser.isDate() && (date.getDayOfMonth() == currentMan.getValue().get(i).getBegin().getDayOfMonth()  || date.getDayOfMonth() == currentMan.getValue().get(i).getEnd().getDayOfMonth() )))
                         {
                             row.createCell(column).setCellValue(dateFormat_input.format(currentMan.getValue().get(i).getBegin()));
                             row.createCell(column + 1).setCellValue(dateFormat_output.format(currentMan.getValue().get(i).getEnd()));
-                            row.createCell(column + 2).setCellValue(dateFormat_output.format(currentMan.getValue().get(i).getSession()));
+                            row.createCell(column + 2).setCellValue(currentMan.getValue().get(i).getSession().toMinutes());
                             index++;
                         }
                     } catch (NullPointerException e) {

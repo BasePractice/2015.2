@@ -59,7 +59,7 @@ public final class VkStatistic extends ServiceBotsExtension {
         super("vk.services.VkStatistic");
         this.msgApi = api.getMessages();
     }
-
+    //Если DateTimeFormatter thread-safe - нужен ли class ThreadLocal
     private static DateTimeFormatter getFormat() {
         DateTimeFormatter format = threadFormat.get();
         if (format == null) {
@@ -149,6 +149,7 @@ public final class VkStatistic extends ServiceBotsExtension {
 
 
     /**FIXME: Разобраться в логике работы */
+    //Логика в Parser
     /*
     public String parse(String msg) {
         try {

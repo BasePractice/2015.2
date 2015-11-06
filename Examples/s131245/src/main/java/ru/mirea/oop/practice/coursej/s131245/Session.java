@@ -1,5 +1,6 @@
 package ru.mirea.oop.practice.coursej.s131245;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 
@@ -7,16 +8,17 @@ import java.time.LocalDateTime;
 public final class Session {
     private final LocalDateTime begin;
     private LocalDateTime end;
-    private LocalDateTime session;
+    private Duration session;
 
     public Session(LocalDateTime begin) {
         this.begin = begin;
     }
 
     /** FIXME: Избавится от deprecated методов */
+    //Заменено на LocalDateTime и Duration
     public void setEnd(LocalDateTime end) {
         this.end = end;
-        this.session =  LocalDateTime.of(begin.getYear(), begin.getMonthValue(), begin.getDayOfMonth() , end.getHour() - begin.getHour(), end.getMinute() - begin.getMinute());
+        this.session = Duration.between(begin, end);
     }
 
     public LocalDateTime getBegin() {
@@ -27,7 +29,7 @@ public final class Session {
         return end;
     }
 
-    public LocalDateTime getSession() {
+    public Duration getSession() {
         return session;
     }
 
