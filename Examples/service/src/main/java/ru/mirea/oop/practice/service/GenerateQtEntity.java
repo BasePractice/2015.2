@@ -47,6 +47,7 @@ public final class GenerateQtEntity {
                         .append("NOTIFY ").append(property.getGetter()).append("Changed")
                         .append(")").append(ENDL);
             }
+            builder.append("    Q_PROPERTY(QString table_name READ tableName)").append(ENDL);
             builder.append("public:").append(ENDL);
             builder.append("    ").append(def.getClassName()).append("(QObject *parent = nullptr): QObject(parent) {}").append(ENDL);
             builder.append("    ").append(def.getClassName()).append("(const ")
@@ -80,14 +81,14 @@ public final class GenerateQtEntity {
             builder.append("        return (*this);").append(ENDL);
             builder.append("    }").append(ENDL);
 
-            builder.append("    const QString tableName() { return QString::fromUtf8(\"").append(def.getClassName()).append("\"); }").append(ENDL);
+            builder.append("    const QString tableName() const { return QString::fromUtf8(\"").append(def.getClassName()).append("\"); }").append(ENDL);
             builder.append(ENDL);
 
             for (Property property : def.properties) {
                 builder.append("    /** Getter ").append(property.getGetter()).append("*/").append(ENDL);
                 builder.append("    ")
                         .append(property.type)
-                        .append(" ")
+                        .append(" &")
                         .append(property.getGetter())
                         .append("() { return _")
                         .append(property.getGetter())

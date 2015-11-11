@@ -170,7 +170,7 @@ VALUES (upper('cb01450e-4b96-4a99-9315-73a1826a75cf'),
         'Андрей',
         'Александрович',
         'a.khlebnikov',
-        'e10adc3949ba59abbe56e057f20f883e',
+        'E10ADC3949BA59ABBE56E057F20F883E',
         'virtuszold@mail.ru',
         1);
 INSERT INTO 'Groups' (name) VALUES ('Эксперт');
