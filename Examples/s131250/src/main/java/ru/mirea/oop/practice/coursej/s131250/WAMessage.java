@@ -1,10 +1,10 @@
 package ru.mirea.oop.practice.coursej.s131250;
 
-public class WAMessage {
-    public String text;
-    public String attachment;
+final class WAMessage {
+    public final String text;
+    public final String attachment;
 
-    public WAMessage(String text, String attachment) {
+    WAMessage(String text, String attachment) {
         this.text = text;
         this.attachment = attachment;
     }

@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
 class ImageBuilder {
@@ -27,7 +26,7 @@ class ImageBuilder {
     public ImageBuilder() {
         long counterValue = counter.getAndIncrement();
         BufferedImage img = new BufferedImage(80, 20, BufferedImage.TYPE_INT_ARGB);
-        FontMetrics imgMetrics = getImageMetrics(img,true);
+        FontMetrics imgMetrics = getImageMetrics(img, true);
 
         BufferedImage result = new BufferedImage(
                 imgMetrics.stringWidth(IMAGE_TITLE), imgMetrics.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -47,8 +46,11 @@ class ImageBuilder {
 
     private FontMetrics getImageMetrics(BufferedImage img, boolean isTitle) {
         Graphics2D g2d = img.createGraphics();
-        if (isTitle) {g2d.setFont(new Font(Font.SERIF, Font.BOLD, TITLE_FONT_SIZE));} else
-        {g2d.setFont(new Font(Font.SERIF, Font.BOLD, TEXT_FONT_SIZE));}
+        if (isTitle) {
+            g2d.setFont(new Font(Font.SERIF, Font.BOLD, TITLE_FONT_SIZE));
+        } else {
+            g2d.setFont(new Font(Font.SERIF, Font.BOLD, TEXT_FONT_SIZE));
+        }
         return g2d.getFontMetrics();
     }
 
@@ -56,7 +58,9 @@ class ImageBuilder {
         long counterValue = counter.getAndIncrement();
         ImageIO.write(result, IMAGE_FILE_TYPE, new File(Configuration.getFileName(counterValue + IMAGE_FILE_EXTENSION)));
         File file = new File(Configuration.getFileName(fileName));
-        if (!file.delete()) {logger.error("Ошибка удаления файла " + Configuration.getFileName(fileName));}
+        if (!file.delete()) {
+            logger.error("Ошибка удаления файла " + Configuration.getFileName(fileName));
+        }
         fileName = counterValue + IMAGE_FILE_EXTENSION;
     }
 

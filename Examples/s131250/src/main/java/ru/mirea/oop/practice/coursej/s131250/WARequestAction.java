@@ -11,7 +11,7 @@ import java.net.URLEncoder;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-public class WARequestAction {
+final class WARequestAction {
     private static final Logger logger = LoggerFactory.getLogger(WARequestAction.class);
     private static String appid = "";
 
@@ -25,7 +25,8 @@ public class WARequestAction {
             appid = prop.getProperty("APPID");
         } catch (Exception e) {
             System.out.println(".WAID load error");
-            System.exit(0);
+            //FIXME: Убивание процесса не лучший вариант
+            return null;
         }
 
         Retrofit retrofit = new Retrofit.Builder()

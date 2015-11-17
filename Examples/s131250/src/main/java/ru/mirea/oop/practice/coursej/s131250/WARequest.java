@@ -5,7 +5,7 @@ import retrofit.Call;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
-public interface WARequest {
+interface WARequest {
     @GET("/v2/query")
     Call<ResponseBody> doWARequest(@Query(value = "input", encoded = true) String input,
                                    @Query("appid") String appid,

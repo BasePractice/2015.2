@@ -19,14 +19,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
 
-public class WAAction {
+final class WAAction {
     private static final Logger logger = LoggerFactory.getLogger(WAAction.class);
-    private ImageBuilder currentImage;
-    private VkontakteApi api;
+    private final ImageBuilder currentImage;
+    private final VkontakteApi api;
     private String vkPhotoOptions;
     private WAMessage waMessage;
 
-    public WAAction(VkontakteApi api) {
+    WAAction(VkontakteApi api) {
         this.currentImage = new ImageBuilder();
         this.api = api;
     }
@@ -106,7 +106,7 @@ public class WAAction {
         vkPhotoOptions = photosApi.saveMessagesPhoto(serverS, photoS, photoS, hash).toString();
     }
 
-    private class VkImageGson {
+    private final class VkImageGson {
         private Integer server;
         private String photo;
         private String hash;
