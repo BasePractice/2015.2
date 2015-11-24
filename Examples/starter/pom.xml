@@ -12,6 +12,13 @@
     <version>1.0.1</version>
     <name>Mirea.Oop.Practice.CourseJ.Starter</name>
 
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
     <build>
         <finalName>Mirea.Oop.Practice.Course.Starter</finalName>
         <resources>
@@ -79,6 +86,28 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>s000000</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>s000001</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>s131250</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>s131226</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>s131245</artifactId>
             <version>${project.version}</version>
         </dependency>
 

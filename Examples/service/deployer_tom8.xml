@@ -1,0 +1,66 @@
+<project name="DeployerTomcat8" default="redeploy" basedir=".">
+    <property name="build" value="${basedir}/target"/>
+    <property name="path" value="/Bauman.Education.Media.Service"/>
+    <property name="base.url" value="http://localhost:8080"/>
+    <property name="url" value="${base.url}/manager/text"/>
+    <property name="username" value="deploy"/>
+    <property name="password" value="deploy"/>
+    <property name="localRepository" value="D:\mvn\repo"/>
+    <property name="remoteRepository" value="C:\.m2\repository"/>
+    <property name="usedRepository" value="${remoteRepository}"/>
+
+    <property name="catalina-ant.jar"
+              value="${usedRepository}\org\apache\tomcat\tomcat-catalina-ant\8.0.20\tomcat-catalina-ant-8.0.20.jar"/>
+    <property name="tomcat-util.jar"
+              value="${usedRepository}\org\apache\tomcat\tomcat-util\8.0.20\tomcat-util-8.0.20.jar"/>
+
+    <property name="deploy_classpath" value="${catalina-ant.jar};${tomcat-util.jar}"/>
+
+    <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" classpath="${deploy_classpath}"/>
+    <taskdef name="list" classname="org.apache.catalina.ant.ListTask" classpath="${deploy_classpath}"/>
+    <taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask" classpath="${deploy_classpath}"/>
+    <taskdef name="resources" classname="org.apache.catalina.ant.ResourcesTask" classpath="${deploy_classpath}"/>
+    <taskdef name="start" classname="org.apache.catalina.ant.StartTask" classpath="${deploy_classpath}"/>
+    <taskdef name="stop" classname="org.apache.catalina.ant.StopTask" classpath="${deploy_classpath}"/>
+    <taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" classpath="${deploy_classpath}"/>
+
+
+    <target name="-prepare" depends="-is-deployed"/>
+
+    <target name="redeploy" depends="-prepare, -undeploy-if-exists, -deploy"/>
+
+    <target name="-undeploy-if-exists" if="${is.war.deployed}">
+        <antcall target="-undeploy"/>
+    </target>
+
+    <target name="-deploy" depends="-prepare">
+        <deploy url="${url}" username="${username}" password="${password}"
+                path="${path}" war="file:${build}${path}.war"/>
+    </target>
+
+    <target name="-reload" depends="-prepare">
+        <reload url="${url}" username="${username}" password="${password}" path="${path}"/>
+    </target>
+
+    <target name="-undeploy">
+        <undeploy url="${url}" username="${username}" password="${password}" path="${path}"/>
+        <sleep seconds="5"/>
+    </target>
+
+    <target name="-is-deployed">
+        <!--<property name="war.list" value=""/>-->
+        <list url="${url}" username="${username}" password="${password}" charset="utf8" output="war.list"
+              append="false"/>
+        <loadfile property="war.found" srcfile="war.list">
+            <filterchain>
+                <linecontainsregexp>
+                    <regexp pattern="${path}"/>
+                </linecontainsregexp>
+            </filterchain>
+        </loadfile>
+        <condition property="is.war.deployed" else="false">
+            <isset property="war.found"/>
+        </condition>
+    </target>
+
+</project>

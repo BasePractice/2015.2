@@ -1,0 +1,374 @@
+[
+  {
+    "name": "User",
+    "includes": [
+      "group.h"
+    ],
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "QUuid",
+        "name": "uuid"
+      },
+      {
+        "type": "QString",
+        "name": "last_name"
+      },
+      {
+        "type": "QString",
+        "name": "first_name"
+      },
+      {
+        "type": "QString",
+        "name": "middl_name"
+      },
+      {
+        "type": "QString",
+        "name": "login"
+      },
+      {
+        "type": "QString",
+        "name": "password"
+      },
+      {
+        "type": "QString",
+        "name": "email"
+      },
+      {
+        "type": "QUrl",
+        "name": "avatar_url"
+      },
+      {
+        "type": "Entities::Group",
+        "name": "group"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "Group",
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "QString",
+        "name": "name"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "Object",
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "QUuid",
+        "name": "uuid"
+      },
+      {
+        "type": "QString",
+        "name": "name"
+      },
+      {
+        "type": "QString",
+        "name": "address"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "ProfileIndex",
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "QUuid",
+        "name": "uuid"
+      },
+      {
+        "type": "QString",
+        "name": "name"
+      },
+      {
+        "type": "double",
+        "name": "min"
+      },
+      {
+        "type": "double",
+        "name": "max"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "ComplexIndex",
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "QUuid",
+        "name": "uuid"
+      },
+      {
+        "type": "QString",
+        "name": "name"
+      },
+      {
+        "type": "double",
+        "name": "min"
+      },
+      {
+        "type": "double",
+        "name": "max"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "Index",
+    "includes": [
+      "complexindex.h"
+    ],
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "QUuid",
+        "name": "uuid"
+      },
+      {
+        "type": "Entities::ComplexIndex",
+        "name": "complex_index"
+      },
+      {
+        "type": "QString",
+        "name": "name"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "GradeProfileValue",
+    "includes": [
+      "profileindex.h",
+      "inspection.h"
+    ],
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "Entities::ProfileIndex",
+        "name": "profile"
+      },
+      {
+        "type": "Entities::Inspection",
+        "name": "inspection"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "ComparativeValue",
+    "includes": [
+      "profileindex.h",
+      "inspection.h"
+    ],
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "Entities::ProfileIndex",
+        "name": "profile"
+      },
+      {
+        "type": "Entities::Inspection",
+        "name": "inspection"
+      },
+      {
+        "type": "double",
+        "name": "value"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "ComplexIndexValue",
+    "includes": [
+      "complexindex.h"
+    ],
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "Entities::ComplexIndex",
+        "name": "complex_index"
+      },
+      {
+        "type": "double",
+        "name": "primary_value"
+      },
+      {
+        "type": "double",
+        "name": "general_value"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "IndexValue",
+    "includes": [
+      "complexindex.h",
+      "index.h"
+    ],
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "Entities::ComplexIndex",
+        "name": "complex_index"
+      },
+      {
+        "type": "Entities::Index",
+        "name": "index"
+      },
+      {
+        "type": "double",
+        "name": "value"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  },
+  {
+    "name": "Inspection",
+    "includes": [
+      "user.h",
+      "object.h"
+    ],
+    "properties": [
+      {
+        "type": "long",
+        "name": "id"
+      },
+      {
+        "type": "QUuid",
+        "name": "uuid"
+      },
+      {
+        "type": "Entities::Object",
+        "name": "object"
+      },
+      {
+        "type": "Entities::User",
+        "name": "user"
+      },
+      {
+        "type": "QByteArray",
+        "name": "content"
+      },
+      {
+        "type": "QDateTime",
+        "name": "complete"
+      },
+      {
+        "type": "QDateTime",
+        "name": "created_at"
+      },
+      {
+        "type": "QDateTime",
+        "name": "updated_at"
+      }
+    ]
+  }
+]

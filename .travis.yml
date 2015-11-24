@@ -1,0 +1,10 @@
+language: java
+install:  cd Examples && mvn install -DskipTests=true && cd ..
+script:   cd Examples && mvn test && cd ..
+
+jdk:
+  - oraclejdk8
+
+notifications:
+  email:
+    - viruszold@mail.ru
