@@ -6,7 +6,18 @@ public final class Algorithms {
     }
 
     public static <E> ILinkedList<E> subList(ILinkedList<E> list, E offset) {
-        throw new RuntimeException("Not implement yet");
+        //throw new RuntimeException("Not implement yet");
+        ILinkedList<E> result = new LinkedListImpl<>();
+        if (list instanceof LinkedListImpl) {
+            LinkedListImpl<E> impl = (LinkedListImpl<E>) list;
+            LinkedListImpl.Node<E> node = impl.indexOf(offset);
+            if (node == null)
+                return result;
+            for (LinkedListImpl.Node<E> next = node; next != null; next = next.next) {
+                result.add(node.item);
+            }
+        }
+        return list;
     }
 
     public static <E> ILinkedList<E> subList(ILinkedList<E> list, E offset, int size) {
@@ -20,7 +31,18 @@ public final class Algorithms {
     }
 
     public static <E> ILinkedList<E> removeList(ILinkedList<E> list, E offset, int size) {
-        throw new RuntimeException("Not implement yet");
+        //throw new RuntimeException("Not implement yet");
+        ILinkedList<E> result = new LinkedListImpl<>();
+        if (list instanceof LinkedListImpl) {
+            LinkedListImpl<E> impl = (LinkedListImpl<E>) list;
+            LinkedListImpl.Node<E> node = impl.indexOf(offset);
+            if (node == null)
+                return result;
+            for (LinkedListImpl.Node<E> next = node; next != null && size > 0; next = next.prev, --size) {
+                result.add(node.item);
+            }
+        }
+        return list;
     }
 
     public static <E> boolean compareList(ILinkedList<E> list, ILinkedList<E> other) {
@@ -39,4 +61,9 @@ public final class Algorithms {
         }
         return accum;
     }
+
+    public static void main(String[] args) {
+
+    }
+
 }
