@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.vk.DocumentsApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
-
+import ru.mirea.oop.practice.coursej.api.vk.entities.Document;
 
 
 import java.io.File;
@@ -22,10 +22,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 
+/*
+   Создание документа по запросу, загрузка на сервер
+ */
 
-//FIXME: Разобраться в логике.
-//SimpleDateFormat не потокобезопасен - сделать его таковым; Заменен на DateTimeFormatter
-//Разбить на классы в соответствии с логикой; Вытащена вся логика парсера, что еще?
 public class Attachment {
     private static final Logger logger = LoggerFactory.getLogger(Attachment.class);
     private static final String REPORTS_DIRECTORY = System.getProperty("user.home") + "/reports";
@@ -51,9 +51,11 @@ public class Attachment {
     public String getAttachmentName() throws Exception {
         DocumentsApi documents = api.getDocuments();
         File file = createFile();
-        boolean document = documents.uploadDocument(file);
+        documents.uploadDocument(file);
+        Document document =documents.list(1, 0, api.idOwner())[0];
 
-        return null;
+
+        return "doc" + document.idOwner + "_" + document.id;
     }
 
     public File createFile() throws FileNotFoundException {
@@ -117,9 +119,9 @@ public class Attachment {
         }
 
 
-        File file = writeFile(workbook);
 
-        return file;
+
+        return writeFile(workbook);
     }
 
     public static File writeFile(Workbook workbook) {

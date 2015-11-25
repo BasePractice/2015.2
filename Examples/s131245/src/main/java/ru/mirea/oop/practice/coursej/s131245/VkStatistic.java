@@ -16,9 +16,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
-/**
- * Created by aleksejpluhin on 13.10.15.
+/*
+ Класс VkStatisctic - основной класс модуля, отвечающий за сбор статистики, передача запроса на файл от
+ пользователя другому классу, формирование ответа пользователю с вложенным файлом.
  */
+
 public final class VkStatistic extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkStatistic.class);
     //FIXME: Зачем static поле?
@@ -72,29 +74,32 @@ public final class VkStatistic extends ServiceBotsExtension {
 
     @Override
     protected void doEvent(Event event) {
-
+        //Первоночальное заполнение статистки друзей, запись пользоватлей, находящихся на сайте во время запуска программы
         if (mapSession.isEmpty()) {
             firstPutOfFriends();
         }
 
         switch (event.type) {
-
+            //Создание новой сессии для пользователя вошедшего на сайт
             case FRIEND_ONLINE: {
                 eventOnline(event);
                 break;
             }
-
+            //Закрытие сессии пользователя
             case FRIEND_OFFLINE: {
                 eventOffline(event);
                 break;
             }
 
-
+            //Получение запроса от на получение статистики.
             case MESSAGE_RECEIVE: {
                 eventMessageReceive(event);
                 break;
             }
-
+            /*
+             Сервис "Вконтакте" не представляет точной инофрмации обо всех пользователях, иногда уведомления о входе/выходе пользователя
+             не приходят и поэтому  при Timeout будет происходить проход по всем пользователям на проверку каких-либо несостыковок
+             */
             case TIMEOUT: {
                 eventTimeout();
                 break;
@@ -148,45 +153,6 @@ public final class VkStatistic extends ServiceBotsExtension {
     }
 
 
-    /**FIXME: Разобраться в логике работы */
-    //Логика в Parser
-    /*
-    public String parse(String msg) {
-        try {
-            String date = "";
-            String text = "";
-            String withoutDate = "";
-            try {
-                String[] split = msg.split(" ");
-                date = split[split.length - 1];
-                withoutDate = msg.substring(0, msg.lastIndexOf(" "));
-                msg = msg.substring(0, msg.lastIndexOf(" "));
-            } catch (Exception e) {
-                logger.error("даты нет");
-            }
-            if (msg.split(": ")[1].equals("всех")) {
-                text = "Статисткика всех пользователй " + (date.isEmpty() ? "" : " за " + date);
-            } else {
-                String[] arr;
-                if(withoutDate.isEmpty()) {
-                    arr = withoutDate.split(": ")[1].split(", ");
-                }  else {
-                    arr = msg.split(": ")[1].split(", ");
-                }
-
-                String people = "";
-                for (String humanName : arr) {
-                    people += humanName + ", ";
-                    text = "Статистика пользователей: " + people.substring(0, people.length() - 2) + (date.isEmpty() ? "" : " за " + date);
-                }
-            }
-            return text;
-        } catch (Exception e) {
-            logger.error("Ошибка ввода");
-        }
-        return null;
-    }
-    */
 
 
 
@@ -252,7 +218,7 @@ public final class VkStatistic extends ServiceBotsExtension {
                     logger.error("Ошибка получения документа");
                 }
             } else if (msg.text.equals("help")) {
-                text = "Запрос состоит имеет ввид\n1)bot get: Иван Иванов\n2)bog get: всех\n3)bot get: Иванов Иван, Иванова Ивана 10/04/2015\n";
+                text = "Запрос состоит имеет вид\n1)bot get: Иван Иванов\n2)bog get: всех\n3)bot get: Иванов Иван, Иванова Ивана 10/04/2015\n";
             }
             else {
                 return;
