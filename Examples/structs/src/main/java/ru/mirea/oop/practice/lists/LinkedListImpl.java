@@ -43,6 +43,15 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
         size++;
     }
 
+    Node<E> indexOf(E element) {
+        for (Node<E> it = first; it != null; it = it.next) {
+            if (element.equals(it.item)) {
+                return (it);
+            }
+        }
+        return null;
+    }
+
     @Override
     public void remove(E element) {
         for (Node<E> it = first; it != null; it = it.next) {
@@ -91,7 +100,7 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
         return element;
     }
 
-    private static final class Node<E> {
+    static final class Node<E> {
         final E item;
         Node<E> next;
         Node<E> prev;
