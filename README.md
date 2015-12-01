@@ -1,4 +1,4 @@
-![Travis-Build](https://travis-ci.org/BasePractice/2015.2.svg?branch=master)
+Travis-CI ![Travis-Build](https://travis-ci.org/BasePractice/2015.2.svg?branch=master)
 Обновление репозитория
 ======================
 Команда выполняется один раз
