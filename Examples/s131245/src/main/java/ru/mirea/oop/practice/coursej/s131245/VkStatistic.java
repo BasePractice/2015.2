@@ -29,6 +29,7 @@ public final class VkStatistic extends ServiceBotsExtension {
     private final MessagesApi msgApi;
     private boolean alreadySend = false;
     private static final ThreadLocal<DateTimeFormatter> threadFormat = new ThreadLocal<>();
+    private DateScheduled dateScheduled = new DateScheduled();
     private static final String FRIENDS_FIELDS = "nickname, " +
             "domain, " +
             "sex, " +
@@ -53,6 +54,9 @@ public final class VkStatistic extends ServiceBotsExtension {
 
 
 
+
+
+
     {
         mapSession.clear();
     }
@@ -74,10 +78,27 @@ public final class VkStatistic extends ServiceBotsExtension {
 
     @Override
     protected void doEvent(Event event) {
+
         //Первоночальное заполнение статистки друзей, запись пользоватлей, находящихся на сайте во время запуска программы
         if (mapSession.isEmpty()) {
             firstPutOfFriends();
         }
+
+
+
+        if(dateScheduled.isScheduled()) {
+            Parser parser = new Parser("bot get: всех");
+           Attachment attachment = new Attachment(mapSession, friendsMap, api, parser);
+            String attachmentName = null;
+            try {
+                 attachmentName = attachment.getAttachmentName();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            sendMessage(owner.id, "отправка по расписанию ", attachmentName );
+        }
+
+
 
         switch (event.type) {
             //Создание новой сессии для пользователя вошедшего на сайт
@@ -113,6 +134,8 @@ public final class VkStatistic extends ServiceBotsExtension {
 
 
     }
+
+
 
 
     @Override
@@ -186,6 +209,10 @@ public final class VkStatistic extends ServiceBotsExtension {
         UserOffline userOffline = (UserOffline) event.object;
         Long key = userOffline.getContact().id;
         int index = mapSession.get(key).size() - 1;
+        //Данная проверка необходима, если первоначальная инициализация вызвана кейсом Offline.
+        if(index == -1) {
+            return;
+        }
         String name = ((UserOffline) event.object).getContact().firstName + " " + ((UserOffline) event.object).getContact().lastName;
         if (mapSession.get(key).get(index).getBegin() == null) {
             return;
@@ -204,7 +231,7 @@ public final class VkStatistic extends ServiceBotsExtension {
         Message msg = (Message) event.object;
         Contact contact = msg.contact;
         String text;
-        Attachment attachment;
+        Attachment attachment = null;
         String attachmentName = null;
         if (contact.id == owner.id) {
             if (msg.text.contains("bot get")) {
@@ -223,31 +250,9 @@ public final class VkStatistic extends ServiceBotsExtension {
             else {
                 return;
             }
-            try {
-
-                Integer idMessage = msgApi.send(
-                        contact.id,
-                        null,
-                        null,
-                        null,
-                        text,
-                        null,
-                        null,
-                        null,
-                        attachmentName,
-                        null,
-                        null
-
-                );
-                logger.debug("Сообщение отправлено " + idMessage);
-
-                alreadySend = true;
-
-            } catch (IOException ex) {
-                logger.error("Ошибка отправки сообщения", ex);
-            } catch (Exception e) {
-                logger.debug("Ошибка attachment");
-                e.printStackTrace();
+            sendMessage(contact.id, text, attachmentName);
+            if(attachment != null) {
+                attachment.deleteFile(attachmentName);
             }
         }
     }
@@ -271,6 +276,36 @@ public final class VkStatistic extends ServiceBotsExtension {
         }
 
     }
+
+    public void sendMessage(long id, String text, String attachmentName) {
+        try {
+
+            Integer idMessage = msgApi.send(
+                    id,
+                    null,
+                    null,
+                    null,
+                    text,
+                    null,
+                    null,
+                    null,
+                    attachmentName,
+                    null,
+                    null
+
+            );
+            logger.debug("Сообщение отправлено " + idMessage);
+
+            alreadySend = true;
+
+        } catch (IOException ex) {
+            logger.error("Ошибка отправки сообщения", ex);
+        } catch (Exception e) {
+            logger.debug("Ошибка attachment");
+            e.printStackTrace();
+        }
+    }
+
 
 
 }

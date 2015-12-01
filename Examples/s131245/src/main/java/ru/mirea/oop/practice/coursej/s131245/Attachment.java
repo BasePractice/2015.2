@@ -30,10 +30,10 @@ public class Attachment {
     private static final Logger logger = LoggerFactory.getLogger(Attachment.class);
     private static final String REPORTS_DIRECTORY = System.getProperty("user.home") + "/reports";
     private static int WIDTH = 4;
-//DateTimeFormatter - thread-safe
+    //DateTimeFormatter - thread-safe
     private static final DateTimeFormatter dateFormat_input = DateTimeFormatter.ofPattern("dd/MM HH:mm");
     private static final DateTimeFormatter dateFormat_output = DateTimeFormatter.ofPattern("HH:mm");
-    private static final DateTimeFormatter dateFormat_forFile =  DateTimeFormatter.ofPattern("dd-MM");
+    private static final DateTimeFormatter dateFormat_forFile = DateTimeFormatter.ofPattern("dd-MM");
 
 
     private Map<Long, ArrayList<Session>> mapSession;
@@ -52,7 +52,7 @@ public class Attachment {
         DocumentsApi documents = api.getDocuments();
         File file = createFile();
         documents.uploadDocument(file);
-        Document document =documents.list(1, 0, api.idOwner())[0];
+        Document document = documents.list(1, 0, api.idOwner())[0];
 
 
         return "doc" + document.idOwner + "_" + document.id;
@@ -100,8 +100,7 @@ public class Attachment {
                     }
                     try {
                         //При отсутствие даты, проверяем конкретную сессию на совпадение с заданной датой
-                        if((!parser.isDate()) || (parser.isDate() && (date.getDayOfMonth() == currentMan.getValue().get(i).getBegin().getDayOfMonth()  || date.getDayOfMonth() == currentMan.getValue().get(i).getEnd().getDayOfMonth() )))
-                        {
+                        if ((!parser.isDate()) || (parser.isDate() && (date.getDayOfMonth() == currentMan.getValue().get(i).getBegin().getDayOfMonth() || date.getDayOfMonth() == currentMan.getValue().get(i).getEnd().getDayOfMonth()))) {
                             row.createCell(column).setCellValue(dateFormat_input.format(currentMan.getValue().get(i).getBegin()));
                             row.createCell(column + 1).setCellValue(dateFormat_output.format(currentMan.getValue().get(i).getEnd()));
                             row.createCell(column + 2).setCellValue(currentMan.getValue().get(i).getSession().toMinutes());
@@ -119,12 +118,10 @@ public class Attachment {
         }
 
 
-
-
         return writeFile(workbook);
     }
 
-    public static File writeFile(Workbook workbook) {
+    public File writeFile(Workbook workbook) {
         String fileName = dateFormat_forFile.format(LocalDate.now()) + ".xlsx";
         File file = new File(REPORTS_DIRECTORY, fileName);
 
@@ -137,6 +134,21 @@ public class Attachment {
     }
 
 
+    public void deleteFile(String attachmentName) {
 
+        DocumentsApi documentsApi;
+        try {
+            documentsApi = api.getDocuments();
+            Document[] documents = documentsApi.list(10, 0, api.idOwner());
 
+            for (Document existDoc : documents) {
+                System.out.println("doc" + existDoc.idOwner + "_" + existDoc.id + "    "  + attachmentName);
+                if (("doc" + existDoc.idOwner + "_" + existDoc.id).equals(attachmentName)) {
+                    documentsApi.delete(existDoc);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Ошибка удаления файла");
+        }
+    }
 }
