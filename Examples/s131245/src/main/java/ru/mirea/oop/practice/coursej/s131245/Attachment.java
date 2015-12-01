@@ -142,7 +142,6 @@ public class Attachment {
             Document[] documents = documentsApi.list(10, 0, api.idOwner());
 
             for (Document existDoc : documents) {
-                System.out.println("doc" + existDoc.idOwner + "_" + existDoc.id + "    "  + attachmentName);
                 if (("doc" + existDoc.idOwner + "_" + existDoc.id).equals(attachmentName)) {
                     documentsApi.delete(existDoc);
                 }
