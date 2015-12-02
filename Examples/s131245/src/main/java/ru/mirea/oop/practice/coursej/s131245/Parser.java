@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-/**
- * Created by aleksejpluhin on 05.11.15.
+/*
+   Анализ запроса пользователя
  */
 public class Parser {
     private final String msg;
