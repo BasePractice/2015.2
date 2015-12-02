@@ -1,0 +1,13 @@
+package ru.mirea.oop.practice.coursej.s131241;
+
+import com.google.gson.Gson;
+import ru.mirea.oop.practice.coursej.s131241.Forecast.Forecast;
+
+public class Test {
+    public static final String JSON = "{\"city\":{\"id\":524901,\"name\":\"Moscow\",\"coord\":{\"lon\":37.615555,\"lat\":55.75222},\"country\":\"RU\",\"population\":0},\"cod\":\"200\",\"message\":0.0304,\"cnt\":7,\"list\":[{\"dt\":1448960400,\"temp\":{\"day\":0.61,\"min\":0.09,\"max\":0.75,\"night\":0.09,\"eve\":0.61,\"morn\":0.61},\"pressure\":987.06,\"humidity\":92,\"weather\":[{\"id\":600,\"main\":\"Snow\",\"description\":\"light snow\",\"icon\":\"13d\"}],\"speed\":6.76,\"deg\":209,\"clouds\":88,\"snow\":0.67},{\"dt\":1449046800,\"temp\":{\"day\":-0.36,\"min\":-3.64,\"max\":-0.36,\"night\":-2.42,\"eve\":-3.64,\"morn\":-0.8},\"pressure\":996,\"humidity\":94,\"weather\":[{\"id\":600,\"main\":\"Snow\",\"description\":\"light snow\",\"icon\":\"13d\"}],\"speed\":2.66,\"deg\":200,\"clouds\":76,\"snow\":0.43},{\"dt\":1449133200,\"temp\":{\"day\":-2.99,\"min\":-5.33,\"max\":-2.78,\"night\":-5.33,\"eve\":-3.95,\"morn\":-2.78},\"pressure\":1011.43,\"humidity\":93,\"weather\":[{\"id\":600,\"main\":\"Snow\",\"description\":\"light snow\",\"icon\":\"13d\"}],\"speed\":3.11,\"deg\":41,\"clouds\":76,\"snow\":0.34},{\"dt\":1449219600,\"temp\":{\"day\":-1.02,\"min\":-4.08,\"max\":1.52,\"night\":1.44,\"eve\":1.23,\"morn\":-4.08},\"pressure\":1007.42,\"humidity\":94,\"weather\":[{\"id\":601,\"main\":\"Snow\",\"description\":\"snow\",\"icon\":\"13d\"}],\"speed\":6.81,\"deg\":247,\"clouds\":92,\"rain\":0.43,\"snow\":4.04},{\"dt\":1449306000,\"temp\":{\"day\":-3.86,\"min\":-3.9,\"max\":-0.78,\"night\":-1.75,\"eve\":-3.74,\"morn\":-0.78},\"pressure\":1007.73,\"humidity\":95,\"weather\":[{\"id\":600,\"main\":\"Snow\",\"description\":\"light snow\",\"icon\":\"13d\"}],\"speed\":4.17,\"deg\":296,\"clouds\":0,\"snow\":0.07},{\"dt\":1449392400,\"temp\":{\"day\":6.78,\"min\":3.7,\"max\":6.78,\"night\":4.16,\"eve\":6.37,\"morn\":3.7},\"pressure\":982.49,\"humidity\":0,\"weather\":[{\"id\":501,\"main\":\"Rain\",\"description\":\"moderate rain\",\"icon\":\"10d\"}],\"speed\":13.46,\"deg\":246,\"clouds\":100,\"rain\":8.8},{\"dt\":1449478800,\"temp\":{\"day\":3.15,\"min\":1.65,\"max\":3.37,\"night\":1.65,\"eve\":2.37,\"morn\":3.37},\"pressure\":986.96,\"humidity\":0,\"weather\":[{\"id\":501,\"main\":\"Rain\",\"description\":\"moderate rain\",\"icon\":\"10d\"}],\"speed\":10.13,\"deg\":285,\"clouds\":81,\"rain\":4.06}]}";
+    public static void main(String[] args) {
+        Gson gson = new Gson();
+        Forecast forecast = gson.fromJson(JSON, Forecast.class);
+        System.out.println(forecast.toString());
+    }
+}

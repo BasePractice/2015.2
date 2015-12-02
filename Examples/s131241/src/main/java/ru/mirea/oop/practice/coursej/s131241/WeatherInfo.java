@@ -9,6 +9,7 @@ public class WeatherInfo extends ServiceBotsExtension {
 
     @Override
     protected void doEvent(Event event) {
+        Object object = null;
 
     }
 
