@@ -16,9 +16,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
-/**
- * Created by aleksejpluhin on 13.10.15.
+/*
+ Класс VkStatisctic - основной класс модуля, отвечающий за сбор статистики, передача запроса на файл от
+ пользователя другому классу, формирование ответа пользователю с вложенным файлом.
  */
+
 public final class VkStatistic extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkStatistic.class);
     //FIXME: Зачем static поле?
@@ -27,6 +29,7 @@ public final class VkStatistic extends ServiceBotsExtension {
     private final MessagesApi msgApi;
     private boolean alreadySend = false;
     private static final ThreadLocal<DateTimeFormatter> threadFormat = new ThreadLocal<>();
+    private DateScheduled dateScheduled = new DateScheduled();
     private static final String FRIENDS_FIELDS = "nickname, " +
             "domain, " +
             "sex, " +
@@ -48,6 +51,9 @@ public final class VkStatistic extends ServiceBotsExtension {
             "can_see_all_posts, " +
             "can_post, " +
             "universities";
+
+
+
 
 
 
@@ -73,28 +79,48 @@ public final class VkStatistic extends ServiceBotsExtension {
     @Override
     protected void doEvent(Event event) {
 
+        //Первоночальное заполнение статистки друзей, запись пользоватлей, находящихся на сайте во время запуска программы
         if (mapSession.isEmpty()) {
             firstPutOfFriends();
         }
 
-        switch (event.type) {
 
+
+        if(dateScheduled.isScheduled()) {
+            Parser parser = new Parser("bot get: всех");
+           Attachment attachment = new Attachment(mapSession, friendsMap, api, parser);
+            String attachmentName = null;
+            try {
+                 attachmentName = attachment.getAttachmentName();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            sendMessage(owner.id, "отправка по расписанию ", attachmentName );
+        }
+
+
+
+        switch (event.type) {
+            //Создание новой сессии для пользователя вошедшего на сайт
             case FRIEND_ONLINE: {
                 eventOnline(event);
                 break;
             }
-
+            //Закрытие сессии пользователя
             case FRIEND_OFFLINE: {
                 eventOffline(event);
                 break;
             }
 
-
+            //Получение запроса от на получение статистики.
             case MESSAGE_RECEIVE: {
                 eventMessageReceive(event);
                 break;
             }
-
+            /*
+             Сервис "Вконтакте" не представляет точной инофрмации обо всех пользователях, иногда уведомления о входе/выходе пользователя
+             не приходят и поэтому  при Timeout будет происходить проход по всем пользователям на проверку каких-либо несостыковок
+             */
             case TIMEOUT: {
                 eventTimeout();
                 break;
@@ -108,6 +134,8 @@ public final class VkStatistic extends ServiceBotsExtension {
 
 
     }
+
+
 
 
     @Override
@@ -148,45 +176,6 @@ public final class VkStatistic extends ServiceBotsExtension {
     }
 
 
-    /**FIXME: Разобраться в логике работы */
-    //Логика в Parser
-    /*
-    public String parse(String msg) {
-        try {
-            String date = "";
-            String text = "";
-            String withoutDate = "";
-            try {
-                String[] split = msg.split(" ");
-                date = split[split.length - 1];
-                withoutDate = msg.substring(0, msg.lastIndexOf(" "));
-                msg = msg.substring(0, msg.lastIndexOf(" "));
-            } catch (Exception e) {
-                logger.error("даты нет");
-            }
-            if (msg.split(": ")[1].equals("всех")) {
-                text = "Статисткика всех пользователй " + (date.isEmpty() ? "" : " за " + date);
-            } else {
-                String[] arr;
-                if(withoutDate.isEmpty()) {
-                    arr = withoutDate.split(": ")[1].split(", ");
-                }  else {
-                    arr = msg.split(": ")[1].split(", ");
-                }
-
-                String people = "";
-                for (String humanName : arr) {
-                    people += humanName + ", ";
-                    text = "Статистика пользователей: " + people.substring(0, people.length() - 2) + (date.isEmpty() ? "" : " за " + date);
-                }
-            }
-            return text;
-        } catch (Exception e) {
-            logger.error("Ошибка ввода");
-        }
-        return null;
-    }
-    */
 
 
 
@@ -220,6 +209,10 @@ public final class VkStatistic extends ServiceBotsExtension {
         UserOffline userOffline = (UserOffline) event.object;
         Long key = userOffline.getContact().id;
         int index = mapSession.get(key).size() - 1;
+        //Данная проверка необходима, если первоначальная инициализация вызвана кейсом Offline.
+        if(index == -1) {
+            return;
+        }
         String name = ((UserOffline) event.object).getContact().firstName + " " + ((UserOffline) event.object).getContact().lastName;
         if (mapSession.get(key).get(index).getBegin() == null) {
             return;
@@ -238,7 +231,7 @@ public final class VkStatistic extends ServiceBotsExtension {
         Message msg = (Message) event.object;
         Contact contact = msg.contact;
         String text;
-        Attachment attachment;
+        Attachment attachment = null;
         String attachmentName = null;
         if (contact.id == owner.id) {
             if (msg.text.contains("bot get")) {
@@ -252,36 +245,14 @@ public final class VkStatistic extends ServiceBotsExtension {
                     logger.error("Ошибка получения документа");
                 }
             } else if (msg.text.equals("help")) {
-                text = "Запрос состоит имеет ввид\n1)bot get: Иван Иванов\n2)bog get: всех\n3)bot get: Иванов Иван, Иванова Ивана 10/04/2015\n";
+                text = "Запрос состоит имеет вид\n1)bot get: Иван Иванов\n2)bog get: всех\n3)bot get: Иванов Иван, Иванова Ивана 10/04/2015\n";
             }
             else {
                 return;
             }
-            try {
-
-                Integer idMessage = msgApi.send(
-                        contact.id,
-                        null,
-                        null,
-                        null,
-                        text,
-                        null,
-                        null,
-                        null,
-                        attachmentName,
-                        null,
-                        null
-
-                );
-                logger.debug("Сообщение отправлено " + idMessage);
-
-                alreadySend = true;
-
-            } catch (IOException ex) {
-                logger.error("Ошибка отправки сообщения", ex);
-            } catch (Exception e) {
-                logger.debug("Ошибка attachment");
-                e.printStackTrace();
+            sendMessage(contact.id, text, attachmentName);
+            if(attachment != null) {
+                attachment.deleteFile(attachmentName);
             }
         }
     }
@@ -305,6 +276,36 @@ public final class VkStatistic extends ServiceBotsExtension {
         }
 
     }
+
+    public void sendMessage(long id, String text, String attachmentName) {
+        try {
+
+            Integer idMessage = msgApi.send(
+                    id,
+                    null,
+                    null,
+                    null,
+                    text,
+                    null,
+                    null,
+                    null,
+                    attachmentName,
+                    null,
+                    null
+
+            );
+            logger.debug("Сообщение отправлено " + idMessage);
+
+            alreadySend = true;
+
+        } catch (IOException ex) {
+            logger.error("Ошибка отправки сообщения", ex);
+        } catch (Exception e) {
+            logger.debug("Ошибка attachment");
+            e.printStackTrace();
+        }
+    }
+
 
 
 }
