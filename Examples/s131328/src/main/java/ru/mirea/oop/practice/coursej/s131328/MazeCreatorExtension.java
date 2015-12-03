@@ -58,7 +58,6 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
             }
         }
 
-
         //Преобразуем к интересующему формату
         Maze maze = new Maze(rows, cols);
         for (int x = 0; x < rows; x++) {
