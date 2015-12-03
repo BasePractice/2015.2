@@ -161,3 +161,4 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
     }
 }
 
+
