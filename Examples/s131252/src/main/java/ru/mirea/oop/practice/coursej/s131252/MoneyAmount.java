@@ -1,8 +1,8 @@
-package ru.mirea.oop.practice.coursej.s131252.Currency;
+package ru.mirea.oop.practice.coursej.s131252;
 
 public class MoneyAmount {
-    Currency currency;
-    double amount;
+    private final Currency currency;
+    private final double amount;
 
     public MoneyAmount(Currency currency, double amount) {
         this.currency = currency;
@@ -15,7 +15,7 @@ public class MoneyAmount {
 
     @Override
     public String toString() {
-        return String.format("%.2f", amount)+ " " + currency.getCharCode();
+        return String.format("%.2f", amount) + " " + currency.getCharCode();
     }
 
 }

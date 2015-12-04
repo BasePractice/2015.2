@@ -1,4 +1,4 @@
-package ru.mirea.oop.practice.coursej.s131252.Currency;
+package ru.mirea.oop.practice.coursej.s131252;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -15,11 +15,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Currency {
-    private String charCode;
-    private double value;
+class Currency {
+    private final String charCode;
+    private final double value;
 
-    public Currency(String charCode, double value) {
+    private Currency(String charCode, double value) {
         this.charCode = charCode;
         this.value = value;
     }
@@ -31,7 +31,6 @@ public class Currency {
                 .url(url)
                 .get()
                 .build();
-        String resp = "";
         InputSource inputSource = new InputSource();
         try {
             Response response = client.newCall(request).execute();
@@ -46,11 +45,7 @@ public class Currency {
             Document document = documentBuilder.parse(inputSource);
             NodeList nodeList = document.getElementsByTagName("Valute");
             for (int i = 0; i < nodeList.getLength(); i++) {
-                Element element = (Element) nodeList.item(i);
-                String charCode = getCharacterDataFromElement((Element) element.getElementsByTagName("CharCode").item(0));
-                int nominal = Integer.parseInt(getCharacterDataFromElement((Element) element.getElementsByTagName("Nominal").item(0)));
-                double value = Double.parseDouble((getCharacterDataFromElement((Element) element.getElementsByTagName("Value").item(0))).replaceAll(",", "."));
-                Currency currency = new Currency(charCode, value / nominal);
+                Currency currency = getCurrencyFromNode(nodeList.item(i));
                 currencyList.add(currency);
             }
 
@@ -64,13 +59,22 @@ public class Currency {
         return currencyList;
     }
 
-    public static String getCharacterDataFromElement(Element e) {
+    private static String getCharacterDataFromElement(Element e) {
         Node child = e.getFirstChild();
         if (child instanceof CharacterData) {
             CharacterData cd = (CharacterData) child;
             return cd.getData();
         }
         return "?";
+    }
+
+    private static Currency getCurrencyFromNode(Node node) {
+        Element element = (Element) node;
+        String charCode = getCharacterDataFromElement((Element) element.getElementsByTagName("CharCode").item(0));
+        int nominal = Integer.parseInt(getCharacterDataFromElement((Element) element.getElementsByTagName("Nominal").item(0)));
+        double value = Double.parseDouble((getCharacterDataFromElement((Element) element.getElementsByTagName("Value").item(0))).replaceAll(",", "."));
+        Currency currency = new Currency(charCode, value / nominal);
+        return currency;
     }
 
     public String getCharCode() {
