@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.Future;
 
 abstract class AbstractBotsExtension implements BotsExtension {
-    private String DEFAULT_USER_FIELDS = "sex," +
+    protected final String DEFAULT_USER_FIELDS = "sex," +
             "bdate," +
             "city," +
             "country," +
