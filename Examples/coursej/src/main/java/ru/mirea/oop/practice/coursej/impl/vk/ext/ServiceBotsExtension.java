@@ -92,7 +92,7 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
     }
 
     @Override
-    public final void run() {
+    public void run() {
         logger.info("Запущен сервис оповещения");
         try {
             friends.clear();
