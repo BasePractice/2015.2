@@ -4,5 +4,5 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public interface RowConverter<E> {
-    E conver(ResultSet rs) throws SQLException;
+    E convert(ResultSet rs) throws SQLException;
 }

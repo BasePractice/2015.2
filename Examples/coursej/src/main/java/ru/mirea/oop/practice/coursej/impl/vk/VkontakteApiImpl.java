@@ -5,7 +5,7 @@ import ru.mirea.oop.practice.coursej.api.Provider;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.vk.*;
 import ru.mirea.oop.practice.coursej.impl.ClientFactory;
-import ru.mirea.oop.practice.coursej.impl.ProviderImpl;
+import ru.mirea.oop.practice.coursej.impl.BasicProvider;
 import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 
 import java.lang.reflect.Constructor;
@@ -100,12 +100,12 @@ public final class VkontakteApiImpl implements VkontakteApi {
 
         @Override
         public Provider<Token> getToken() {
-            return new ProviderImpl<>(Token.class);
+            return new BasicProvider<>(Token.class);
         }
 
         @Override
         public Provider<Credentials> getCredentials() {
-            return new ProviderImpl<>(Credentials.class);
+            return new BasicProvider<>(Credentials.class);
         }
     }
 

@@ -79,7 +79,7 @@ final class SettingsRepositoryImpl implements SettingsRepository {
                 stmt.setString(1, key);
                 try (final ResultSet rs = stmt.executeQuery()) {
                     if (rs.next())
-                        return PROPERTY_CONVERTER.conver(rs);
+                        return PROPERTY_CONVERTER.convert(rs);
                 }
             }
         } catch (Exception ex) {
