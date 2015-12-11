@@ -61,6 +61,11 @@ public final class VkontakteApiImpl implements VkontakteApi {
     }
 
     @Override
+    public AudioApi getAudios() throws Exception {
+        return getImpl(AudioApiImpl.class, Audios.class);
+    }
+
+    @Override
     public long idOwner() {
         return authenticator.idOwner();
     }
