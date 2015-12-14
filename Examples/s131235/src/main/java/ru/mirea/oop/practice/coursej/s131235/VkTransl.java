@@ -41,13 +41,10 @@ public class VkTransl extends ServiceBotsExtension {
 
     public void eventMessageReceive(Event event) {
 
-
-
         if (alreadySend) {
             alreadySend = false;
             return;
         }
-
 
         Message msg = (Message) event.object;
         Contact contact = msg.contact;
