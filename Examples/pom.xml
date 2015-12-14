@@ -167,9 +167,16 @@
     <modules>
         <module>structs</module>
         <module>coursej</module>
-
+        <module>s000000</module>
+        <module>s000001</module>
+        <module>s131253</module>
+        <module>s131241</module>
+        <module>s131250</module>
+        <module>s131226</module>
+        <module>s131245</module>
         <module>s131235</module>
-
+        <module>s131328</module>
+        <module>s131239</module>
         <module>starter</module>
         <module>service</module>
     </modules>
