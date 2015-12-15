@@ -88,9 +88,7 @@ abstract class AbstractBotsExtension implements BotsExtension {
     protected static final Logger logger = LoggerFactory.getLogger(AbstractBotsExtension.class);
     protected static final Gson gson = ServiceCreator.gson;
     protected final Map<Long, Contact> friends = new HashMap<>();
-    protected final OkHttpClient ok;
-    protected final MessagesApi messages;
-    protected final VkontakteApi api;
+    protected VkontakteApi api;
     protected final String name;
     protected Contact owner;
     protected Future<?> started;
@@ -104,9 +102,6 @@ abstract class AbstractBotsExtension implements BotsExtension {
         this.isRunnings = false;
         this.isLoaded = false;
         this.owner = null;
-        this.ok = api.createClient();
-        this.messages = api.getMessages();
-        this.ok.setConnectTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS);
     }
 
     protected AbstractBotsExtension(String name) throws Exception {

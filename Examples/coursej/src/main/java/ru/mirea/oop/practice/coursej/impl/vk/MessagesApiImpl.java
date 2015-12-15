@@ -14,13 +14,13 @@ final class MessagesApiImpl implements MessagesApi {
     }
 
     @Override
-    public LongPollData getLongPollServer(Boolean useSsl, Boolean needPts) throws IOException {
+    public synchronized LongPollData getLongPollServer(Boolean useSsl, Boolean needPts) throws IOException {
         Call<Result<LongPollData>> call = inter.getLongPollServer(useSsl, needPts);
         return Result.call(call);
     }
 
     @Override
-    public int send(Long idUser,
+    public synchronized int send(Long idUser,
                     String domain,
                     Integer idChat,
                     String idUsers,
@@ -37,7 +37,7 @@ final class MessagesApiImpl implements MessagesApi {
     }
 
     @Override
-    public int setActivity(Long idUser, String type) throws IOException {
+    public synchronized int setActivity(Long idUser, String type) throws IOException {
         Call<Result<Integer>> call = inter.setActivity(idUser, type);
         return Result.call(call);
     }
