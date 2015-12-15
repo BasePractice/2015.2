@@ -12,12 +12,10 @@ import java.io.IOException;
  */
 public class VkTransl extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkTransl.class);
-    private final MessagesApi msgApi;
     private boolean alreadySend = false;
 
     public VkTransl() throws Exception {
         super("vk.services.VkTransl");
-        this.msgApi = api.getMessages();
     }
 
     @Override
@@ -90,7 +88,7 @@ public class VkTransl extends ServiceBotsExtension {
     public void sendMessage(long id, String text) {
         try {
 
-            Integer idMessage = msgApi.send(
+            Integer idMessage = messages.send(
                     id,
                     null,
                     null,

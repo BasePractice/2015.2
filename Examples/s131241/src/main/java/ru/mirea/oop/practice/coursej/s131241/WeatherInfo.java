@@ -2,7 +2,6 @@ package ru.mirea.oop.practice.coursej.s131241;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 import ru.mirea.oop.practice.coursej.s131241.impl.OpenWeatherMapApiImpl;
@@ -13,12 +12,10 @@ public class WeatherInfo extends ServiceBotsExtension {
     public static final String DESCRIPTION = "Прогноз погоды на 7 дней по огромному количеству городов";
     private static final Logger logger = LoggerFactory.getLogger(WeatherInfo.class);
     private final OpenWeatherMapApi weatherApi;
-    private final MessagesApi msgApi;
 
     public WeatherInfo() throws Exception {
         super("vk.services.WeatherInfo");
         this.weatherApi = new OpenWeatherMapApiImpl();
-        this.msgApi = api.getMessages();
     }
 
     @Override
@@ -42,7 +39,7 @@ public class WeatherInfo extends ServiceBotsExtension {
                 }
 
                 try {
-                    Integer idMessage = msgApi.send(
+                    Integer idMessage = messages.send(
                             contact.id,
                             null,
                             null,

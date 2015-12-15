@@ -26,7 +26,6 @@ public final class VkStatistic extends ServiceBotsExtension {
     //FIXME: Зачем static поле?
     private final Map<Long, ArrayList<Session>> mapSession = new HashMap<>();
     private final Map<Long, Contact> friendsMap = new HashMap<>();
-    private final MessagesApi msgApi;
     private boolean alreadySend = false;
     private static final ThreadLocal<DateTimeFormatter> threadFormat = new ThreadLocal<>();
     private DateScheduled dateScheduled = new DateScheduled();
@@ -63,7 +62,6 @@ public final class VkStatistic extends ServiceBotsExtension {
 
     public VkStatistic() throws Exception {
         super("vk.services.VkStatistic");
-        this.msgApi = api.getMessages();
     }
     //Если DateTimeFormatter thread-safe - нужен ли class ThreadLocal
     private static DateTimeFormatter getFormat() {
@@ -280,7 +278,7 @@ public final class VkStatistic extends ServiceBotsExtension {
     public void sendMessage(long id, String text, String attachmentName) {
         try {
 
-            Integer idMessage = msgApi.send(
+            Integer idMessage = messages.send(
                     id,
                     null,
                     null,

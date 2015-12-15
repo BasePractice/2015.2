@@ -1,10 +1,8 @@
 package ru.mirea.oop.practice.coursej.impl.vk.ext;
 
-import com.squareup.okhttp.HttpUrl;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
+import com.squareup.okhttp.*;
 import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
+import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.UsersApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.api.vk.entities.LongPollData;
@@ -12,17 +10,19 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.LongPollData;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.SocketTimeoutException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public abstract class ServiceBotsExtension extends AbstractBotsExtension implements Runnable {
     private final Map<Long, Message> messageCache = new ConcurrentHashMap<>();
     private static final Event timeoutEvent = new Event(EventType.TIMEOUT, null);
     private final int timeout;
     private volatile boolean isRunning;
+    protected OkHttpClient ok;
+    protected MessagesApi messages;
 
     protected ServiceBotsExtension(String name) throws Exception {
         super(name);
@@ -54,6 +54,9 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
     @Override
     protected boolean init() throws Exception {
         api.start();
+        this.ok = api.createClient();
+        this.messages = api.getMessages();
+        this.ok.setConnectTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS);
         return true;
     }
 
@@ -152,7 +155,7 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
 
     /**
      * Первым параметром каждого события передаётся его код, поддерживаются следующие коды событий:
-     * <p>
+     * <p/>
      * 0,$message_id,0 — удаление сообщения с указанным local_id
      * 1,$message_id,$flags — замена флагов сообщения (FLAGS:=$flags)
      * 2,$message_id,$mask[,$user_id] — установка флагов сообщения (FLAGS|=$mask)

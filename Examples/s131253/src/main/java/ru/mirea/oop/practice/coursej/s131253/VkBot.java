@@ -18,7 +18,6 @@ public class VkBot extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkBot.class);
     private Game game = new Game();
     private Question justSended; //Последний отправленный вопрос
-    private final MessagesApi msgApi;
     private boolean isTestEnded = true; //Завершёна ли викторина. По умолчанию, пока игра не началась, завершёна.
     private static final int QUESTIONS_COUNT = 8; //Из этого кол-ва вопросов будет состоять викторина.
 
@@ -29,7 +28,6 @@ public class VkBot extends ServiceBotsExtension {
 
     public VkBot() throws Exception {
         super("vk.services.VkBot");
-        this.msgApi = api.getMessages();
     }
 
     @Override
@@ -140,7 +138,7 @@ public class VkBot extends ServiceBotsExtension {
 
     public void sendMessage(long id, String text) {  //Метод отправки сообщения text пользователю id.
         try {
-            Integer idMessage = msgApi.send(
+            Integer idMessage = messages.send(
                     id,
                     null,
                     null,

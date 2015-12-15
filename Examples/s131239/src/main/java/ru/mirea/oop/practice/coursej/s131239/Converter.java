@@ -12,11 +12,9 @@ import java.util.Map;
 
 public final class Converter extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(Converter.class);
-    private final MessagesApi msgApi;
 
     public Converter() throws Exception {
         super("vk.services.Converter");
-        this.msgApi = api.getMessages();
     }
 
     @Override
@@ -80,7 +78,7 @@ public final class Converter extends ServiceBotsExtension {
                             msgToSend.append(num).append(" ").append(desc).append(" = ").append(stringDoubleEntry.getValue() * num).append(" ").append(stringDoubleEntry.getKey()).append("\n");
                         }
                         try {
-                            Integer idMessage = msgApi.send(
+                            Integer idMessage = messages.send(
                                     contact.id,
                                     null,
                                     null,

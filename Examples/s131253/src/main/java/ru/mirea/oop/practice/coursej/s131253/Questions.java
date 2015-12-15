@@ -31,7 +31,7 @@ public class Questions {
                     в конструктор класса Question, а затем экземпляр класса добавляется в динамический массив */
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

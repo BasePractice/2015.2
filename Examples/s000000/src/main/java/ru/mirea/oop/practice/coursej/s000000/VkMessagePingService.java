@@ -12,11 +12,9 @@ import java.io.IOException;
 
 public final class VkMessagePingService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkMessagePingService.class);
-    private final MessagesApi msgApi;
 
     public VkMessagePingService() throws Exception {
         super("vk.services.EchoServer");
-        this.msgApi = api.getMessages();
     }
 
     @Override
@@ -34,7 +32,7 @@ public final class VkMessagePingService extends ServiceBotsExtension {
                 logger.debug("Получили сообщение от " + Contact.viewerString(contact));
 
                 try {
-                    Integer idMessage = msgApi.send(
+                    Integer idMessage = messages.send(
                             contact.id,
                             null,
                             null,
