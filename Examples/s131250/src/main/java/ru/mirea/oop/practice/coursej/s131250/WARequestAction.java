@@ -21,11 +21,10 @@ final class WARequestAction {
         okHttpClient.setConnectTimeout(40, TimeUnit.SECONDS);
         try {
             Properties prop = new Properties();
-            prop.load(Configuration.loadFrom(".WAID"));
-            appid = prop.getProperty("APPID");
+            prop.load(WARequestAction.class.getResourceAsStream("/appId.properties"));
+            appid = prop.getProperty("appId");
         } catch (Exception e) {
-            System.out.println(".WAID load error");
-            //FIXME: Убивание процесса не лучший вариант
+            System.out.println(".appId load error");
             return null;
         }
 
