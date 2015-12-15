@@ -20,7 +20,7 @@ public final class Starter {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         Set<Future<?>> futures = new LinkedHashSet<>();
         Set<String> enabled = loadEnabled();
-        startMazeExtensions(enabled);
+//        startMazeExtensions(enabled);
         startBotsExtensions(futures, enabled);
 
         for (Future<?> future : futures) {
@@ -32,15 +32,24 @@ public final class Starter {
 
     private static void startMazeExtensions(Set<String> enabled) throws IOException {
         ServiceLoader<MazeExtension> loader = ServiceLoader.load(MazeExtension.class);
+        final File directory = new File(".Result");
+        if (!directory.exists())
+            logger.debug("Создаем директорию с результатами: {}", directory.mkdirs());
         for (MazeExtension extension : loader) {
             if (!enabled.contains(extension.name())) {
                 logger.debug("Сервис: \"" + extension.name() + "\" пропущен");
                 continue;
             }
             logger.debug("Запусксам: " + extension.name());
-            MazeExtension.Maze maze = extension.generateMaze(10, 10);
+            MazeExtension.Maze maze = extension.generateMaze(100, 100);
             BufferedImage image = extension.createImage(maze);
-            File file = new File(extension.name() + ".png");
+            File file = new File(directory, extension.name() + ".Generated.png");
+            ImageIO.write(image, "PNG", file);
+            logger.debug("Сохраняем: " + file.getAbsolutePath());
+
+            final MazeExtension.Point[] path = extension.findPath(maze);
+            image = extension.createImage(maze, path);
+            file = new File(directory, extension.name() + ".Walked.png");
             ImageIO.write(image, "PNG", file);
             logger.debug("Сохраняем: " + file.getAbsolutePath());
         }

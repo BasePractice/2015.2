@@ -5,12 +5,8 @@ public interface ParserApi {
 
     java.io.File getReport();
 
-    java.io.File getChanges();
+    String getChanges();
 
-    String getShortReport();
-
-    String getShortChanges();
-
-    void updateDB() throws InterruptedException;
+    void updateDB();
 
 }

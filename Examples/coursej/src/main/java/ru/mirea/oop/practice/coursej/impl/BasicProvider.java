@@ -6,12 +6,12 @@ import java.lang.reflect.Constructor;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class ProviderImpl<T> implements Provider<T> {
+public final class BasicProvider<T> implements Provider<T> {
     private final Class<T> klass;
     private final Object[] params;
     private volatile T created;
 
-    public ProviderImpl(Class<T> klass, Object... objects) {
+    public BasicProvider(Class<T> klass, Object... objects) {
         this.klass = klass;
         this.params = objects == null ? new Object[0] : objects;
     }
@@ -19,7 +19,7 @@ public final class ProviderImpl<T> implements Provider<T> {
     @Override
     public T get() {
         if (created == null) {
-            synchronized (ProviderImpl.class) {
+            synchronized (BasicProvider.class) {
                 if (created == null) {
                     try {
                         Class[] classes = Stream.of(params).map(Object::getClass)
@@ -38,7 +38,7 @@ public final class ProviderImpl<T> implements Provider<T> {
 
     @Override
     public void put(T value) {
-        synchronized (ProviderImpl.class) {
+        synchronized (BasicProvider.class) {
             created = value;
         }
     }

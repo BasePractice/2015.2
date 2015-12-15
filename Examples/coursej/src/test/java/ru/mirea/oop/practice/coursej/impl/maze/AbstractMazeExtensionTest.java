@@ -22,7 +22,7 @@ public class AbstractMazeExtensionTest {
 
             @Override
             public String name() {
-                return null;
+                return AbstractMazeExtensionTest.class.getSimpleName();
             }
 
             @Override

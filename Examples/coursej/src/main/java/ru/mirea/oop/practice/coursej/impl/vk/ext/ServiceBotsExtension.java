@@ -1,12 +1,10 @@
 package ru.mirea.oop.practice.coursej.impl.vk.ext;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.squareup.okhttp.HttpUrl;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.UsersApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.api.vk.entities.LongPollData;
@@ -17,40 +15,11 @@ import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 public abstract class ServiceBotsExtension extends AbstractBotsExtension implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class);
-    private static final String FRIENDS_FIELDS = "nickname, " +
-            "domain, " +
-            "sex, " +
-            "bdate, " +
-            "city, " +
-            "country, " +
-            "timezone, " +
-            "photo_50, " +
-            "photo_100, " +
-            "photo_200_orig, " +
-            "has_mobile, " +
-            "contacts, " +
-            "education, " +
-            "online, " +
-            "relation, " +
-            "last_seen, " +
-            "status, " +
-            "can_write_private_message, " +
-            "can_see_all_posts, " +
-            "can_post, " +
-            "universities";
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private final Map<Long, Contact> friends = new HashMap<>();
-    private final Map<Long, Message> messageCache = new HashMap<>();
-    private final OkHttpClient ok;
-    private final MessagesApi messages;
-
-
-    private static final int DEFAULT_TIMEOUT = 1000;
+    private final Map<Long, Message> messageCache = new ConcurrentHashMap<>();
     private static final Event timeoutEvent = new Event(EventType.TIMEOUT, null);
     private final int timeout;
     private volatile boolean isRunning;
@@ -59,9 +28,6 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
         super(name);
         this.timeout = DEFAULT_TIMEOUT;
         this.isRunning = true;
-        this.ok = api.createClient();
-        this.messages = api.getMessages();
-        this.ok.setConnectTimeout(timeout, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -357,6 +323,10 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
             this.platform = platform;
         }
 
+        public Contact getContact() {
+            return contact;
+        }
+
         @Override
         public String toString() {
             return contact.firstName + " " + contact.lastName;
@@ -385,6 +355,10 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
         protected UserOffline(Contact contact, boolean isAway) {
             this.contact = contact;
             this.isAway = isAway;
+        }
+
+        public Contact getContact() {
+            return contact;
         }
 
         @Override

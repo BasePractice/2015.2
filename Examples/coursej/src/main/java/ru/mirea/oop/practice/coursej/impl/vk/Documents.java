@@ -23,7 +23,7 @@ interface Documents {
     @GET("/method/docs.get")
     Call<Result<Document[]>> list(@Query("count") Integer count,
                                   @Query("offset") Integer offset,
-                                  @Query("owner_id") Integer idOwner);
+                                  @Query("owner_id") Long idOwner);
 
     @GET("/method/docs.getById")
     Call<Result<Document[]>> id(@Query("docs") String docs);

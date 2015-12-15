@@ -15,4 +15,6 @@ public interface VkontakteApi extends CommonApi {
     FriendsApi getFriends() throws Exception;
 
     DocumentsApi getDocuments() throws Exception;
+
+    AudioApi getAudios() throws Exception;
 }

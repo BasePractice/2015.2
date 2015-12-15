@@ -6,6 +6,7 @@ import ru.mirea.oop.practice.coursej.s131226.parsers.Prices;
 import java.util.Date;
 import java.util.List;
 
+/**FIXME: Плохая идея наслеоваться от потока */
 public class ParserThread extends Thread {
     public Parser parser;
     public List<Prices> pricesList;

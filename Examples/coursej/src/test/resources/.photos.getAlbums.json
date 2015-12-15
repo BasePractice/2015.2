@@ -1,0 +1,127 @@
+{
+  "response": [
+    {
+      "aid": -6,
+      "thumb_id": null,
+      "owner_id": 6658522,
+      "title": "Фотографии с моей страницы",
+      "size": 0
+    },
+    {
+      "aid": -7,
+      "thumb_id": 389325890,
+      "owner_id": 6658522,
+      "title": "Фотографии на моей стене",
+      "size": 93
+    },
+    {
+      "aid": -15,
+      "thumb_id": 393206724,
+      "owner_id": 6658522,
+      "title": "Сохранённые фотографии",
+      "size": 2127
+    },
+    {
+      "aid": 203495842,
+      "thumb_id": "342068054",
+      "owner_id": "6658522",
+      "title": "Севастополь",
+      "description": "03-05.10.2014",
+      "created": "1412608642",
+      "updated": "1412609138",
+      "size": 100,
+      "privacy": 0,
+      "privacy_view": {
+        "type": "all"
+      },
+      "privacy_comment": {
+        "type": "all"
+      }
+    },
+    {
+      "aid": 200246834,
+      "thumb_id": "337074796",
+      "owner_id": "6658522",
+      "title": "Ложкин",
+      "description": "",
+      "created": "1407577984",
+      "updated": "1408873815",
+      "size": 10,
+      "privacy": 0,
+      "privacy_view": {
+        "type": "all"
+      },
+      "privacy_comment": {
+        "type": "all"
+      }
+    },
+    {
+      "aid": 195398228,
+      "thumb_id": "331017833",
+      "owner_id": "6658522",
+      "title": "Гонка героев 2014",
+      "description": "",
+      "created": "1401037600",
+      "updated": "1401037615",
+      "size": 4,
+      "privacy": 0,
+      "privacy_view": {
+        "type": "all"
+      },
+      "privacy_comment": {
+        "type": "all"
+      }
+    },
+    {
+      "aid": 67618879,
+      "thumb_id": "121715824",
+      "owner_id": "6658522",
+      "title": "Potatoes and Dragons",
+      "description": "",
+      "created": "1231490568",
+      "updated": "1231490659",
+      "size": 2,
+      "privacy": 1,
+      "privacy_view": {
+        "type": "friends"
+      },
+      "privacy_comment": {
+        "type": "all"
+      }
+    },
+    {
+      "aid": 47134230,
+      "thumb_id": "117410732",
+      "owner_id": "6658522",
+      "title": "Питер",
+      "description": "Концерт Metallica в Питере",
+      "created": "1222519459",
+      "updated": "1222519624",
+      "size": 13,
+      "privacy": 0,
+      "privacy_view": {
+        "type": "all"
+      },
+      "privacy_comment": {
+        "type": "all"
+      }
+    },
+    {
+      "aid": 23308624,
+      "thumb_id": "109330300",
+      "owner_id": "6658522",
+      "title": "Разное",
+      "description": "",
+      "created": "1208779635",
+      "updated": "1439058593",
+      "size": 37,
+      "privacy": 0,
+      "privacy_view": {
+        "type": "all"
+      },
+      "privacy_comment": {
+        "type": "all"
+      }
+    }
+  ]
+}

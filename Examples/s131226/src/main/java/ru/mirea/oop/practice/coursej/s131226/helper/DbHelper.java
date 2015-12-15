@@ -8,10 +8,12 @@ import java.util.*;
 import java.util.Date;
 
 
+/** FIXME: Переписать в соответствии с хорошими манерами использования JDBC */
+//ЗЫ: Использовать Repository конструкцию
 public class DbHelper {
-    public Connection conn;
-    public Statement statmt;
-    public ResultSet resSet;
+    private Connection conn;
+    private Statement statmt;
+    private ResultSet resSet;
 
     public DbHelper() {
     }
@@ -26,20 +28,23 @@ public class DbHelper {
         System.out.println("База Подключена!");
     }
 
-    public String getDBState() throws SQLException {
+    public List<String> getDBState() throws SQLException, ClassNotFoundException {
+        conn();
         statmt = conn.createStatement();
         resSet = statmt.executeQuery("SELECT name FROM sqlite_master WHERE type = 'table';");
-        String dbState = "На данный момент в базе содержатся следующие таблицы: \n";
+        List<String> tables = new ArrayList<>();
         while (resSet.next()) {
-            dbState += resSet.getObject("name").toString() + "\n";
+            tables.add(resSet.getObject("name").toString() + "\n");
         }
-        return dbState;
+        return tables;
     }
+
+
 
     // --------Создание таблицы--------
 
 
-    public synchronized String createSumTable(String[] sites) throws SQLException {
+    public synchronized String createTable(String[] sites) throws SQLException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String date = dateFormat.format(new Date());
         String tableName = "sum" + date;
@@ -64,7 +69,7 @@ public class DbHelper {
             sites[i] = pricesList.get(i).getSitename();
             siteNames = siteNames + ", " + pricesList.get(i).getSitename();
         }
-        String tableName = createSumTable(sites);
+        String tableName = createTable(sites);
 
         Set<Integer> articles = new HashSet<>();
         for (Prices prices : pricesList) {
@@ -100,8 +105,74 @@ public class DbHelper {
         statmt.execute(req);
     }
 
+    public String getLastTableName() throws SQLException, ClassNotFoundException {
+        List<String> tables = getDBState();
+        return tables.get(tables.size() - 1);
+    }
+    public List<Prices> getDifferences() throws SQLException, ClassNotFoundException {
+        return getDifferences(getLastTableName());
+    }
+
+    public List<Prices> getDifferences(String tableName) throws SQLException, ClassNotFoundException {
+        List<Prices> pricesList = getPrices(tableName);
+        List<Prices> differences = new ArrayList<>();
+        Prices referencePrices = new Prices(null, null);
+
+        for (Prices prices : pricesList) {
+            if (prices.getSitename().equals("FissmanPosuda")) {
+                referencePrices = prices;
+                pricesList.remove(referencePrices);
+                break;
+            }
+        }
+        for (Prices prices : pricesList) {
+            Prices difference = new Prices(prices.getSitename(), new HashMap<>());
+            for (Map.Entry<Integer, Integer> entry : prices.getPricesMap().entrySet()) {
+                if (entry.getValue() - referencePrices.getPricesMap().getOrDefault(entry.getKey(), 0) < -1 && entry.getValue() != 0) {
+                    difference.addValue(entry.getKey(), entry.getValue());
+                }
+            }
+            differences.add(difference);
+        }
+        differences.add(0, referencePrices);
+        return differences;
+    }
+    public List<Prices> getPrices() throws SQLException, ClassNotFoundException {
+        String lastDBName = getLastTableName();
+
+        return getPrices(lastDBName);
+    }
+
+
+    public List<Prices> getPrices(String tableName) throws SQLException, ClassNotFoundException {
+
+        conn();
+        List<String> sites = new ArrayList<>();
+        statmt = conn.createStatement();
+        resSet = statmt.executeQuery("pragma table_info(" + tableName + ");");
+
+        while (resSet.next()) {
+            if (!resSet.getObject("name").toString().equals("article")) {
+                sites.add(resSet.getObject("name").toString());
+            }
+        }
+        List<Prices> pricesList = new ArrayList<>();
+        for (String site : sites) {
+            pricesList.add(new Prices(site, new HashMap<Integer, Integer>()));
+        }
+
+        resSet = statmt.executeQuery("SELECT * FROM " + tableName + ";");
+        while (resSet.next()) {
+            for (Prices prices : pricesList) {
+                prices.addValue(resSet.getInt("article"), resSet.getInt(prices.getSitename()));
+            }
+        }
+        return pricesList;
+    }
+
 
     // --------Закрытие--------
+
     public void closeDB() throws ClassNotFoundException, SQLException {
 
         statmt.close();
