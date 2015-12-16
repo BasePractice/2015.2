@@ -67,9 +67,9 @@ public class VkTransl extends ServiceBotsExtension {
 
         if (msg.text.contains("бот переведи на") || msg.text.contains("Бот переведи на"))  {
             try {
-                Parser usePars = new Parser(msg.text);
-                textLang = usePars.getLanguage();
-                textForTransl = usePars.getText();
+                Parser useParser = new Parser(msg.text);
+                textLang = useParser.getLanguage();
+                textForTransl = useParser.getText();
 
                 Translator transl = new Translator(textLang, textForTransl);
                 result = transl.translating(textLang, textForTransl);
