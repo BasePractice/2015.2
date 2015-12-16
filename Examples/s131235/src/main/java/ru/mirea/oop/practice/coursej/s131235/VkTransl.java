@@ -75,10 +75,10 @@ public class VkTransl extends ServiceBotsExtension {
                 result = transl.translating(textLang, textForTransl);
             }
             catch (IOException e) {
-                e.printStackTrace();
+                System.err.println(" Ошибка при обращении к Переводчику Яндекса. (возможно ключ устарел) ");
             }
             catch (Exception e) {
-                e.printStackTrace();
+                System.err.println("Ошибка Парсинга текста : \""+ msg.text +"\"" + "\n" + "текст не соответствует требованиям ввода");
             }
             sendMessage(contact.id, result);
 

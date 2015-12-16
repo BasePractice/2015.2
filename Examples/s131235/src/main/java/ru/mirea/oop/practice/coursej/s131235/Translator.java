@@ -29,23 +29,23 @@ public class Translator {
 
     public static String translating(String lang, String text) throws IOException {
         String key = "trnsl.1.1.20151208T095415Z.967d846ac9275be4.62e517b3d9054079fa6aa57d02f15b1a0e1fc9ea";
-        String urlStr = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key;
+        String urlForConnection = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key;
 
-        URL urlObject = new URL(urlStr);
+        URL urlObject = new URL(urlForConnection);
         HttpsURLConnection connection = (HttpsURLConnection) urlObject.openConnection();
         connection.setDoOutput(true);
-        DataOutputStream outputStr = new DataOutputStream(connection.getOutputStream());
-        outputStr.writeBytes("text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + lang);
-        InputStream inpStr = connection.getInputStream();
+        DataOutputStream outputData = new DataOutputStream(connection.getOutputStream());
+        outputData.writeBytes("text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + lang);
+        InputStream inputData = connection.getInputStream();
 
-        Scanner scan = new Scanner(inpStr);
+        Scanner scan = new Scanner(inputData);
         String json = scan.nextLine();
 
-        JsonElement jsonPars = new JsonParser().parse(json);
-        JsonObject jsObj = jsonPars.getAsJsonObject();
-        String perevod = jsObj.get("text").getAsString();
+        JsonElement jsonParsing = new JsonParser().parse(json);
+        JsonObject jsObject = jsonParsing.getAsJsonObject();
+        String translated = jsObject.get("text").getAsString();
 
-        String secondString = new String(perevod.getBytes("windows-1251"), "UTF-8");
+        String secondString = new String(translated.getBytes("windows-1251"), "UTF-8");
 
         if (text.equals(secondString)) {
             return "перевод не будет осуществлен";
