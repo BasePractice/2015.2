@@ -6,6 +6,8 @@ import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
 
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
+
 /**
  * Created by TopKek on 12.12.2015.
  */
@@ -50,6 +52,7 @@ public class VkTransl extends ServiceBotsExtension {
         String textForTransl;
         String result = "";
 
+
         if (msg.text.equals("help")) {
 
             help = "Гайд по использованию бота> \n" +
@@ -65,7 +68,7 @@ public class VkTransl extends ServiceBotsExtension {
 
         }
 
-        if (msg.text.contains("бот переведи на") || msg.text.contains("Бот переведи на"))  {
+        if ( containsIgnoreCase(msg.text, "бот переведи на") == true )  {
             try {
                 Parser useParser = new Parser(msg.text);
                 textLang = useParser.getLanguage();
@@ -75,10 +78,10 @@ public class VkTransl extends ServiceBotsExtension {
                 result = transl.translating(textLang, textForTransl);
             }
             catch (IOException e) {
-                System.err.println(" Ошибка при обращении к Переводчику Яндекса. (возможно ключ устарел) ");
+                logger.error(" Ошибка при обращении к Переводчику Яндекса. (возможно ключ устарел) ");
             }
             catch (Exception e) {
-                System.err.println("Ошибка Парсинга текста : \""+ msg.text +"\"" + "\n" + "текст не соответствует требованиям ввода");
+                logger.error("Ошибка Парсинга текста : \""+ msg.text +"\"" + "\n" + "текст не соответствует требованиям ввода");
             }
             sendMessage(contact.id, result);
 

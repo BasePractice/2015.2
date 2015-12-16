@@ -5,9 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Scanner;
@@ -34,12 +32,16 @@ public class Translator {
         URL urlObject = new URL(urlForConnection);
         HttpsURLConnection connection = (HttpsURLConnection) urlObject.openConnection();
         connection.setDoOutput(true);
-        DataOutputStream outputData = new DataOutputStream(connection.getOutputStream());
-        outputData.writeBytes("text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + lang);
-        InputStream inputData = connection.getInputStream();
+        String json;
 
-        Scanner scan = new Scanner(inputData);
-        String json = scan.nextLine();
+        try (DataOutputStream outputData = new DataOutputStream(connection.getOutputStream())) {
+            outputData.writeBytes("text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + lang);
+        }
+
+        try (InputStream inputData = connection.getInputStream()){
+            Scanner scan = new Scanner(inputData);
+            json = scan.nextLine();
+        }
 
         JsonElement jsonParsing = new JsonParser().parse(json);
         JsonObject jsObject = jsonParsing.getAsJsonObject();
