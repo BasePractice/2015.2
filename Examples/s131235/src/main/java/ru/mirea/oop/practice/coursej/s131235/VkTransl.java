@@ -1,7 +1,6 @@
 package ru.mirea.oop.practice.coursej.s131235;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
@@ -67,16 +66,18 @@ public class VkTransl extends ServiceBotsExtension {
         }
 
         if (msg.text.contains("бот переведи на") || msg.text.contains("Бот переведи на"))  {
-
-            Parser usePars = new Parser(msg.text);
-            textLang = usePars.getLanguage();
-            textForTransl = usePars.getText();
-
-            Translator transl = new Translator(textLang, textForTransl);
-
             try {
+                Parser usePars = new Parser(msg.text);
+                textLang = usePars.getLanguage();
+                textForTransl = usePars.getText();
+
+                Translator transl = new Translator(textLang, textForTransl);
                 result = transl.translating(textLang, textForTransl);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
             sendMessage(contact.id, result);

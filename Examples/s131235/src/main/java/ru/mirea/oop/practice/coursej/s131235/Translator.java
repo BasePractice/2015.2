@@ -48,7 +48,7 @@ public class Translator {
         String secondString = new String(perevod.getBytes("windows-1251"), "UTF-8");
 
         if (text.equals(secondString)) {
-            return "перевод не будет осуществлен, так как языки одинаковы";
+            return "перевод не будет осуществлен";
         }
         return secondString;
     }
