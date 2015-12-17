@@ -1,5 +1,6 @@
 package ru.mirea.oop.practice.coursej.s131225;
 
+import com.google.common.html.HtmlEscapers;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -12,6 +13,7 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.Audio;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ClientBotsExtension;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -59,8 +61,10 @@ public final class VkMusicSync extends ClientBotsExtension {
                 Request request = new Request.Builder().url(audio.url).build();
                 Response response;
                 response = client.newCall(request).execute();
-                try (BufferedSink sink = Okio.buffer(Okio.sink(file))){
+                try (BufferedSink sink = Okio.buffer(Okio.sink(file))) {
                     sink.writeAll(response.body().source());
+                } catch (FileNotFoundException e) {
+                    logger.error("ошибка записи файла {}", file.getName());
                 }
 
                 return file.getName();
@@ -110,7 +114,7 @@ public final class VkMusicSync extends ClientBotsExtension {
     private static String getFileName(Audio audio) {
         String fileName = audio.artist + " - " + audio.title + ".mp3";
         fileName = fileName.replaceAll("\\?|<|>|:|\\\\|\\||\\*|/|\"", "");
-        fileName = fileName.replaceAll("&amp;", "&");
+        fileName = HtmlEscapers.htmlEscaper().escape(fileName);
         return fileName;
     }
 
