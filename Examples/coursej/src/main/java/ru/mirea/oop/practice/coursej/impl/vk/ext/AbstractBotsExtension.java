@@ -1,17 +1,24 @@
 package ru.mirea.oop.practice.coursej.impl.vk.ext;
 
+import com.google.gson.Gson;
+import com.squareup.okhttp.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.ext.BotsExtension;
+import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
+import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 import ru.mirea.oop.practice.coursej.impl.vk.VkontakteApiImpl;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 abstract class AbstractBotsExtension implements BotsExtension {
-    private String DEFAULT_USER_FIELDS = "sex," +
+    protected final String DEFAULT_USER_FIELDS = "sex," +
             "bdate," +
             "city," +
             "country," +
@@ -56,8 +63,32 @@ abstract class AbstractBotsExtension implements BotsExtension {
             "friend_status," +
             "military," +
             "career";
-    private static final Logger logger = LoggerFactory.getLogger(AbstractBotsExtension.class);
-    protected final VkontakteApi api;
+    protected static final String FRIENDS_FIELDS = "nickname, " +
+            "domain, " +
+            "sex, " +
+            "bdate, " +
+            "city, " +
+            "country, " +
+            "timezone, " +
+            "photo_50, " +
+            "photo_100, " +
+            "photo_200_orig, " +
+            "has_mobile, " +
+            "contacts, " +
+            "education, " +
+            "online, " +
+            "relation, " +
+            "last_seen, " +
+            "status, " +
+            "can_write_private_message, " +
+            "can_see_all_posts, " +
+            "can_post, " +
+            "universities";
+    protected static final int DEFAULT_TIMEOUT = 1000;
+    protected static final Logger logger = LoggerFactory.getLogger(AbstractBotsExtension.class);
+    protected static final Gson gson = ServiceCreator.gson;
+    protected final Map<Long, Contact> friends = new HashMap<>();
+    protected VkontakteApi api;
     protected final String name;
     protected Contact owner;
     protected Future<?> started;
@@ -65,7 +96,7 @@ abstract class AbstractBotsExtension implements BotsExtension {
     private boolean isRunnings;
     private boolean isLoaded;
 
-    protected AbstractBotsExtension(String name, VkontakteApi api) {
+    protected AbstractBotsExtension(String name, VkontakteApi api) throws Exception {
         this.api = api;
         this.name = name;
         this.isRunnings = false;

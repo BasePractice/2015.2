@@ -11,6 +11,10 @@ public interface MazeExtension {
 
     BufferedImage createImage(Maze maze);
 
+    BufferedImage createImage(Maze maze, Point[] path);
+
+    Point[] findPath(Maze maze);
+
     final class Maze {
         public final int cols;
         public final int rows;
@@ -20,6 +24,16 @@ public interface MazeExtension {
             this.cols = cols;
             this.rows = rows;
             this.data = new char[rows][cols];
+        }
+    }
+
+    final class Point {
+        public final int x;
+        public final int y;
+
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
     }
 

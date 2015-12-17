@@ -81,7 +81,7 @@ final class UrlBuilder {
                 .addQueryParameter("redirect_uri", redirectUrl)
                 .addQueryParameter("scope", scopes())
                 .addQueryParameter("response_type", responseType)
-                .addQueryParameter("v", "5.8")
+                .addQueryParameter("v", "5.40")
                 .build();
     }
 }
