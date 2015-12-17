@@ -6,6 +6,11 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import okio.BufferedSink;
 import okio.Okio;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Entities;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.vk.AudioApi;
@@ -114,8 +119,13 @@ public final class VkMusicSync extends ClientBotsExtension {
     private static String getFileName(Audio audio) {
         String fileName = audio.artist + " - " + audio.title + ".mp3";
         fileName = fileName.replaceAll("\\?|<|>|:|\\\\|\\||\\*|/|\"", "");
-        fileName = HtmlEscapers.htmlEscaper().escape(fileName);
+        fileName=unescapeHtml(fileName);
         return fileName;
+    }
+
+    private static String unescapeHtml(String html) { // изврат, зато без добавления лишних библиотек
+       String text=Jsoup.clean(html, Whitelist.basic()).replaceAll("&amp;", "&"); // & особенный =(
+        return text;
     }
 
     @Override
