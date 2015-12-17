@@ -35,7 +35,7 @@ public final class VkMusicSync extends ClientBotsExtension {
         final List<Audio> list = new ArrayList<>(Arrays.asList(audios.list(null, null, null, null, null, null)));
         List<String> existFiles = getFileList();
         logger.debug(" У текщего пользователя {} аудиозаписей," +
-                " на данном устройстве хранится {} аудиозаписей.",list.size(),existFiles.size());
+                " на данном устройстве хранится {} аудиозаписей.", list.size(), existFiles.size());
 
         for (Audio audio : list) {  // грузим то, чего у нас нет
             String fileName = getFileName(audio);
@@ -45,7 +45,7 @@ public final class VkMusicSync extends ClientBotsExtension {
         }
         logger.debug("Посик \"лишних\" файлов...");
         List<String> deleted = deleteExcess(list, getFileList()); // удаляем лишнее
-        logger.debug("удалено {} файлов. Синхронизация завершена!",deleted.size() );
+        logger.debug("удалено {} файлов. Синхронизация завершена!", deleted.size());
 
     }
 
@@ -65,7 +65,7 @@ public final class VkMusicSync extends ClientBotsExtension {
                 return file.getName();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Ошибка при загрузке {} по URL {}", getFileName(audio), audio.url);
         }
         return null;
     }
@@ -75,8 +75,8 @@ public final class VkMusicSync extends ClientBotsExtension {
         for (String fileName : existFiles) {
             boolean isListed = false;
             for (Audio audio : list) {
-                String fileName1 = getFileName(audio);
-                if (fileName.equals(fileName1)) {
+                String listedFileName = getFileName(audio);
+                if (fileName.equals(listedFileName)) {
                     isListed = true;
                     break;
                 }
@@ -99,9 +99,10 @@ public final class VkMusicSync extends ClientBotsExtension {
                     files.add(file.getFileName().toString());
                 }
             }
-        } catch (IOException | DirectoryIteratorException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            logger.error(" ");
         }
+
         return files;
     }
 
