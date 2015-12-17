@@ -68,7 +68,7 @@ public class VkTransl extends ServiceBotsExtension {
 
         }
 
-        if ( containsIgnoreCase(msg.text, "бот переведи на") == true )  {
+        if ( containsIgnoreCase(msg.text, "бот переведи на"))  {
             try {
                 Parser useParser = new Parser(msg.text);
                 textLang = useParser.getLanguage();
@@ -81,7 +81,7 @@ public class VkTransl extends ServiceBotsExtension {
                 logger.error(" Ошибка при обращении к Переводчику Яндекса. (возможно ключ устарел) ");
             }
             catch (Exception e) {
-                logger.error("Ошибка Парсинга текста : \""+ msg.text +"\"" + "\n" + "текст не соответствует требованиям ввода");
+                logger.info("Невозможен Парсинг текста : \""+ msg.text +"\"" + "\n" + "текст не соответствует требованиям ввода");
             }
             sendMessage(contact.id, result);
 
