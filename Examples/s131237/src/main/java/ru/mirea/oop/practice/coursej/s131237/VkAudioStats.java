@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.http.client.utils.URIBuilder;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.Configuration;
 import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
@@ -27,7 +28,7 @@ import static java.lang.Thread.sleep;
  * Created by Shams on 10.12.2015.
  */
 public final class VkAudioStats extends ClientBotsExtension {
-    public static final org.slf4j.Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class);
+    public static final Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class);
     public final Map<Long, Contact> friends = new HashMap<>();
     public static final String ACCESS_TOKEN = "access_token";
     private static final String FRIENDS_FIELDS = "nickname, " +
@@ -84,8 +85,8 @@ public final class VkAudioStats extends ClientBotsExtension {
         }
         catch ( Exception e ) { }
 
-        modeChoice  = props.getProperty("modeChoice", "all");
-        tracksCount = new Integer(props.getProperty("tracksCount", "100"));
+        modeChoice  = props.getProperty("modeChoice", "all"); // all || exact
+        tracksCount = new Integer(props.getProperty("tracksCount", "100")); // maximun 8000
         userId  = props.getProperty("userId", "id89634062");
     }
 
@@ -101,16 +102,9 @@ public final class VkAudioStats extends ClientBotsExtension {
                 UsersApi usersApi = api.getUsers();
 
 
-                Scanner s = new Scanner(System.in);
+                //Scanner s = new Scanner(System.in);
 
                 //logger.info("\nEnter \"all\" to handle all friends\nor \"exact\" to handle exact user\n");
-
-                Properties properties = new Properties();
-                try (InputStream stream = System.in) {
-                    properties.load(stream);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
 
                 Contact[] contacts = new Contact[0]; //Получение массива пользователей
                 switch (modeChoice) {
