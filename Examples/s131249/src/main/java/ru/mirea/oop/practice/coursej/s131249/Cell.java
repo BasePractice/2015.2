@@ -2,6 +2,10 @@ package ru.mirea.oop.practice.coursej.s131249;
 
 import ru.mirea.oop.practice.coursej.api.ext.MazeExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 
 public class Cell {
     int x;
@@ -69,14 +73,54 @@ public class Cell {
         if (right) val |= MazeExtension.SQUARE_RIGHT;
         return val;
     }
-    public void newGroupId(long lastGroupId) {
-        if (this.groupId == 0) {
-            this.groupId = ++lastGroupId;
+    public boolean isNeighbor(Cell otherCell) {
+        return Math.abs(this.x - otherCell.x) + Math.abs(this.y - otherCell.y) == 1;
+    }
+    public boolean canMoveTo(Cell to) {
+        if (this.isNeighbor( to)) {
+            switch (this.x - to.x) {
+                case 0:{
+                    switch (this.y - to.y) {
+                        case 1:{
+                            if (!this.up && !to.down) {
+                                return true;
+                            }
+                            break;
+                        }
+                        case -1:{
+                            if (!this.down && !to.up) {
+                                return true;
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case 1:{
+                    if (!this.left && !to.right) {
+                        return true;
+                    }
+                    break;
+                }
+                case -1:{
+                    if (!this.right && !to.left){
+                        return true;
+                    }
+                    break;
+                }
+
+            }
         }
+        return false;
+    }
+    public  List<Cell> getNeighbors( Set<Cell> cells) {
+        List<Cell> neighbors = new ArrayList<>();
+        for (Cell cell2 : cells) {
+            if (this.isNeighbor( cell2) && this.canMoveTo( cell2)) {
+                neighbors.add(cell2);
+            }
+        }
+        return neighbors;
     }
 
-
-    public void clearGroupId() {
-        this.groupId = 0;
-    }
 }

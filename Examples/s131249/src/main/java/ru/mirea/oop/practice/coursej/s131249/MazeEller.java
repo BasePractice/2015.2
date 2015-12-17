@@ -29,7 +29,7 @@ public class MazeEller extends AbstractMazeExtension {
         do {
             for (Cell cell : cellSet) {
                 if (cell.distance == wave) {
-                    List<Cell> neighbors=getNeighbors(cell, cellSet);
+                    List<Cell> neighbors=cell.getNeighbors( cellSet);
                     for (Cell neighbor :neighbors ) {
                         if (neighbor.distance == -1) {
                             neighbor.distance = wave + 1;
@@ -37,18 +37,16 @@ public class MazeEller extends AbstractMazeExtension {
                     }
                 }
             }
-            logger.debug("длина пути " + wave);
             wave++;
         } while (finish.distance == -1);
         List<Cell> path = new ArrayList<>();
         path.add(finish);
         Cell currCell=finish;
         while (!path.contains(start)) {
-            currCell = getNearest(getNeighbors(currCell, cellSet));
+            currCell = getNearest(currCell.getNeighbors( cellSet));
             path.add(currCell);
-            System.out.println("Cur cell dist=" + currCell.distance);
         }
-        logger.debug("найден путь от выхода до входа");
+        logger.debug("найден путь от выхода до входа, его длинна "+wave);
 
         Point[] pathPoints = new Point[path.size()];
         for (int i=0;i<pathPoints.length;i++) {
@@ -71,58 +69,6 @@ public class MazeEller extends AbstractMazeExtension {
         }
         return null;
     }
-    public static List<Cell> getNeighbors(Cell cell,Set<Cell> cells) {
-        int x = cell.x;
-        int y = cell.y;
-        List<Cell> neighbors = new ArrayList<>();
-        for (Cell cell2 : cells) {
-            if (isNeighbor(cell, cell2) && canMoveTo(cell, cell2)) {
-                neighbors.add(cell2);
-            }
-        }
-        return neighbors;
-    }
-    public static boolean canMoveTo(Cell from, Cell to) {
-        if (isNeighbor(from, to)) {
-            switch (from.x - to.x) {
-                case 0:{
-                    switch (from.y - to.y) {
-                        case 1:{
-                            if (!from.up && !to.down) {
-                                return true;
-                            }
-                            break;
-                        }
-                        case -1:{
-                            if (!from.down && !to.up) {
-                                return true;
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-                case 1:{
-                    if (!from.left && !to.right) {
-                        return true;
-                    }
-                    break;
-                }
-                case -1:{
-                    if (!from.right && !to.left){
-                        return true;
-                    }
-                    break;
-                }
-
-            }
-        }
-            return false;
-    }
-    public static boolean isNeighbor(Cell cell1, Cell cell2) {
-        return Math.abs(cell1.x - cell2.x) + Math.abs(cell1.y - cell2.y) == 1;
-    }
-
     @Override
     public String description() {
         return "Лабиринт по алгаритму Эллера";
@@ -227,7 +173,7 @@ public class MazeEller extends AbstractMazeExtension {
         }
         for (int i = 0; i < cols; i++) {
             if (row[i].down) {
-                row[i].clearGroupId();
+                row[i].groupId=0;
                 row[i].groupId = ++lastGroupId;
                 row[i].down = false;
 
