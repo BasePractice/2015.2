@@ -218,11 +218,11 @@ public final class VkStatistic extends ServiceBotsExtension {
 
     public void eventOffline(Event event) {
         //Пропускает пользователей, которые стали друзьями или перестали ими быть
-        UserOnline userOnline;
+        UserOffline userOffline;
         Long key;
         try {
-            userOnline = (UserOnline) event.object;
-            key = userOnline.getContact().id;
+            userOffline = (UserOffline) event.object;
+            key = userOffline.getContact().id;
         } catch (Exception e) {
             logger.error("Лишний пользователь");
             return;
