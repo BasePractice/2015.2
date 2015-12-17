@@ -85,8 +85,8 @@ public final class VkAudioStats extends ClientBotsExtension {
         }
         catch ( Exception e ) { }
 
-        modeChoice  = props.getProperty("modeChoice", "all"); // all || exact
-        tracksCount = new Integer(props.getProperty("tracksCount", "100")); // maximun 8000
+        modeChoice  = props.getProperty("modeChoice", "exact"); // all || exact
+        tracksCount = new Integer(props.getProperty("tracksCount", "30")); // maximum 8000
         userId  = props.getProperty("userId", "id89634062");
     }
 
@@ -94,158 +94,152 @@ public final class VkAudioStats extends ClientBotsExtension {
     protected void doClient() throws Exception {
         logger.info("Запущен сервис статистики аудиузаписей");
         loadParams();
+        friends.clear();
+
         try {
-            friends.clear();
-
-            try {
-                FriendsApi friendsApi = api.getFriends();
-                UsersApi usersApi = api.getUsers();
+            FriendsApi friendsApi = api.getFriends();
+            UsersApi usersApi = api.getUsers();
 
 
-                //Scanner s = new Scanner(System.in);
+            //Scanner s = new Scanner(System.in);
 
-                //logger.info("\nEnter \"all\" to handle all friends\nor \"exact\" to handle exact user\n");
+            //logger.info("\nEnter \"all\" to handle all friends\nor \"exact\" to handle exact user\n");
 
-                Contact[] contacts = new Contact[0]; //Получение массива пользователей
-                switch (modeChoice) {
-                    case "all":
-                        contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
-                        break;
-                    case "exact":
-                        //System.out.println("\nEnter the user id: "); //Запрос id пользователя
-                        //String id = s.nextLine();
-                        contacts = usersApi.list(userId, null, FRIENDS_FIELDS);
-                        break;
-                    default:
-                        break;
-                }
-
-                //int tracksCount = s.nextInt();
-
-
-                DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HHmmss");
-                Date date = new Date();
-
-
-                String path = "C:" + File.separator + "VkMusic" + File.separator + "log" + dateFormat.format(date) + ".txt";
-                File f = new File(path);
-                f.getParentFile().mkdirs();
-                try {
-                    f.createNewFile();
-                } catch (IOException ex) {
-                    logger.error("Ошибка создания файла", ex);
-                }
-
-                //Проходим по всем контактам
-                for (Contact contact : contacts) {
-
-                    System.out.println("\n=====================================================\n\n");
-                    System.out.format("обработка треков %s\n\n", Contact.viewerString(contact));
-
-                    FileWriter writer = new FileWriter(f, true);
-                    writer.write("\n=====================================================\n\n");
-                    writer.write(String.format("Обработка друга %s\n\n", Contact.viewerString(contact)));
-
-                    friends.put(contact.id, contact);
-
-                    URIBuilder builder = new URIBuilder();
-
-                    //Запрос всех трэков пользователя
-                    builder.setScheme("https").setHost("api.vk.com").setPath("/method/audio.get")
-                            .setParameter("count", String.valueOf(tracksCount))
-                            .setParameter("owner_id", Long.toString(contact.id))
-                            .setParameter("access_token", getToken());
-
-                    //Разбор ответа от сервера
-                    JsonParser parser = new JsonParser();
-                    JsonObject mainObject = parser.parse(getJSON(builder.toString())).getAsJsonObject();
-                    JsonArray tracks = mainObject.getAsJsonArray("response");
-                    HashMap<String, Float> audioStats = new HashMap<>();
-
-                    float sum = 0;
-
-                    if (tracks != null) {
-                        for (JsonElement track : tracks) {
-                            try {
-                                JsonObject trackObject = track.getAsJsonObject();
-                                //Получаем название группы
-                                String artistName = trackObject.get("artist").toString();
-
-                                System.out.println(artistName + " " + trackObject.get("title").toString());
-                                builder = new URIBuilder();
-
-                                //Использование api developer.echonest.com
-                                builder.setScheme("http").setHost("developer.echonest.com").setPath("/api/v4/artist/profile")
-                                        .setParameter("api_key", "KLHMNCTQ90GNZUKBV") //ключ для усорения работы
-                                        .setParameter("name", trackObject.get("artist").toString())
-                                        .setParameter("format", "json")
-                                        .setParameter("bucket", "genre");
-                                JsonObject genreArrayObject = parser.parse(getJSON(builder.toString())).getAsJsonObject();
-                                JsonArray genres = genreArrayObject.getAsJsonObject("response").getAsJsonObject("artist").getAsJsonArray("genres");
-
-
-                                if (genres != null) {
-                                    float j = 0.7f;
-                                    int i = 0;
-                                    //Проход по всем жанрам
-                                    for (JsonElement genre : genres) {
-                                        i++;
-                                        if (i > 1 && i < 4) {
-                                            j = 0.4f;
-                                        }
-                                        else if (i >= 4 && i <= 5) {
-                                            j = 0.2f;
-                                        }
-                                        else if (i > 5) {
-                                            j = 0.1f;
-                                        }
-                                        JsonObject genereObject = genre.getAsJsonObject();
-
-                                        //Добавление в словарь
-                                        if (audioStats.containsKey(genereObject.get("name").toString()))
-                                            audioStats.put(genereObject.get("name").toString(), audioStats.get(genereObject.get("name").toString()) + j);
-                                        else
-                                            audioStats.put(genereObject.get("name").toString(), j);
-
-                                        sum += j;
-                                    }
-                                }
-                                sleep(600); //Ограничение api developer.echonest.com
-
-                            } catch (Exception ex) {
-                            }
-                        }
-
-
-                        for (Map.Entry<String, Float> entry : audioStats.entrySet()) {
-                            if (sum != 0) {
-                                entry.setValue((entry.getValue() / sum) * 100);
-                            }
-                        }
-
-                        List<Map.Entry<String, Float>> genreList = new ArrayList<>(audioStats.entrySet());
-                        Collections.sort(genreList, (e1, e2) -> e1.getValue().compareTo(e2.getValue())); //Сортировка жанров по значению (% от всех)
-                        Collections.reverse(genreList);
-
-                        //Вывод статистики в файл
-                        for (Map.Entry<String, Float> entry : genreList) {
-                            writer.write(String.format("%s - %.2f%%\n", entry.getKey(), entry.getValue()));
-                        }
-
-                        writer.close();
-                    } else {
-                        System.out.println("Аудиозаписи пользователя недоступны");
-                        writer.write("\nАудиозаписи пользователя недоступны\n");
-                        writer.close();
-                    }
-                }
-
-            } catch (Exception ex) {
-                logger.error("Ошибка получения списка друзей", ex);
+            Contact[] contacts = new Contact[0]; //Получение массива пользователей
+            switch (modeChoice) {
+                case "all":
+                    contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
+                    break;
+                case "exact":
+                    //System.out.println("\nEnter the user id: "); //Запрос id пользователя
+                    //String id = s.nextLine();
+                    contacts = usersApi.list(userId, null, FRIENDS_FIELDS);
+                    break;
+                default:
+                    break;
             }
-        }
-        catch (Exception ex){
 
+            //int tracksCount = s.nextInt();
+
+
+            DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HHmmss");
+            Date date = new Date();
+
+
+            String path = "C:" + File.separator + "VkMusic" + File.separator + "log" + dateFormat.format(date) + ".txt";
+            File f = new File(path);
+            f.getParentFile().mkdirs();
+            try {
+                f.createNewFile();
+            } catch (IOException ex) {
+                logger.error("Ошибка создания файла", ex);
+            }
+
+            //Проходим по всем контактам
+            for (Contact contact : contacts) {
+
+                System.out.println("\n=====================================================\n\n");
+                System.out.format("обработка треков %s\n\n", Contact.viewerString(contact));
+
+                FileWriter writer = new FileWriter(f, true);
+                writer.write("\n=====================================================\n\n");
+                writer.write(String.format("Обработка друга %s\n\n", Contact.viewerString(contact)));
+
+                friends.put(contact.id, contact);
+
+                URIBuilder builder = new URIBuilder();
+
+                //Запрос всех трэков пользователя
+                builder.setScheme("https").setHost("api.vk.com").setPath("/method/audio.get")
+                        .setParameter("count", String.valueOf(tracksCount))
+                        .setParameter("owner_id", Long.toString(contact.id))
+                        .setParameter("access_token", getToken());
+
+                //Разбор ответа от сервера
+                JsonParser parser = new JsonParser();
+                JsonObject mainObject = parser.parse(getJSON(builder.toString())).getAsJsonObject();
+                JsonArray tracks = mainObject.getAsJsonArray("response");
+                HashMap<String, Float> audioStats = new HashMap<>();
+
+                float sum = 0;
+
+                if (tracks != null) {
+                    for (JsonElement track : tracks) {
+                        try {
+                            JsonObject trackObject = track.getAsJsonObject();
+                            //Получаем название группы
+                            String artistName = trackObject.get("artist").toString();
+
+                            System.out.println(artistName + " " + trackObject.get("title").toString());
+                            builder = new URIBuilder();
+
+                            //Использование api developer.echonest.com
+                            builder.setScheme("http").setHost("developer.echonest.com").setPath("/api/v4/artist/profile")
+                                    .setParameter("api_key", "KLHMNCTQ90GNZUKBV") //ключ для усорения работы
+                                    .setParameter("name", trackObject.get("artist").toString())
+                                    .setParameter("format", "json")
+                                    .setParameter("bucket", "genre");
+                            JsonObject genreArrayObject = parser.parse(getJSON(builder.toString())).getAsJsonObject();
+                            JsonArray genres = genreArrayObject.getAsJsonObject("response").getAsJsonObject("artist").getAsJsonArray("genres");
+
+
+                            if (genres != null) {
+                                float j = 0.7f;
+                                int i = 0;
+                                //Проход по всем жанрам
+                                for (JsonElement genre : genres) {
+                                    i++;
+                                    if (i > 1 && i < 4) {
+                                        j = 0.4f;
+                                    } else if (i >= 4 && i <= 5) {
+                                        j = 0.2f;
+                                    } else if (i > 5) {
+                                        j = 0.1f;
+                                    }
+                                    JsonObject genereObject = genre.getAsJsonObject();
+
+                                    //Добавление в словарь
+                                    if (audioStats.containsKey(genereObject.get("name").toString()))
+                                        audioStats.put(genereObject.get("name").toString(), audioStats.get(genereObject.get("name").toString()) + j);
+                                    else
+                                        audioStats.put(genereObject.get("name").toString(), j);
+
+                                    sum += j;
+                                }
+                            }
+                            sleep(600); //Ограничение api developer.echonest.com
+
+                        } catch (Exception ex) {
+                            logger.error("Ошибка внешнего api", ex);
+                        }
+                    }
+
+
+                    for (Map.Entry<String, Float> entry : audioStats.entrySet()) {
+                        if (sum != 0) {
+                            entry.setValue((entry.getValue() / sum) * 100);
+                        }
+                    }
+
+                    List<Map.Entry<String, Float>> genreList = new ArrayList<>(audioStats.entrySet());
+                    Collections.sort(genreList, (e1, e2) -> e1.getValue().compareTo(e2.getValue())); //Сортировка жанров по значению (% от всех)
+                    Collections.reverse(genreList);
+
+                    //Вывод статистики в файл
+                    for (Map.Entry<String, Float> entry : genreList) {
+                        writer.write(String.format("%s - %.2f%%\n", entry.getKey(), entry.getValue()));
+                    }
+
+                    writer.close();
+                } else {
+                    System.out.println("Аудиозаписи пользователя недоступны");
+                    writer.write("\nАудиозаписи пользователя недоступны\n");
+                    writer.close();
+                }
+            }
+
+        } catch (Exception ex) {
+            logger.error("Ошибка получения списка друзей", ex);
         }
     }
 
@@ -279,7 +273,7 @@ public final class VkAudioStats extends ClientBotsExtension {
                 StringBuilder sb = new StringBuilder();
                 while ((line = br.readLine()) != null) {
                     sb.append(line);
-                    sb.append("\n");
+                    sb.append(System.lineSeparator());
                 }
                 br.close();
 
