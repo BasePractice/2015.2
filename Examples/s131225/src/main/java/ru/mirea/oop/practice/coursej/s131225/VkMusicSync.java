@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class VkMusicSync extends ClientBotsExtension {
-    public static final String MUSIC_DIR = System.getProperty("user.home") + "\\.Music";
+    public static final String MUSIC_DIR = System.getProperty("user.home")+System.getProperty("file.separator") + ".Music";
     private static final Logger logger = LoggerFactory.getLogger(VkMusicSync.class);
 
     public VkMusicSync() throws Exception {
@@ -34,30 +34,26 @@ public final class VkMusicSync extends ClientBotsExtension {
         final File directory = new File(MUSIC_DIR);
         if (!directory.exists())
             logger.debug("Создаем директорию для хранения музыки: {}", directory.mkdirs());
-        final List<Audio> list =new ArrayList<>(Arrays.asList(audios.list(null, null, null, null, null, null)));
+        final List<Audio> list = new ArrayList<>(Arrays.asList(audios.list(null, null, null, null, null, null)));
         List<String> existFiles = getFileList();
-        logger.debug(" У текщего пользователя "+list.size()+" аудиозаписей, на данном устройстве хранится "
-                +existFiles.size()+" аудиозаписей.");
+        logger.debug(" У текщего пользователя " + list.size() + " аудиозаписей, на данном устройстве хранится "
+                + existFiles.size() + " аудиозаписей.");
 
         for (Audio audio : list) {  // грузим то, чего у нас нет
-            String fileName = audio.artist + " - " + audio.title + ".mp3";
-            fileName=fileName.replaceAll("\\?|<|>|:|\\\\|\\||\\*|/|\"",""); // windows MD!
-            fileName = fileName.replaceAll("&amp;", "&");
+            String fileName = getWinFileName(audio);
             if (!existFiles.contains(fileName)) {
                 download(audio);
             }
         }
         logger.debug("Посик \"лишний\" файлов...");
-        List<String> deleted=deleteExcess(list, getFileList()); // удаляем лишнее
+        List<String> deleted = deleteExcess(list, getFileList()); // удаляем лишнее
         logger.debug("удалено " + deleted.size() + " файлов. Синхронизация завершена!");
 
     }
 
     private String download(Audio audio) {
         try {
-            String fileName = audio.artist + " - " + audio.title + ".mp3";
-            fileName=fileName.replaceAll("\\?|<|>|:|\\\\|\\||\\*|/|\"","");
-            fileName = fileName.replaceAll("&amp;", "&");
+            String fileName = getWinFileName(audio);
             File file = new File(MUSIC_DIR, fileName);
             if (!file.exists()) {
                 logger.debug("Загрузка " + file.getName());
@@ -81,9 +77,7 @@ public final class VkMusicSync extends ClientBotsExtension {
         for (String fileName : existFiles) {
             boolean isListed = false;
             for (Audio audio : list) {
-                String fileName1 = audio.artist + " - " + audio.title + ".mp3";
-                fileName1=fileName1.replaceAll("\\?|<|>|:|\\\\|\\||\\*|/|\"","");
-                fileName1 = fileName1.replaceAll("&amp;", "&");
+                String fileName1 = getWinFileName(audio);
                 if (fileName.equals(fileName1)) {
                     isListed = true;
                     break;
@@ -111,6 +105,13 @@ public final class VkMusicSync extends ClientBotsExtension {
             e.printStackTrace();
         }
         return files;
+    }
+
+    private static String getWinFileName(Audio audio) {
+        String fileName = audio.artist + " - " + audio.title + ".mp3";
+        fileName = fileName.replaceAll("\\?|<|>|:|\\\\|\\||\\*|/|\"", "");
+        fileName = fileName.replaceAll("&amp;", "&");
+        return fileName;
     }
 
     @Override
