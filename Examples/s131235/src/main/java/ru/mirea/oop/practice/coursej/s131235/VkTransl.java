@@ -74,8 +74,8 @@ public class VkTransl extends ServiceBotsExtension {
                 textLang = useParser.getLanguage();
                 textForTransl = useParser.getText();
 
-                Translator transl = new Translator(textLang, textForTransl);
-                result = transl.translating(textLang, textForTransl);
+
+                result =  Translator.translating(textLang, textForTransl);
             }
             catch (IOException e) {
                 logger.error(" Ошибка при обращении к Переводчику Яндекса. (возможно ключ устарел) ");
@@ -87,6 +87,8 @@ public class VkTransl extends ServiceBotsExtension {
 
         }
     }
+
+
 
 
     public void sendMessage(long id, String text) {

@@ -14,17 +14,8 @@ import java.util.Scanner;
  * Created by TopKek on 12.12.2015.
  */
 public class Translator {
-    private String textForTransl;
-    private String langForTransl;
 
-
-    public Translator(String langForTransl, String textForTransl) {
-        this.textForTransl = textForTransl;
-        this.langForTransl = langForTransl;
-
-    }
-
-
+   
     public static String translating(String lang, String text) throws IOException {
         String key = "trnsl.1.1.20151208T095415Z.967d846ac9275be4.62e517b3d9054079fa6aa57d02f15b1a0e1fc9ea";
         String urlForConnection = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key;
