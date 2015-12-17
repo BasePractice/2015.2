@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CurrencyConverter extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(CurrencyConverter.class);
-    private static final String HELP = " пример входных даннх: 22.10 USD RUB";
+    private static final String HELP = " пример входных даннх: 12.34 USD RUB";
     private final MessagesApi msgApi;
 
     public CurrencyConverter() throws Exception {
@@ -54,11 +54,10 @@ public class CurrencyConverter extends ServiceBotsExtension {
                         MoneyAmount afterConversion = beforeConversion.convertTo(to);
                         answer = beforeConversion.toString() + " = " + afterConversion.toString();
                     } else {
-                        throw new IllegalArgumentException("ошибка входных параметров");
+                        throw new IllegalArgumentException("проверьте формат вводимых данных");
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    answer = " Не корректный ввод, \n" + HELP + "\n список доступных валют:";
+                } catch (IllegalArgumentException e) {
+                    answer = " Не корректный ввод, \n" + e.getMessage() + ",\n" + HELP + "\n список доступных валют:";
                     for (Currency currency : Currency.getCurrencyList()) {
                         answer += currency.getCharCode() + ", ";
                     }
