@@ -53,9 +53,6 @@ class Currency {
             e.printStackTrace();
         }
         currencyList.add(new Currency("RUB", 1));
-        for (Currency currency : currencyList) {
-            System.out.println(currency.toString());
-        }
         return currencyList;
     }
 
