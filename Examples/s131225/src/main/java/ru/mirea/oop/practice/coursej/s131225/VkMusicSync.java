@@ -54,14 +54,15 @@ public final class VkMusicSync extends ClientBotsExtension {
             String fileName = getFileName(audio);
             File file = new File(MUSIC_DIR, fileName);
             if (!file.exists()) {
-                logger.debug("Загрузка " + file.getName());
+                logger.debug("Загрузка {} ", file.getName());
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(audio.url).build();
                 Response response;
                 response = client.newCall(request).execute();
-                BufferedSink sink = Okio.buffer(Okio.sink(file));
-                sink.writeAll(response.body().source());
-                sink.close();
+                try (BufferedSink sink = Okio.buffer(Okio.sink(file))){
+                    sink.writeAll(response.body().source());
+                }
+
                 return file.getName();
             }
         } catch (IOException e) {
@@ -100,7 +101,7 @@ public final class VkMusicSync extends ClientBotsExtension {
                 }
             }
         } catch (IOException e) {
-            logger.error(" ");
+            logger.error("Ошибка  при получчении списка файлов. Существует ли директория {}", MUSIC_DIR);
         }
 
         return files;
