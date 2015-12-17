@@ -41,7 +41,6 @@ public final class Contact {
     public String status;
     public String site;
     public int timezon;
-    public HashMap<String, Float> audioStats;
 
     public static String viewerString(Contact contact) {
         return contact.lastName + " " + contact.firstName;

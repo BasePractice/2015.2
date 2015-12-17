@@ -139,7 +139,7 @@ public final class VkAudioStats extends ServiceBotsExtension {
                     JsonParser parser = new JsonParser();
                     JsonObject mainObject = parser.parse(getJSON(builder.toString())).getAsJsonObject();
                     JsonArray tracks = mainObject.getAsJsonArray("response");
-                    contact.audioStats = new HashMap<>();
+                    HashMap<String, Float> audioStats = new HashMap<>();
 
                     float sum = 0;
 
@@ -179,10 +179,10 @@ public final class VkAudioStats extends ServiceBotsExtension {
                                         JsonObject genereObject = genre.getAsJsonObject();
 
                                         //Добавление в словарь
-                                        if (contact.audioStats.containsKey(genereObject.get("name").toString()))
-                                            contact.audioStats.put(genereObject.get("name").toString(), contact.audioStats.get(genereObject.get("name").toString()) + j);
+                                        if (audioStats.containsKey(genereObject.get("name").toString()))
+                                            audioStats.put(genereObject.get("name").toString(), audioStats.get(genereObject.get("name").toString()) + j);
                                         else
-                                            contact.audioStats.put(genereObject.get("name").toString(), j);
+                                            audioStats.put(genereObject.get("name").toString(), j);
 
                                         sum += j;
                                     }
@@ -194,13 +194,13 @@ public final class VkAudioStats extends ServiceBotsExtension {
                         }
 
 
-                        for (Map.Entry<String, Float> entry : contact.audioStats.entrySet()) {
+                        for (Map.Entry<String, Float> entry : audioStats.entrySet()) {
                             if (sum != 0) {
                                 entry.setValue((entry.getValue() / sum) * 100);
                             }
                         }
 
-                        List<Map.Entry<String, Float>> genreList = new ArrayList<>(contact.audioStats.entrySet());
+                        List<Map.Entry<String, Float>> genreList = new ArrayList<>(audioStats.entrySet());
                         Collections.sort(genreList, (e1, e2) -> e1.getValue().compareTo(e2.getValue())); //Сортировка жанров по значению (% от всех)
                         Collections.reverse(genreList);
 

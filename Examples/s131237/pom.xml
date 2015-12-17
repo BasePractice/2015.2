@@ -29,7 +29,7 @@
     </licenses>
 
     <build>
-        <finalName>Mirea.Oop.Practice.Course.S000000</finalName>
+        <finalName>Mirea.Oop.Practice.Course.S131237</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
