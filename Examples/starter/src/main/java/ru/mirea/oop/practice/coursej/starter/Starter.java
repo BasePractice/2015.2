@@ -20,8 +20,8 @@ public final class Starter {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         Set<Future<?>> futures = new LinkedHashSet<>();
         Set<String> enabled = loadEnabled();
-//        startMazeExtensions(enabled);
-        startBotsExtensions(futures, enabled);
+        startMazeExtensions(enabled);
+        //startBotsExtensions(futures, enabled);
 
         for (Future<?> future : futures) {
             future.get();
