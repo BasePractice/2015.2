@@ -51,6 +51,9 @@ public final class VkAudioStats extends ClientBotsExtension {
             "can_see_all_posts, " +
             "can_post, " +
             "universities";
+    private String modeChoice;
+    private Integer tracksCount;
+    private String userId;
 
     public VkAudioStats() throws Exception {
         super("vk.services.VkAudioStats");
@@ -63,9 +66,33 @@ public final class VkAudioStats extends ClientBotsExtension {
     }
 
 
+    public void loadParams() {
+        Properties props = new Properties();
+        InputStream is;
+
+        try {
+            File f = new File("server.properties");
+            is = new FileInputStream( f );
+        }
+        catch ( Exception e ) { is = null; }
+
+        try {
+            if ( is == null ) {
+                is = getClass().getResourceAsStream("server.properties");
+            }
+            props.load( is );
+        }
+        catch ( Exception e ) { }
+
+        modeChoice  = props.getProperty("modeChoice", "all");
+        tracksCount = new Integer(props.getProperty("tracksCount", "100"));
+        userId  = props.getProperty("userId", "id89634062");
+    }
+
     @Override
     protected void doClient() throws Exception {
-        System.out.format("Запущен сервис статистики аудиузаписей");
+        logger.info("Запущен сервис статистики аудиузаписей");
+        loadParams();
         try {
             friends.clear();
 
@@ -76,27 +103,30 @@ public final class VkAudioStats extends ClientBotsExtension {
 
                 Scanner s = new Scanner(System.in);
 
-                System.out.println("\nEnter \"all\" to handle all friends\nor \"exact\" to handle exact user\n");
+                //logger.info("\nEnter \"all\" to handle all friends\nor \"exact\" to handle exact user\n");
 
-                String str = s.nextLine(); //Ответ пользователя all или exact
+                Properties properties = new Properties();
+                try (InputStream stream = System.in) {
+                    properties.load(stream);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
 
                 Contact[] contacts = new Contact[0]; //Получение массива пользователей
-                switch (str) {
+                switch (modeChoice) {
                     case "all":
                         contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
                         break;
                     case "exact":
-                        System.out.println("\nEnter the user id: "); //Запрос id пользователя
-                        String id = s.nextLine();
-                        contacts = usersApi.list(id, null, FRIENDS_FIELDS);
+                        //System.out.println("\nEnter the user id: "); //Запрос id пользователя
+                        //String id = s.nextLine();
+                        contacts = usersApi.list(userId, null, FRIENDS_FIELDS);
                         break;
                     default:
                         break;
                 }
 
-
-                System.out.println("\nEnter count of tracks to handle (MAX 6000): ");
-                int tracksCount = s.nextInt();
+                //int tracksCount = s.nextInt();
 
 
                 DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HHmmss");
