@@ -31,13 +31,13 @@ public class Cell {
         this.x = x;
         this.y = y;
         if ((c & MazeExtension.SQUARE_LEFT) == MazeExtension.SQUARE_LEFT) {
-            this.left=true;
+            this.left = true;
         }
         if ((c & MazeExtension.SQUARE_UP) == MazeExtension.SQUARE_UP) {
-            this.up=true;
+            this.up = true;
         }
         if ((c & MazeExtension.SQUARE_RIGHT) == MazeExtension.SQUARE_RIGHT) {
-            this.right=true;
+            this.right = true;
         }
         if ((c & MazeExtension.SQUARE_DOWN) == MazeExtension.SQUARE_DOWN) {
             this.down = true;
@@ -73,21 +73,23 @@ public class Cell {
         if (right) val |= MazeExtension.SQUARE_RIGHT;
         return val;
     }
+
     public boolean isNeighbor(Cell otherCell) {
         return Math.abs(this.x - otherCell.x) + Math.abs(this.y - otherCell.y) == 1;
     }
+
     public boolean canMoveTo(Cell to) {
-        if (this.isNeighbor( to)) {
+        if (this.isNeighbor(to)) {
             switch (this.x - to.x) {
-                case 0:{
+                case 0: {
                     switch (this.y - to.y) {
-                        case 1:{
+                        case 1: {
                             if (!this.up && !to.down) {
                                 return true;
                             }
                             break;
                         }
-                        case -1:{
+                        case -1: {
                             if (!this.down && !to.up) {
                                 return true;
                             }
@@ -96,14 +98,14 @@ public class Cell {
                     }
                     break;
                 }
-                case 1:{
+                case 1: {
                     if (!this.left && !to.right) {
                         return true;
                     }
                     break;
                 }
-                case -1:{
-                    if (!this.right && !to.left){
+                case -1: {
+                    if (!this.right && !to.left) {
                         return true;
                     }
                     break;
@@ -113,10 +115,11 @@ public class Cell {
         }
         return false;
     }
-    public  List<Cell> getNeighbors( Set<Cell> cells) {
+
+    public List<Cell> getNeighbors(Set<Cell> cells) {
         List<Cell> neighbors = new ArrayList<>();
         for (Cell cell2 : cells) {
-            if (this.isNeighbor( cell2) && this.canMoveTo( cell2)) {
+            if (this.isNeighbor(cell2) && this.canMoveTo(cell2)) {
                 neighbors.add(cell2);
             }
         }

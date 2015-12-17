@@ -1,4 +1,5 @@
 package ru.mirea.oop.practice.coursej.s131249;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.impl.maze.AbstractMazeExtension;
@@ -16,7 +17,7 @@ public class MazeEller extends AbstractMazeExtension {
         Set<Cell> cellSet = new HashSet<>();
         for (int y = 0; y < maze.rows; y++) {
             for (int x = 0; x < maze.cols; x++) {
-                Cell cell=new Cell(y, x, maze.data[y][x]);
+                Cell cell = new Cell(y, x, maze.data[y][x]);
                 cells[y][x] = cell;
                 cellSet.add(cell);
             }
@@ -29,8 +30,8 @@ public class MazeEller extends AbstractMazeExtension {
         do {
             for (Cell cell : cellSet) {
                 if (cell.distance == wave) {
-                    List<Cell> neighbors=cell.getNeighbors( cellSet);
-                    for (Cell neighbor :neighbors ) {
+                    List<Cell> neighbors = cell.getNeighbors(cellSet);
+                    for (Cell neighbor : neighbors) {
                         if (neighbor.distance == -1) {
                             neighbor.distance = wave + 1;
                         }
@@ -41,21 +42,22 @@ public class MazeEller extends AbstractMazeExtension {
         } while (finish.distance == -1);
         List<Cell> path = new ArrayList<>();
         path.add(finish);
-        Cell currCell=finish;
+        Cell currCell = finish;
         while (!path.contains(start)) {
-            currCell = getNearest(currCell.getNeighbors( cellSet));
+            currCell = getNearest(currCell.getNeighbors(cellSet));
             path.add(currCell);
         }
-        logger.debug("найден путь от выхода до входа, его длинна "+wave);
+        logger.debug("найден путь от выхода до входа, его длинна {}", wave);
 
         Point[] pathPoints = new Point[path.size()];
-        for (int i=0;i<pathPoints.length;i++) {
+        for (int i = 0; i < pathPoints.length; i++) {
             pathPoints[i] = new Point(path.get(i).x, path.get(i).y);
         }
         logger.debug("обратный путь построен");
         return pathPoints;
 
     }
+
     public static Cell getNearest(List<Cell> neighbors) {
         Collections.sort(neighbors, (o1, o2) -> {
             Integer d1 = o1.distance;
@@ -69,6 +71,7 @@ public class MazeEller extends AbstractMazeExtension {
         }
         return null;
     }
+
     @Override
     public String description() {
         return "Лабиринт по алгаритму Эллера";
@@ -173,7 +176,7 @@ public class MazeEller extends AbstractMazeExtension {
         }
         for (int i = 0; i < cols; i++) {
             if (row[i].down) {
-                row[i].groupId=0;
+                row[i].groupId = 0;
                 row[i].groupId = ++lastGroupId;
                 row[i].down = false;
 
