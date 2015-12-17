@@ -82,13 +82,13 @@ public class VkTransl extends ServiceBotsExtension {
                 if (textLangFirst.equals("**")){
                     result =  Translator.translating(textLangSecond, textForTransl);
 
-                }else {
+                } else {
                     StringBuffer sb = new StringBuffer();
                     sb.append(textLangFirst);
                     sb.append("-");
                     sb.append(textLangSecond);
-                    String summa = sb.toString();
-                    result =  Translator.translating(summa, textForTransl);
+                    String combined = sb.toString();
+                    result =  Translator.translating(combined, textForTransl);
                 }
 
 
