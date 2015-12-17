@@ -34,7 +34,7 @@ public final class VkMusicSync extends ClientBotsExtension {
         final File directory = new File(MUSIC_DIR);
         if (!directory.exists())
             logger.debug("Создаем директорию для хранения музыки: {}", directory.mkdirs());
-        final List<Audio> list =new ArrayList<>(Arrays.asList(audios.list(null, null, null, null, null, 50)));
+        final List<Audio> list =new ArrayList<>(Arrays.asList(audios.list(null, null, null, null, null, null)));
         List<String> existFiles = getFileList();
         logger.debug(" У текщего пользователя "+list.size()+" аудиозаписей, на данном устройстве хранится "
                 +existFiles.size()+" аудиозаписей.");
