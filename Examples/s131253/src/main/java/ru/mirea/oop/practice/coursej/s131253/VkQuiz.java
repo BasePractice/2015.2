@@ -2,32 +2,30 @@ package ru.mirea.oop.practice.coursej.s131253;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
 
-
 /**
  * Created by Александр on 27.11.2015.
  */
 
-public class VkBot extends ServiceBotsExtension {
+public class VkQuiz extends ServiceBotsExtension {
 
-    private static final Logger logger = LoggerFactory.getLogger(VkBot.class);
+    private static final Logger logger = LoggerFactory.getLogger(VkQuiz.class);
     private Game game = new Game();
     private Question justSended; //Последний отправленный вопрос
     private boolean isTestEnded = true; //Завершёна ли викторина. По умолчанию, пока игра не началась, завершёна.
-    private static final int QUESTIONS_COUNT = 8; //Из этого кол-ва вопросов будет состоять викторина.
+    private static final int QUESTIONS_COUNT = 5; //Из этого кол-ва вопросов будет состоять викторина.
 
     @Override
     public String description() {
         return "Сервис для проведения викторины/теста с пользователями";
     }
 
-    public VkBot() throws Exception {
-        super("vk.services.VkBot");
+    public VkQuiz() throws Exception {
+        super("vk.services.VkQuiz");
     }
 
     @Override
@@ -38,17 +36,18 @@ public class VkBot extends ServiceBotsExtension {
             case MESSAGE_RECEIVE: {  //Весь цикл бота протекает при событиях одного типа - входящих сообщениях
 
                 Message msg = (Message) event.object;
-
-                if (msg.isOutbox() || msg.contact.id == owner.id) {
-                    System.out.println("ИСХОДЯЩЕЕ");
-                    System.out.println("Текст сообщения: " + msg.text);
-                    break;
-                }
-
                 Contact contact = msg.contact;
 
-                if (msg.text.toLowerCase().equals("инфо")) {
-                    sendMessage(contact.id, "Привет, я бот-викторина! \n Чтобы сыграть, напишите *Начать викторину*. \n" +
+                if (msg.isOutbox()) {
+                    logger.debug("Сообщение для " + Contact.viewerString(contact)
+                            + ", не следует на него отвечать оно исходящее");
+                    logger.debug("Текст сообщения: " + msg.text);
+                    break;
+                }
+                logger.debug("Получили сообщение от " + Contact.viewerString(contact));
+
+                if (msg.text.toLowerCase().equals("инфо") || msg.text.toLowerCase().equals("help")) {
+                    sendMessage(contact.id, "Привет, я бот-викторина! \n Чтобы сыграть, напишите «Начать викторину». \n" +
                             "Вам будет задано " + QUESTIONS_COUNT + " вопросов. \n В ответах регистр (нижний/ВЕрХниЙ) не имеет значения." +
                             " \n В вопросах-тестах присылайте номер правильного варианта." );
                     break;
@@ -57,8 +56,6 @@ public class VkBot extends ServiceBotsExtension {
                 if (msg.text.toLowerCase().equals("начать викторину") && !isTestEnded()) {
                     sendMessage(msg.contact.id, "Sorry! Кто-то уже играет в викторину. \n Попробуйте позже.");
                 }
-
-                // System.out.println("ПОЛУЧЕНО " + msg.text);
 
                 Question random = game.RandomQuestion();
 
@@ -78,20 +75,19 @@ public class VkBot extends ServiceBotsExtension {
 
                         sendMessage(contact.id, "Тест завершён. \n Поздравляю, вы ответили правильно на все вопросы"
                                         + "\n Ваше время: " + testTime + " секунд. \n " +
-                                        "Чтобы начать новую игру, напишите *Начать викторину*");
+                                        "Чтобы начать новую игру, напишите «Начать викторину»");
                         isTestEnded=true;
 
                     } else {
                         sendMessage(contact.id, "Тест завершён. \n Кол-во правильных ответов: "
                                 + game.getScore() + "/"+ QUESTIONS_COUNT+" \n Ваше время: " + testTime + " секунд. \n" +
-                                " Чтобы начать новую игру, напишите *Начать викторину*");
+                                " Чтобы начать новую игру, напишите «Начать викторину»");
                         isTestEnded=true;
                     }
 
                     game.setQuestionsFalse();
                     break;
                 }
-
 
                 if ((msg.text.toLowerCase().equals("начать викторину")) && isTestEnded()) {
                     game = new Game();

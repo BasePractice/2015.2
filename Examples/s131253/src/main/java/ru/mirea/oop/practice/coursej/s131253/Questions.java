@@ -15,7 +15,21 @@ public class Questions {
 
     public Questions() {
 
-        BufferedReader reader = null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(Configuration.getFileName("/Questions.txt"))))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("=")) {  //Каждая строка в документе разбивается символом "=" на 2 строковых элемента.
+                    String[] elements = line.split("=");
+                    baseOfQuestons.add(new Question(elements[0], elements[1]));  /*Текст вопроса и ответ на него передаются
+                    в конструктор класса Question, а затем экземпляр класса добавляется в динамический массив */
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+ /*
+   BufferedReader reader = null;
         try {  //Производится считывание вопросов для викторины из текстового файла
             reader = new BufferedReader(new FileReader(new File(Configuration.getFileName("Questions.txt"))));
         } catch (FileNotFoundException e) {
@@ -27,20 +41,20 @@ public class Questions {
             while ((line = reader.readLine()) != null) {
                 if (line.contains("=")) {  //Каждая строка в документе разбивается символом "=" на 2 строковых элемента.
                     String[] elements = line.split("=");
-                    baseOfQuestons.add(new Question(elements[0], elements[1])); /*Текст вопроса и ответ на него передаются
+                    baseOfQuestons.add(new Question(elements[0], elements[1])); */ /*Текст вопроса и ответ на него передаются
                     в конструктор класса Question, а затем экземпляр класса добавляется в динамический массив */
-                }
+ /*               }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+*/
     public ArrayList<Question> getBaseOfQuestons() {
         return baseOfQuestons;
     }
 
-    public Question getQuesForNumber(int i) {
+    public Question getQuestionForNumber(int i) {
      return baseOfQuestons.get(i);
     } //Метод выдаёт вопрос по номеру i.
 
