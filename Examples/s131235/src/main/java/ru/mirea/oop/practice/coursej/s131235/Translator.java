@@ -20,7 +20,7 @@ public class Translator {
     private Translator(){
     }
 
-    public static String translating(String lang, String text) throws IOException {
+    public static String translating(String langFirst, String text) throws IOException {
         String key = "trnsl.1.1.20151208T095415Z.967d846ac9275be4.62e517b3d9054079fa6aa57d02f15b1a0e1fc9ea";
         String urlForConnection = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key;
 
@@ -30,7 +30,7 @@ public class Translator {
         String json;
 
         try (DataOutputStream outputData = new DataOutputStream(connection.getOutputStream())) {
-            outputData.writeBytes("text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + lang);
+            outputData.writeBytes("text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + langFirst);
         }
 
         try (InputStream inputData = connection.getInputStream()){
