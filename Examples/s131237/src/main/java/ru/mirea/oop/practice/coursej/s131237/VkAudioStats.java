@@ -5,12 +5,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.http.client.utils.URIBuilder;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.Configuration;
 import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
 import ru.mirea.oop.practice.coursej.api.vk.UsersApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
+import ru.mirea.oop.practice.coursej.impl.vk.ext.ClientBotsExtension;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.*;
@@ -26,8 +26,8 @@ import static java.lang.Thread.sleep;
 /**
  * Created by Shams on 10.12.2015.
  */
-public final class VkAudioStats extends ServiceBotsExtension {
-    public static final Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class);
+public final class VkAudioStats extends ClientBotsExtension {
+    public static final org.slf4j.Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class);
     public final Map<Long, Contact> friends = new HashMap<>();
     public static final String ACCESS_TOKEN = "access_token";
     private static final String FRIENDS_FIELDS = "nickname, " +
@@ -56,18 +56,15 @@ public final class VkAudioStats extends ServiceBotsExtension {
         super("vk.services.VkAudioStats");
     }
 
-    @Override
-    public void doEvent(Event event) {
-
-    }
 
     @Override
     public String description() {
         return "Сбор статистики музыкальных предпочтений";
     }
 
+
     @Override
-    public void run() {
+    protected void doClient() throws Exception {
         System.out.format("Запущен сервис статистики аудиузаписей");
         try {
             friends.clear();
@@ -169,13 +166,15 @@ public final class VkAudioStats extends ServiceBotsExtension {
                                     //Проход по всем жанрам
                                     for (JsonElement genre : genres) {
                                         i++;
-                                        if (i > 1 && i < 4)
+                                        if (i > 1 && i < 4) {
                                             j = 0.4f;
-                                        else if (i >= 4 && i <= 5)
+                                        }
+                                        else if (i >= 4 && i <= 5) {
                                             j = 0.2f;
-                                        else if (i > 5)
+                                        }
+                                        else if (i > 5) {
                                             j = 0.1f;
-
+                                        }
                                         JsonObject genereObject = genre.getAsJsonObject();
 
                                         //Добавление в словарь
