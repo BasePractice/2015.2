@@ -3,8 +3,12 @@ package ru.mirea.oop.practice.coursej.s131245;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+/*
+  Первоначальный класс, отвечающий за хранения статистки о пользователях, один объект класса является одни посещением
+  какого-либо пользователя, одно посещение имеет: вход - поле begin, выход - end и продолжительность пребывания в
+  социальной сети - session в минутах.
 
-/**FIXME: Разобраться в логике. Сделать все поля final */
+ */
 public final class Session {
     private final LocalDateTime begin;
     private LocalDateTime end;
@@ -14,7 +18,6 @@ public final class Session {
         this.begin = begin;
     }
 
-    /** FIXME: Избавится от deprecated методов */
     //Заменено на LocalDateTime и Duration
     public void setEnd(LocalDateTime end) {
         this.end = end;

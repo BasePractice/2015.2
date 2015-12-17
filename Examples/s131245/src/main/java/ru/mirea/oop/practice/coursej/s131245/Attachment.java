@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.vk.DocumentsApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
-
+import ru.mirea.oop.practice.coursej.api.vk.entities.Document;
 
 
 import java.io.File;
@@ -22,18 +22,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 
+/*
+   Создание документа по запросу, загрузка на сервер
+ */
 
-//FIXME: Разобраться в логике.
-//SimpleDateFormat не потокобезопасен - сделать его таковым; Заменен на DateTimeFormatter
-//Разбить на классы в соответствии с логикой; Вытащена вся логика парсера, что еще?
 public class Attachment {
     private static final Logger logger = LoggerFactory.getLogger(Attachment.class);
     private static final String REPORTS_DIRECTORY = System.getProperty("user.home") + "/reports";
     private static int WIDTH = 4;
-//DateTimeFormatter - thread-safe
+    //DateTimeFormatter - thread-safe
     private static final DateTimeFormatter dateFormat_input = DateTimeFormatter.ofPattern("dd/MM HH:mm");
     private static final DateTimeFormatter dateFormat_output = DateTimeFormatter.ofPattern("HH:mm");
-    private static final DateTimeFormatter dateFormat_forFile =  DateTimeFormatter.ofPattern("dd-MM");
+    private static final DateTimeFormatter dateFormat_forFile = DateTimeFormatter.ofPattern("dd-MM");
 
 
     private Map<Long, ArrayList<Session>> mapSession;
@@ -51,9 +51,11 @@ public class Attachment {
     public String getAttachmentName() throws Exception {
         DocumentsApi documents = api.getDocuments();
         File file = createFile();
-        boolean document = documents.uploadDocument(file);
+        documents.uploadDocument(file);
+        Document document = documents.list(1, 0, api.idOwner())[0];
 
-        return null;
+
+        return "doc" + document.idOwner + "_" + document.id;
     }
 
     public File createFile() throws FileNotFoundException {
@@ -72,8 +74,10 @@ public class Attachment {
         int column = 0;
 
         for (Map.Entry<Long, ArrayList<Session>> currentMan : mapSession.entrySet()) {
+            if(!friendsMap.containsKey(currentMan.getKey())) {
+                continue;
+            }
             //Проход по списку контактов и заполнение каждого в отдельности по столбцам
-
             String key = friendsMap.get(currentMan.getKey()).firstName + " " + friendsMap.get(currentMan.getKey()).lastName;
             //Либо часть людей заполняется, либо все
             if (parser.getMsg().contains("Статистика всех пользователей") || arrayOfPeople.contains(key)) {
@@ -98,8 +102,7 @@ public class Attachment {
                     }
                     try {
                         //При отсутствие даты, проверяем конкретную сессию на совпадение с заданной датой
-                        if((!parser.isDate()) || (parser.isDate() && (date.getDayOfMonth() == currentMan.getValue().get(i).getBegin().getDayOfMonth()  || date.getDayOfMonth() == currentMan.getValue().get(i).getEnd().getDayOfMonth() )))
-                        {
+                        if ((!parser.isDate()) || (parser.isDate() && (date.getDayOfMonth() == currentMan.getValue().get(i).getBegin().getDayOfMonth() || date.getDayOfMonth() == currentMan.getValue().get(i).getEnd().getDayOfMonth()))) {
                             row.createCell(column).setCellValue(dateFormat_input.format(currentMan.getValue().get(i).getBegin()));
                             row.createCell(column + 1).setCellValue(dateFormat_output.format(currentMan.getValue().get(i).getEnd()));
                             row.createCell(column + 2).setCellValue(currentMan.getValue().get(i).getSession().toMinutes());
@@ -117,12 +120,10 @@ public class Attachment {
         }
 
 
-        File file = writeFile(workbook);
-
-        return file;
+        return writeFile(workbook);
     }
 
-    public static File writeFile(Workbook workbook) {
+    public File writeFile(Workbook workbook) {
         String fileName = dateFormat_forFile.format(LocalDate.now()) + ".xlsx";
         File file = new File(REPORTS_DIRECTORY, fileName);
 
@@ -135,6 +136,20 @@ public class Attachment {
     }
 
 
+    public void deleteFile(String attachmentName) {
 
+        DocumentsApi documentsApi;
+        try {
+            documentsApi = api.getDocuments();
+            Document[] documents = documentsApi.list(10, 0, api.idOwner());
 
+            for (Document existDoc : documents) {
+                if (("doc" + existDoc.idOwner + "_" + existDoc.id).equals(attachmentName)) {
+                    documentsApi.delete(existDoc);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Ошибка удаления файла");
+        }
+    }
 }

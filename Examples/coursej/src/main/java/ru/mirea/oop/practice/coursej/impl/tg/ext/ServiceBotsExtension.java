@@ -7,7 +7,7 @@ import ru.mirea.oop.practice.coursej.api.Provider;
 import ru.mirea.oop.practice.coursej.api.ext.BotsExtension;
 import ru.mirea.oop.practice.coursej.api.tg.entities.Update;
 import ru.mirea.oop.practice.coursej.api.tg.entities.User;
-import ru.mirea.oop.practice.coursej.impl.ProviderImpl;
+import ru.mirea.oop.practice.coursej.impl.BasicProvider;
 import ru.mirea.oop.practice.coursej.impl.tg.BotClient;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ public abstract class ServiceBotsExtension implements BotsExtension, Runnable {
     protected User owner;
 
     protected ServiceBotsExtension(String name) {
-        this.client = new ProviderImpl<>(BotClient.class);
+        this.client = new BasicProvider<>(BotClient.class);
         this.name = name;
     }
 

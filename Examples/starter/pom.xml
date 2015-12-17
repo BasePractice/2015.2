@@ -103,6 +103,11 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>s131253</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>s131250</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -118,7 +123,22 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>s131241</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>s131328</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>s131239</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>s131235</artifactId>
             <version>${project.version}</version>
         </dependency>
 

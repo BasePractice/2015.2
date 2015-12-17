@@ -5,7 +5,7 @@ import ru.mirea.oop.practice.coursej.api.Provider;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.vk.*;
 import ru.mirea.oop.practice.coursej.impl.ClientFactory;
-import ru.mirea.oop.practice.coursej.impl.ProviderImpl;
+import ru.mirea.oop.practice.coursej.impl.BasicProvider;
 import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 
 import java.lang.reflect.Constructor;
@@ -61,6 +61,11 @@ public final class VkontakteApiImpl implements VkontakteApi {
     }
 
     @Override
+    public AudioApi getAudios() throws Exception {
+        return getImpl(AudioApiImpl.class, Audios.class);
+    }
+
+    @Override
     public long idOwner() {
         return authenticator.idOwner();
     }
@@ -88,19 +93,19 @@ public final class VkontakteApiImpl implements VkontakteApi {
 
     @Override
     public OkHttpClient createClient() {
-        return client.clone();
+        return client;
     }
 
     private static final class GetterImpl implements Getter {
 
         @Override
         public Provider<Token> getToken() {
-            return new ProviderImpl<>(Token.class);
+            return new BasicProvider<>(Token.class);
         }
 
         @Override
         public Provider<Credentials> getCredentials() {
-            return new ProviderImpl<>(Credentials.class);
+            return new BasicProvider<>(Credentials.class);
         }
     }
 

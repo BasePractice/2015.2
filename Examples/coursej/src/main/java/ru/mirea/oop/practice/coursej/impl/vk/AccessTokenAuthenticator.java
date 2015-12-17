@@ -18,7 +18,8 @@ final class AccessTokenAuthenticator {
             Request request = chain.request();
             HttpUrl httpUrl = request.httpUrl().newBuilder()
                     .addQueryParameter("access_token", accessToken).build();
-            logger.trace("Url: " + httpUrl.toString());
+            //FIXME: Убрать после отладки
+            logger.debug("Url: " + httpUrl.toString());
             return chain.proceed(request.newBuilder().url(httpUrl).build());
         });
     }
