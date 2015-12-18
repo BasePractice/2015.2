@@ -44,7 +44,7 @@
                             <addClasspath>true</addClasspath>
                         </manifest>
                         <manifestEntries>
-                            <Export-Package>ru.mirea.oop.practice.coursej.s131235.VkTransl</Export-Package>
+                            <Export-Package>ru.mirea.oop.practice.coursej.s131235.VkTranslator</Export-Package>
                         </manifestEntries>
                     </archive>
                 </configuration>

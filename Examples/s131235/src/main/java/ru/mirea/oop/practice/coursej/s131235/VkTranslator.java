@@ -9,11 +9,11 @@ import java.io.IOException;
 /**
  * Created by TopKek on 12.12.2015.
  */
-public class VkTransl extends ServiceBotsExtension {
-    private static final Logger logger = LoggerFactory.getLogger(VkTransl.class);
+public class VkTranslator extends ServiceBotsExtension {
+    private static final Logger logger = LoggerFactory.getLogger(VkTranslator.class);
     private boolean alreadySend = false;
 
-    public VkTransl() throws Exception {
+    public VkTranslator() throws Exception {
         super("vk.services.VkTransl");
     }
 
