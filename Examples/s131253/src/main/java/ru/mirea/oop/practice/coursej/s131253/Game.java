@@ -43,8 +43,8 @@ public class Game {
 
     public Question RandomQuestion() { //Метод, выдающий случайный вопрос из тех, которые ещё не были отправлены
         do {
-            int number = (int) (Math.random() * questions.getBaseOfQuestons().size());
-            Question question = questions.getQuesForNumber(number);
+            int number = (int) (Math.random() * questions.getQuestionsCount());
+            Question question = questions.getQuestionForNumber(number);
             this.currentQuestion = question;
         }
         while (currentQuestion.isSended());
@@ -52,16 +52,19 @@ public class Game {
         return currentQuestion;
     }
 
-
     public Question currentQuest() {
         return currentQuestion;
     }
 
     public void setQuestionsFalse() { //Сброс флага "Был отправлен" на false у всех вопросов.
-        for (int i = 0; i < questions.getBaseOfQuestons().size(); i++) {
-            questions.getQuesForNumber(i).setSended(false);
+        for (int i = 0; i < questions.getQuestionsCount(); i++) {
+            questions.getQuestionForNumber(i).setSended(false);
         }
         System.out.println("Вопросы сброшены");
+    }
+
+    public int getQuestionsCount () {
+        return questions.getBaseOfQuestons().size();
     }
 
     public void putPlayerId(long idPlayer) {
