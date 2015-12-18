@@ -14,7 +14,7 @@ public class VkTranslator extends ServiceBotsExtension {
     private boolean alreadySend = false;
 
     public VkTranslator() throws Exception {
-        super("vk.services.VkTransl");
+        super("vk.services.VkTranslator");
     }
 
     @Override
