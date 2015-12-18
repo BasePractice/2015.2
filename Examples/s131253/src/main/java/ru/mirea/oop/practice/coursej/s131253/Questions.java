@@ -2,6 +2,10 @@ package ru.mirea.oop.practice.coursej.s131253;
 
 import java.io.*;
 import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+// import com.sun.media.jfxmedia.logging.Logger;
 import ru.mirea.oop.practice.coursej.Configuration;
 
 
@@ -11,11 +15,12 @@ import ru.mirea.oop.practice.coursej.Configuration;
 
 public class Questions {
 
+    private static final Logger logger = LoggerFactory.getLogger(Questions.class);
     private ArrayList<Question> baseOfQuestons = new ArrayList<>();
 
     public Questions() {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(Configuration.getFileName("/Questions.txt"))))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Questions.class.getResourceAsStream("/questions.txt")))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("=")) {  //Каждая строка в документе разбивается символом "=" на 2 строковых элемента.
@@ -24,9 +29,15 @@ public class Questions {
                     в конструктор класса Question, а затем экземпляр класса добавляется в динамический массив */
                 }
             }
+        } catch (FileNotFoundException e) {
+            logger.error("Файл с вопросами не найден: ", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Ошибка чтения файла с вопросами: ", e);
         }
+    }
+
+    public int getQuestionsCount () {
+        return getBaseOfQuestons().size();
     }
 
     public ArrayList<Question> getBaseOfQuestons() {
