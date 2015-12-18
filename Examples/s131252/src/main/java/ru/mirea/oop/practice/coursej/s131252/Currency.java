@@ -3,6 +3,8 @@ package ru.mirea.oop.practice.coursej.s131252;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
@@ -16,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Currency {
+    private static final Logger logger = LoggerFactory.getLogger(Currency.class);
     private final String charCode;
     private final double value;
+    public static final String URL = "http://www.cbr.ru/scripts/XML_daily.asp";
 
     private Currency(String charCode, double value) {
         this.charCode = charCode;
@@ -25,18 +29,17 @@ class Currency {
     }
 
     public static List<Currency> getCurrencyList() {
-        String url = "http://www.cbr.ru/scripts/XML_daily.asp";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(url)
+                .url(URL)
                 .get()
                 .build();
         InputSource inputSource = new InputSource();
         try {
             Response response = client.newCall(request).execute();
             inputSource.setCharacterStream(response.body().charStream());
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            logger.error("Ошибка при выполнении запроса к сайту ЦБ РФ по url {}", URL);
         }
         List<Currency> currencyList = new ArrayList<>();
         try {
@@ -49,8 +52,12 @@ class Currency {
                 currencyList.add(currency);
             }
 
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            // ну не может его тут быть, стандартные же параметры
+        } catch (SAXException e) {
+            logger.error("Ошибка при разборе XML документа полученного с сайта ЦБ РФ по url {}", URL);
+        } catch (IOException e) {
+            logger.error("Ошибка при получении XML документа с сайта ЦБ РФ по url {}", URL);
         }
         currencyList.add(new Currency("RUB", 1));
         return currencyList;
@@ -70,8 +77,7 @@ class Currency {
         String charCode = getCharacterDataFromElement((Element) element.getElementsByTagName("CharCode").item(0));
         int nominal = Integer.parseInt(getCharacterDataFromElement((Element) element.getElementsByTagName("Nominal").item(0)));
         double value = Double.parseDouble((getCharacterDataFromElement((Element) element.getElementsByTagName("Value").item(0))).replaceAll(",", "."));
-        Currency currency = new Currency(charCode, value / nominal);
-        return currency;
+        return new Currency(charCode, value / nominal);
     }
 
     public String getCharCode() {
