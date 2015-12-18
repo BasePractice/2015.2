@@ -26,22 +26,6 @@ public final class Keywords {
         }
     }
 
-//    public static void fillMap() {
-//        answers.put("привет", "Привет!");
-//        answers.put("привет!", "Привет!");
-//        answers.put("пока", "До встречи!");
-//        answers.put("пока!", "До встречи!");
-//        answers.put("дела?", "Отлично! А у тебя?");
-//        answers.put(":)",":)");
-//        answers.put("вычмат?","Нет ещё(("); //фразы не воспринимает, только отдельные слова
-//        answers.put("ахаха","хахахахахахаха!");
-//        answers.put("ночи", "Доброй ночи");
-//        answers.put("Party", "It's my party and I'll cry if I want to");
-//        answers.put("Bathroom", "She came in through the bathroom window");
-//        answers.put("comes","Here comes the sun");
-//        answers.put("jungle","welcome to the jungle");
-//    }
-
     public static boolean isKeyword (String key) {
         return answers.containsKey(key);
     }
