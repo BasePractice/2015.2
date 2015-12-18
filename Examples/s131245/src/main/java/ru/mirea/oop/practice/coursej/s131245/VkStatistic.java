@@ -84,6 +84,7 @@ public final class VkStatistic extends ServiceBotsExtension {
 
 
 
+
         if(dateScheduled.isScheduled()) {
             Parser parser = new Parser("bot get: всех");
            Attachment attachment = new Attachment(mapSession, friendsMap, api, parser);
@@ -97,8 +98,8 @@ public final class VkStatistic extends ServiceBotsExtension {
         }
 
 
-
         switch (event.type) {
+
             //Создание новой сессии для пользователя вошедшего на сайт
             case FRIEND_ONLINE: {
                 eventOnline(event);
@@ -179,8 +180,20 @@ public final class VkStatistic extends ServiceBotsExtension {
 
 
     public  void eventOnline(Event event) {
-        UserOnline userOnline = (UserOnline) event.object;
-        Long key = userOnline.getContact().id;
+        //Пропускает пользователей, которые стали друзьями или перестали ими быть
+        UserOnline userOnline;
+        Long key;
+        try {
+            userOnline = (UserOnline) event.object;
+            key = userOnline.getContact().id;
+        } catch (Exception e) {
+            logger.error("Лишний пользователь");
+            return;
+        }
+        if(!mapSession.containsKey(key)) {
+            return;
+        }
+
 
         Session session = new Session(LocalDateTime.now());
         if (mapSession.get(key).isEmpty()) {
@@ -204,8 +217,20 @@ public final class VkStatistic extends ServiceBotsExtension {
     }
 
     public void eventOffline(Event event) {
-        UserOffline userOffline = (UserOffline) event.object;
-        Long key = userOffline.getContact().id;
+        //Пропускает пользователей, которые стали друзьями или перестали ими быть
+        UserOffline userOffline;
+        Long key;
+        try {
+            userOffline = (UserOffline) event.object;
+            key = userOffline.getContact().id;
+        } catch (Exception e) {
+            logger.error("Лишний пользователь");
+            return;
+        }
+        if(!mapSession.containsKey(key)) {
+            return;
+        }
+
         int index = mapSession.get(key).size() - 1;
         //Данная проверка необходима, если первоначальная инициализация вызвана кейсом Offline.
         if(index == -1) {
@@ -259,7 +284,9 @@ public final class VkStatistic extends ServiceBotsExtension {
         putFriendsMap();
         for (Map.Entry<Long, Contact> current : friendsMap.entrySet()) {
             Long key = current.getValue().id;
-
+           if(!mapSession.containsKey(key)) {
+               continue;
+           }
             if (!mapSession.get(key).isEmpty()) {
                 int index = mapSession.get(key).size() - 1;
                 Session lastSession = mapSession.get(key).get(index);

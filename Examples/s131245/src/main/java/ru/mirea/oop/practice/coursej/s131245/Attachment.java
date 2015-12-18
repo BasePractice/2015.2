@@ -74,8 +74,10 @@ public class Attachment {
         int column = 0;
 
         for (Map.Entry<Long, ArrayList<Session>> currentMan : mapSession.entrySet()) {
+            if(!friendsMap.containsKey(currentMan.getKey())) {
+                continue;
+            }
             //Проход по списку контактов и заполнение каждого в отдельности по столбцам
-
             String key = friendsMap.get(currentMan.getKey()).firstName + " " + friendsMap.get(currentMan.getKey()).lastName;
             //Либо часть людей заполняется, либо все
             if (parser.getMsg().contains("Статистика всех пользователей") || arrayOfPeople.contains(key)) {

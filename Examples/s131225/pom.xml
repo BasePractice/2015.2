@@ -7,10 +7,10 @@
         <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>s131235</artifactId>
+    <artifactId>s131225</artifactId>
     <packaging>jar</packaging>
     <version>1.0.1</version>
-    <name>Mirea.Oop.Practice.CourseJ.S131235</name>
+    <name>Mirea.Oop.Practice.CourseJ.S131225</name>
 
     <licenses>
         <license>
@@ -20,7 +20,7 @@
     </licenses>
 
     <build>
-        <finalName>Mirea.Oop.Practice.Course.S131235</finalName>
+        <finalName>Mirea.Oop.Practice.Course.S131225</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
@@ -37,14 +37,14 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <jarName>Mirea.Oop.Practice.Course.S131235</jarName>
+                    <jarName>Mirea.Oop.Practice.Course.S131225</jarName>
                     <archive>
                         <index>true</index>
                         <manifest>
                             <addClasspath>true</addClasspath>
                         </manifest>
                         <manifestEntries>
-                            <Export-Package>ru.mirea.oop.practice.coursej.s131235.VkTransl</Export-Package>
+                            <Export-Package>ru.mirea.oop.practice.coursej.s131225.VkMessagePingService</Export-Package>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -121,11 +121,5 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.9</version>
-        </dependency>
-
     </dependencies>
 </project>
