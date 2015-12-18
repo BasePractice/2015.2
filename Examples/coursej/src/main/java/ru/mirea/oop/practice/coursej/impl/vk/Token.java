@@ -17,7 +17,7 @@ final class Token {
     final long expireTime;
     final long idUser;
 
-    public Token() {
+    private Token() {
         Properties prop = new Properties();
         try {
             prop.load(Configuration.loadFrom(".accessToken"));
@@ -39,7 +39,12 @@ final class Token {
     static Token parse(HttpUrl url) {
         String accessToken = url.queryParameter(ACCESS_TOKEN);
         String value = url.queryParameter(EXPIRES_IN);
-        long expireTime = value == null ? -1 : (Long.parseLong(value) * 1000) + System.currentTimeMillis();
+        if (value == null)
+            value = "0";
+        long time = Long.parseLong(value);
+        if (time == 0)
+            time = 100000;
+        long expireTime = time + System.currentTimeMillis();
         value = url.queryParameter(USER_ID);
         long idUser = value == null ? -1 : Long.parseLong(value);
         return new Token(accessToken, expireTime, idUser);
