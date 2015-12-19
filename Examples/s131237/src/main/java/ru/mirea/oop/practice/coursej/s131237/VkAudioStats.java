@@ -8,12 +8,12 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.Configuration;
+import ru.mirea.oop.practice.coursej.api.vk.AudioApi;
 import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
 import ru.mirea.oop.practice.coursej.api.vk.UsersApi;
+import ru.mirea.oop.practice.coursej.api.vk.entities.Audio;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ClientBotsExtension;
-import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -28,9 +28,8 @@ import static java.lang.Thread.sleep;
  * Created by Shams on 10.12.2015.
  */
 public final class VkAudioStats extends ClientBotsExtension {
-    public static final Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class);
+    public static final Logger logger = LoggerFactory.getLogger(VkAudioStats.class);
     public final Map<Long, Contact> friends = new HashMap<>();
-    public static final String ACCESS_TOKEN = "access_token";
     private static final String FRIENDS_FIELDS = "nickname, " +
             "domain, " +
             "sex, " +
@@ -87,7 +86,6 @@ public final class VkAudioStats extends ClientBotsExtension {
 
         modeChoice  = props.getProperty("modeChoice", "exact"); // all || exact
         tracksCount = new Integer(props.getProperty("tracksCount", "30")); // maximum 8000
-        userId  = props.getProperty("userId", "id89634062");
     }
 
     @Override
@@ -99,6 +97,7 @@ public final class VkAudioStats extends ClientBotsExtension {
         try {
             FriendsApi friendsApi = api.getFriends();
             UsersApi usersApi = api.getUsers();
+            AudioApi audioApi = api.getAudios();
 
 
             //Scanner s = new Scanner(System.in);
@@ -111,9 +110,7 @@ public final class VkAudioStats extends ClientBotsExtension {
                     contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
                     break;
                 case "exact":
-                    //System.out.println("\nEnter the user id: "); //Запрос id пользователя
-                    //String id = s.nextLine();
-                    contacts = usersApi.list(userId, null, FRIENDS_FIELDS);
+                    contacts = usersApi.list(null, null, FRIENDS_FIELDS);
                     break;
                 default:
                     break;
@@ -138,50 +135,45 @@ public final class VkAudioStats extends ClientBotsExtension {
             //Проходим по всем контактам
             for (Contact contact : contacts) {
 
-                System.out.println("\n=====================================================\n\n");
-                System.out.format("обработка треков %s\n\n", Contact.viewerString(contact));
-
-                FileWriter writer = new FileWriter(f, true);
-                writer.write("\n=====================================================\n\n");
-                writer.write(String.format("Обработка друга %s\n\n", Contact.viewerString(contact)));
+                logger.info("\n=====================================================\n\n");
+                logger.info("обработка треков %s\n\n", Contact.viewerString(contact));
 
                 friends.put(contact.id, contact);
 
                 URIBuilder builder = new URIBuilder();
+                JsonParser parser = new JsonParser();
 
                 //Запрос всех трэков пользователя
-                builder.setScheme("https").setHost("api.vk.com").setPath("/method/audio.get")
-                        .setParameter("count", String.valueOf(tracksCount))
-                        .setParameter("owner_id", Long.toString(contact.id))
-                        .setParameter("access_token", getToken());
+                Audio[] tracks = audioApi.list(null, null, null, null, null, tracksCount);
 
-                //Разбор ответа от сервера
-                JsonParser parser = new JsonParser();
-                JsonObject mainObject = parser.parse(getJSON(builder.toString())).getAsJsonObject();
-                JsonArray tracks = mainObject.getAsJsonArray("response");
                 HashMap<String, Float> audioStats = new HashMap<>();
 
                 float sum = 0;
 
                 if (tracks != null) {
-                    for (JsonElement track : tracks) {
+                    for (Audio track : tracks) {
                         try {
-                            JsonObject trackObject = track.getAsJsonObject();
                             //Получаем название группы
-                            String artistName = trackObject.get("artist").toString();
+                            String artistName = track.artist;
 
-                            System.out.println(artistName + " " + trackObject.get("title").toString());
+                            logger.info(artistName + " - " + track.title);
                             builder = new URIBuilder();
 
                             //Использование api developer.echonest.com
                             builder.setScheme("http").setHost("developer.echonest.com").setPath("/api/v4/artist/profile")
                                     .setParameter("api_key", "KLHMNCTQ90GNZUKBV") //ключ для усорения работы
-                                    .setParameter("name", trackObject.get("artist").toString())
+                                    .setParameter("name", artistName)
                                     .setParameter("format", "json")
                                     .setParameter("bucket", "genre");
-                            JsonObject genreArrayObject = parser.parse(getJSON(builder.toString())).getAsJsonObject();
-                            JsonArray genres = genreArrayObject.getAsJsonObject("response").getAsJsonObject("artist").getAsJsonArray("genres");
 
+                            JsonArray genres = null;
+                            try {
+                                JsonObject genreArrayObject = parser.parse(getJSON(builder.toString())).getAsJsonObject();
+                                genres = genreArrayObject.getAsJsonObject("response").getAsJsonObject("artist").getAsJsonArray("genres");
+                            }
+                            catch(Exception ex){
+                                logger.error("Артист не найден");
+                            }
 
                             if (genres != null) {
                                 float j = 0.7f;
@@ -227,30 +219,16 @@ public final class VkAudioStats extends ClientBotsExtension {
 
                     //Вывод статистики в файл
                     for (Map.Entry<String, Float> entry : genreList) {
-                        writer.write(String.format("%s - %.2f%%\n", entry.getKey(), entry.getValue()));
+                        logger.info(String.format("%s - %.2f%%\n", entry.getKey(), entry.getValue()));
                     }
-
-                    writer.close();
                 } else {
-                    System.out.println("Аудиозаписи пользователя недоступны");
-                    writer.write("\nАудиозаписи пользователя недоступны\n");
-                    writer.close();
+                    logger.info("Аудиозаписи пользователя недоступны");
                 }
             }
 
         } catch (Exception ex) {
             logger.error("Ошибка получения списка друзей", ex);
         }
-    }
-
-    private String getToken() {
-        Properties prop = new Properties();
-        try {
-            prop.load(Configuration.loadFrom(".accessToken"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return prop.getProperty(ACCESS_TOKEN);
     }
 
     public static String getJSON(String urle) {

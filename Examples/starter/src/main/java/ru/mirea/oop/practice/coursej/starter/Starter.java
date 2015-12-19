@@ -1,10 +1,8 @@
 package ru.mirea.oop.practice.coursej.starter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.ext.BotsExtension;
 import ru.mirea.oop.practice.coursej.api.ext.MazeExtension;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
