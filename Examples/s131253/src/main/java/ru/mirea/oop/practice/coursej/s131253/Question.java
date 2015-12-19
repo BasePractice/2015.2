@@ -1,28 +1,25 @@
 package ru.mirea.oop.practice.coursej.s131253;
 
-/**
- * Created by Александр on 08.12.2015.
- */
-public class Question {
-    private boolean isSended = false; //Отправлен ли уже вопрос. По умолчанию - нет.
+final class Question {
+    private boolean isSanded = false; //Отправлен ли уже вопрос. По умолчанию - нет.
     private String text;
     private String answer;
 
-    public Question(String text, String answer) {   //Конструктор вопросов в форме "текст вопроса-ответ на вопрос"
+    Question(String text, String answer) {   //Конструктор вопросов в форме "текст вопроса-ответ на вопрос"
         this.text = text;
         this.answer = answer;
     }
 
-    public String  getAnswer() {
+    public String getAnswer() {
         return answer;
     }
 
-    public void setSended(boolean isSended) {
-        this.isSended = isSended;
+    public void setSanded(boolean isSanded) {
+        this.isSanded = isSanded;
     }
 
-    public boolean isSended() {
-        return isSended;
+    public boolean isSanded() {
+        return isSanded;
     }
 
     public String getText() {
