@@ -1,15 +1,11 @@
 package ru.mirea.oop.practice.coursej.s131225;
 
-import com.google.common.html.HtmlEscapers;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import okio.BufferedSink;
 import okio.Okio;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Entities;
-import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +16,10 @@ import ru.mirea.oop.practice.coursej.impl.vk.ext.ClientBotsExtension;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -119,12 +118,12 @@ public final class VkMusicSync extends ClientBotsExtension {
     private static String getFileName(Audio audio) {
         String fileName = audio.artist + " - " + audio.title + ".mp3";
         fileName = fileName.replaceAll("\\?|<|>|:|\\\\|\\||\\*|/|\"", "");
-        fileName=unescapeHtml(fileName);
+        fileName = unescapeHtml(fileName);
         return fileName;
     }
 
     private static String unescapeHtml(String html) { // изврат, зато без добавления лишних библиотек
-       String text=Jsoup.clean(html, Whitelist.basic()).replaceAll("&amp;", "&"); // & особенный =(
+        String text = Jsoup.clean(html, Whitelist.basic()).replaceAll("&amp;", "&"); // & особенный =(
         return text;
     }
 
