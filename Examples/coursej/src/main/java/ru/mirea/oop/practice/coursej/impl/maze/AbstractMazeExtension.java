@@ -6,8 +6,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class AbstractMazeExtension implements MazeExtension {
-    private static final int WIDTH = 20;
-    private static final int THICKNESS = 3;
+    private static final int WIDTH = 40;
+    private static final int THICKNESS = 4;
 
     public Point[] findPath(Maze maze) {
         return null;
