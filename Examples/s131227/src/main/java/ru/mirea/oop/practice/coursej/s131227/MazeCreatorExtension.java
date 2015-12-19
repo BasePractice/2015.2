@@ -1,8 +1,9 @@
 package ru.mirea.oop.practice.coursej.s131227;
 
+
 import ru.mirea.oop.practice.coursej.impl.maze.AbstractMazeExtension;
 
-import java.util.Random;
+import java.util.*;
 
 public final class MazeCreatorExtension extends AbstractMazeExtension {
 
@@ -25,246 +26,169 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         this.cols = cols;
         Maze maze = new Maze(rows, cols);
 
-        int f = 0;
-        int i, j, p, v;
+        int x, y, a, b, c, d;
+        int fullness = 0;
 
-        //Генерируем лабиринт
-        Cells cells = new Cells(rows, cols);
-        cells.fillMaze();
-        int a = rnd.nextInt(rows);
-        int b = rnd.nextInt(cols);
-        cells.setGStart(a, b);
-        cells.kill(a, b);
-        while (f != rows * cols) {
-            cells.hunt();
-            f = 0;
-            for (i = 0; i < rows; i++) {
-                for (j = 0; j < cols; j++) {
-                    if (cells.getWalls(i, j) != 0) {
-                        f += 1;
+        for (x = 0; x < rows; x++) {
+            for (y = 0; y < cols; y++) {
+                maze.data[x][y] = 0;
+            }
+        }
+        x = rnd.nextInt(rows);
+        y = rnd.nextInt(cols);
+        maze.data[x][y] = 15;
+        while (((x != 0 && maze.data[x - 1][y] == 0) || (x != (rows - 1) && maze.data[x + 1][y] == 0) ||
+                (y != 0 && maze.data[x][y - 1] == 0) || (y != (cols - 1) && maze.data[x][y + 1] == 0))) {
+            c = (rnd.nextInt(3) - 1);
+            d = (rnd.nextInt(3) - 1);
+            if (c == -1 && d == 0 && (x != 0 && maze.data[x + c][y + d] == 0)) {
+                maze.data[x][y] -= 2;
+                x -= 1;
+                maze.data[x][y] = 7;
+            }
+            if (c == 1 && d == 0 && (x != (rows - 1) && maze.data[x + c][y + d] == 0)) {
+                maze.data[x][y] -= 8;
+                x += 1;
+                maze.data[x][y] = 13;
+            }
+            if (c == 0 && d == -1 && (y != 0 && maze.data[x + c][y + d] == 0)) {
+                maze.data[x][y] -= 1;
+                y -= 1;
+                maze.data[x][y] = 11;
+            }
+            if (c == 0 && d == 1 && (y != (cols - 1) && maze.data[x + c][y + d] == 0)) {
+                maze.data[x][y] -= 4;
+                y += 1;
+                maze.data[x][y] = 14;
+            }
+        }
+        while(fullness != rows * cols){
+            fullness = 0;
+        for (x = 0; x < rows; x++) {
+            for (y = 0; y < cols; y++) {
+                if ((x != (rows - 1) && maze.data[x][y] == 0 && maze.data[x + 1][y] != 0) ||
+                        (y != 0 && maze.data[x][y - 1] != 0 && maze.data[x][y] == 0) ||
+                        (y != (cols - 1) && maze.data[x][y] == 0 && maze.data[x][y + 1] != 0) ||
+                        (x != 0 && maze.data[x - 1][y] != 0 && maze.data[x][y] == 0)) {
+                    if (x != (rows - 1) && maze.data[x][y] == 0 && maze.data[x + 1][y] != 0) {
+                        maze.data[x][y] = 7;
+                        maze.data[x + 1][y] -= 2;
+                    }
+                    if (y != 0 && maze.data[x][y - 1] != 0 && maze.data[x][y] == 0) {
+                        maze.data[x][y] = 14;
+                        maze.data[x][y - 1] -= 4;
+                    }
+                    if (y != (cols - 1) && maze.data[x][y] == 0 && maze.data[x][y + 1] != 0) {
+                        maze.data[x][y] = 11;
+                        maze.data[x][y + 1] -= 1;
+                    }
+                    if (x != 0 && maze.data[x - 1][y] != 0 && maze.data[x][y] == 0) {
+                        maze.data[x][y] = 13;
+                        maze.data[x - 1][y] -= 8;
+                    }
+                    a = x;
+                    b = y;
+                    while (((x != 0 && maze.data[x - 1][y] == 0) || (x != (rows - 1) && maze.data[x + 1][y] == 0) ||
+                            (y != 0 && maze.data[x][y - 1] == 0) || (y != (cols - 1) && maze.data[x][y + 1] == 0))) {
+                        c = (rnd.nextInt(3) - 1);
+                        d = (rnd.nextInt(3) - 1);
+                        if (c == -1 && d == 0 && (x != 0 && maze.data[x + c][y + d] == 0)) {
+                            maze.data[x][y] -= 2;
+                            x -= 1;
+                            maze.data[x][y] = 7;
+                        }
+                        if (c == 1 && d == 0 && (x != (rows - 1) && maze.data[x + c][y + d] == 0)) {
+                            maze.data[x][y] -= 8;
+                            x += 1;
+                            maze.data[x][y] = 13;
+                        }
+                        if (c == 0 && d == -1 && (y != 0 && maze.data[x + c][y + d] == 0)) {
+                            maze.data[x][y] -= 1;
+                            y -= 1;
+                            maze.data[x][y] = 11;
+                        }
+                        if (c == 0 && d == 1 && (y != (cols - 1) && maze.data[x + c][y + d] == 0)) {
+                            maze.data[x][y] -= 4;
+                            y += 1;
+                            maze.data[x][y] = 14;
+                        }
+                    }
+                    x = a;
+                    y = b;
+                }
+            }
+        }
+            for (x = 0; x < rows; x++) {
+                for (y = 0; y < cols; y++) {
+                    if(maze.data[x][y] != 0){
+                        fullness++;
                     }
                 }
             }
         }
-        cells.setExit();
-
-        //Ищем выход из лабиринта
-        cells.findExit();
-
-        //Преобразуем к нужному формату
-        for (int x = 0; x < rows; x++) {
-            for (int y = 0; y < cols; y++) {
-                maze.data[x][y] = cells.getWalls(x, y);
-            }
-        }
-
-        //Создаем массив точек пути от начала к выходу
-        p = 0;
-        for(i = 0; i < rows; i++){
-            for(j = 0; j < cols; j++){
-                if(cells.getWay(i, j) != 0){
-                    p++;
-                }
-            }
-        }
-        p++;
-        v = 0;
-        Point[] path = new Point[p];
-        for(i = 0; i < rows; i++){
-            for(j = 0; j < cols; j++){
-                if(cells.getWay(i, j) != 0){
-                    path[v] = new Point(i, j);
-                    v++;
-                }
-            }
-        }
-        v++;
-        path[v] = new Point(9, 9);
 
         return maze;
     }
 
     @Override
     public Point[] findPath(Maze maze) {
-        return new Point[0];
+        cols = maze.cols;
+        rows = maze.rows;
+        Cell[][] cells = new Cell[maze.rows][maze.cols];
+        Set<Cell> cellSet = new HashSet<>();
+        for (int y = 0; y < maze.rows; y++) {
+            for (int x = 0; x < maze.cols; x++) {
+                Cell cell = new Cell(y, x, maze.data[y][x]);
+                cells[y][x] = cell;
+                cellSet.add(cell);
+            }
+        }
+
+        Cell start = cells[0][0];
+        start.distance = 0;
+        Cell finish = cells[rows - 1][cols - 1];
+        int wave = 0;
+        while (finish.distance == -1){
+            for (Cell cell : cellSet) {
+                if (cell.distance == wave) {
+                    List<Cell> neighbors = cell.getNeighbors(cellSet);
+                    for (Cell neighbor : neighbors) {
+                        if (neighbor.distance == -1) {
+                            neighbor.distance = wave + 1;
+                        }
+                    }
+                }
+            }
+            wave++;
+        }
+        List<Cell> path = new ArrayList<>();
+        path.add(finish);
+        Cell currCell = finish;
+        while (!path.contains(start)) {
+            currCell = getNearest(currCell.getNeighbors(cellSet));
+            path.add(currCell);
+        }
+
+        Point[] pathPoints = new Point[path.size()];
+        for (int i = 0; i < pathPoints.length; i++) {
+            pathPoints[i] = new Point(path.get(i).x, path.get(i).y);
+        }
+        return pathPoints;
+
     }
 
-    class Cells {
-        int rows, cols;
-        char array[][][];
-        int i, j;
-        int a, b, c, d, w;
-        char v;
-        boolean PathFound = false;
-
-        public Cells(int rows, int cols) {
-            this.rows = rows;
-            this.cols = cols;
-            this.array = new char[rows][cols][4];
-        }
-
-        public void fillMaze() {
-            for (i = 0; i < rows; i++) {
-                for (j = 0; j < cols; j++) {
-                    this.array[i][j][0] = 0;
-                }
-            }
-            for (i = 0; i < rows; i++) {
-                for (j = 0; j < cols; j++) {
-                    this.array[i][j][1] = 0;
-                }
+    public static Cell getNearest(List<Cell> neighbors) {
+        Collections.sort(neighbors, (o1, o2) -> {
+            Integer d1 = o1.distance;
+            Integer d2 = o2.distance;
+            return d1.compareTo(d2);
+        });
+        for (Cell cell : neighbors) {
+            if (cell.distance != -1) {
+                return cell;
             }
         }
-
-        public void hunt() {
-            for (i = 0; i < rows; i++) {
-                for (j = 0; j < cols; j++) {
-                    if ((i != (rows - 1) && array[i][j][0] == 0 && array[i + 1][j][0] != 0) ||
-                            (j != 0 && array[i][j - 1][0] != 0 && array[i][j][0] == 0) ||
-                            (j != (cols - 1) && array[i][j][0] == 0 && array[i][j + 1][0] != 0) ||
-                            (i != 0 && array[i - 1][j][0] != 0 && array[i][j][0] == 0)) {
-                        if (i != (rows - 1) && array[i][j][0] == 0 && array[i + 1][j][0] != 0) {
-                            array[i][j][0] = 7;
-                            array[i + 1][j][0] -= 2;
-                        }
-                        if (j != 0 && array[i][j - 1][0] != 0 && array[i][j][0] == 0) {
-                            array[i][j][0] = 14;
-                            array[i][j - 1][0] -= 4;
-                        }
-                        if (j != (cols - 1) && array[i][j][0] == 0 && array[i][j + 1][0] != 0) {
-                            array[i][j][0] = 11;
-                            array[i][j + 1][0] -= 1;
-                        }
-                        if (i != 0 && array[i - 1][j][0] != 0 && array[i][j][0] == 0) {
-                            array[i][j][0] = 13;
-                            array[i - 1][j][0] -= 8;
-                        }
-                        a = i;
-                        b = j;
-                        this.kill(a, b);
-                    }
-                }
-            }
-        }
-
-        public void kill(int a, int b) {
-            this.a = a;
-            this.b = b;
-            while (((a != 0 && array[a - 1][b][0] == 0) || (a != (rows - 1) && array[a + 1][b][0] == 0) ||
-                    (b != 0 && array[a][b - 1][0] == 0) || (b != (cols - 1) && array[a][b + 1][0] == 0))) {
-                c = (rnd.nextInt(3) - 1);
-                d = (rnd.nextInt(3) - 1);
-                if (c == -1 && d == 0 && (a != 0 && array[a + c][b + d][0] == 0)) {
-                    array[a][b][0] -= 2;
-                    a -= 1;
-                    array[a][b][0] = 7;
-                }
-                if (c == 1 && d == 0 && (a != (rows - 1) && array[a + c][b + d][0] == 0)) {
-                    array[a][b][0] -= 8;
-                    a += 1;
-                    array[a][b][0] = 13;
-                }
-                if (c == 0 && d == -1 && (b != 0 && array[a + c][b + d][0] == 0)) {
-                    array[a][b][0] -= 1;
-                    b -= 1;
-                    array[a][b][0] = 14;
-                }
-                if (c == 0 && d == 1 && (b != (cols - 1) && array[a + c][b + d][0] == 0)) {
-                    array[a][b][0] -= 4;
-                    b += 1;
-                    array[a][b][0] = 11;
-                }
-            }
-        }
-
-        public char getWalls(int a, int b) {
-            return array[a][b][0];
-        }
-
-        public char getWay(int a, int b) {
-            return array[a][b][3];
-        }
-
-        public void setGStart(int a, int b) {
-            this.array[a][b][0] = 15;
-        }
-
-        public void setExit() {
-            array[0][0][0] -= 1;
-
-        }
-
-        public void findExit() {
-            w = 2;
-            this.array[rows - 1][cols - 1][1] = 1;
-            this.array[rows - 1][cols - 1][2] = 1;
-            while (PathFound != true) {
-                for (i = 0; i < rows; i++) {
-                    for (j = 0; j < cols; j++) {
-                        if (array[0][0][1] != 0) {
-                            PathFound = true;
-                        }
-                        if (i != (rows - 1) && (array[i + 1][j][0] & 2) != 2 && array[i + 1][j][1] == (w - 1) &&
-                                array[i][j][2] != 1) {
-                            array[i][j][1] += w;
-                            array[i][j][2] = 1;
-                        }
-                        if (j != 0 && (array[i][j - 1][0] & 4) != 4 && array[i][j - 1][1] == (w - 1) &&
-                                array[i][j][2] != 1) {
-                            array[i][j][1] += w;
-                            array[i][j][2] = 1;
-                        }
-                        if (j != (cols - 1) && (array[i][j + 1][0] & 1) != 1 && array[i][j + 1][1] == (w - 1) &&
-                                array[i][j][2] != 1) {
-                            array[i][j][1] += w;
-                            array[i][j][2] = 1;
-                        }
-                        if (i != 0 && (array[i - 1][j][0] & 8) != 8 && array[i - 1][j][1] == (w - 1) &&
-                                array[i][j][2] != 1) {
-                            array[i][j][1] += w;
-                            array[i][j][2] = 1;
-                        }
-                    }
-                }
-                w++;
-            }
-            this.findWay();
-        }
-
-        public void findWay() {
-            a = 0;
-            b = 0;
-            array[0][0][3] = array[0][0][1];
-            v = array[0][0][1];
-            while(v != 1){
-                if (a != 0 && (array[a - 1][b][0] & 8) != 8 && array[a - 1][b][1] == (v - 1)) {
-                    v--;
-                    array[a][b][3] |= v;
-                    a--;
-                    continue;
-                }
-                if (a != (rows - 1) && (array[a + 1][b][0] & 2) != 2 && array[a + 1][b][1] == (v - 1)) {
-                    v--;
-                    array[a][b][3] = v;
-                    a++;
-                    continue;
-
-                }
-                if (b != 0 && (array[a][b - 1][0] & 4) != 4 && array[a][b - 1][1] == (v - 1)) {
-                    v--;
-                    array[a][b][3] = v;
-                    b--;
-                    continue;
-
-                }
-                if (b != (cols - 1) && (array[a][b + 1][0] & 1) != 1 && array[a][b + 1][1] == (v - 1)) {
-                    v--;
-                    array[a][b][3] = v;
-                    b++;
-                }
-            }
-        }
-
+        return null;
     }
 }
 
