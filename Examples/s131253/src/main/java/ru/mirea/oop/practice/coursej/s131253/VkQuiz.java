@@ -8,6 +8,9 @@ import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 import java.io.IOException;
 import java.text.MessageFormat;
 
+/**
+ * -4
+ */
 public final class VkQuiz extends ServiceBotsExtension {
 
     private static final Logger logger = LoggerFactory.getLogger(VkQuiz.class);

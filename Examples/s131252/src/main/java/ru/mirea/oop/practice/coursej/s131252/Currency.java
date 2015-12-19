@@ -17,18 +17,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-class Currency {
+final class Currency {
     private static final Logger logger = LoggerFactory.getLogger(Currency.class);
-    private final String charCode;
-    private final double value;
-    public static final String URL = "http://www.cbr.ru/scripts/XML_daily.asp";
+    final String code;
+    final double value;
+    private static final String URL = "http://www.cbr.ru/scripts/XML_daily.asp";
 
-    private Currency(String charCode, double value) {
-        this.charCode = charCode;
+    private Currency(String code, double value) {
+        this.code = code;
         this.value = value;
     }
 
-    public static List<Currency> getCurrencyList() {
+    static List<Currency> getCurrencyList() {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URL)
@@ -53,7 +53,6 @@ class Currency {
                     currencyList.add(currency);
                 }
             }
-
         } catch (ParserConfigurationException e) {
             logger.error("Ошибка чтения парамтеров конфигурации при разборке XML документа.");
         } catch (SAXException e) {
@@ -85,18 +84,10 @@ class Currency {
         return null;
     }
 
-    public String getCharCode() {
-        return charCode;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
     @Override
     public String toString() {
         return "Currency{" +
-                "charCode='" + charCode + '\'' +
+                "code='" + code + '\'' +
                 ", value=" + value +
                 '}';
     }

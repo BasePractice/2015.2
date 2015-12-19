@@ -2,7 +2,6 @@ package ru.mirea.oop.practice.coursej.s131252;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
@@ -11,17 +10,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CurrencyConverter extends ServiceBotsExtension {
+/**
+ * -5
+ */
+public final class CurrencyConverter extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(CurrencyConverter.class);
     private static final String HELP = "ожидается запрос следующего формата: дробное или целое " +
             "число(дробная часть отделяется точкой), пробел,символьный код валюты," +
             " ИЗ которой нужно конвертировать, пробел, символьный код валюты В которую нужно конвертировать.\n" +
             "Пример входных даннх: 12.34 USD RUB";
-    private final MessagesApi msgApi;
 
     public CurrencyConverter() throws Exception {
         super("vk.services.CurrencyConverter");
-        this.msgApi = api.getMessages();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CurrencyConverter extends ServiceBotsExtension {
                 String answer = getAnswer(msg.text);
 
                 try {
-                    Integer idMessage = msgApi.send(
+                    Integer idMessage = messages.send(
                             contact.id,
                             null,
                             null,
@@ -68,10 +68,10 @@ public class CurrencyConverter extends ServiceBotsExtension {
                 Currency from = null;
                 Currency to = null;
                 for (Currency currency : currencyList) {
-                    if (currency.getCharCode().equals(req.get(1))) {
+                    if (currency.code.equals(req.get(1))) {
                         from = currency;
                     }
-                    if (currency.getCharCode().equals(req.get(2))) {
+                    if (currency.code.equals(req.get(2))) {
                         to = currency;
                     }
                 }
@@ -92,7 +92,7 @@ public class CurrencyConverter extends ServiceBotsExtension {
         } catch (IllegalArgumentException e) {
             answer = " Не корректный ввод, \n" + e.getMessage() + ",\n" + HELP + "\n Список доступных валют:";
             for (Currency currency : Currency.getCurrencyList()) {
-                answer += currency.getCharCode() + ", ";
+                answer += currency.code + ", ";
             }
             answer = answer.substring(0, answer.length() - 2);
         }
