@@ -47,7 +47,7 @@ final class WAAction {
 
 
     private void createImageFromWA(String input) throws IOException {
-        ResponseBody waResponse = WARequestAction.getResponsefromWA(input);
+        ResponseBody waResponse = WARequestAction.getResponseFromWA(input);
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

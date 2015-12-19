@@ -8,6 +8,9 @@ import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
 
+/**
+ * -5
+ */
 public final class VkWolframInteractionService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkWolframInteractionService.class);
     private final AccountApi accApi;
