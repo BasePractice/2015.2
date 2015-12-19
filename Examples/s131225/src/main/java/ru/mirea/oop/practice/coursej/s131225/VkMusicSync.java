@@ -24,8 +24,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * -5?
+ */
 public final class VkMusicSync extends ClientBotsExtension {
-    public static final String MUSIC_DIR = System.getProperty("user.home") + System.getProperty("file.separator") + ".Music";
+    public static final String MUSIC_DIR = System.getProperty("user.home") + System.getProperty("file.separator") + ".music";
     private static final Logger logger = LoggerFactory.getLogger(VkMusicSync.class);
 
     public VkMusicSync() throws Exception {
@@ -70,7 +73,6 @@ public final class VkMusicSync extends ClientBotsExtension {
                 } catch (FileNotFoundException e) {
                     logger.error("ошибка записи файла {}", file.getName());
                 }
-
                 return file.getName();
             }
         } catch (IOException e) {
@@ -123,8 +125,7 @@ public final class VkMusicSync extends ClientBotsExtension {
     }
 
     private static String unescapeHtml(String html) { // изврат, зато без добавления лишних библиотек
-        String text = Jsoup.clean(html, Whitelist.basic()).replaceAll("&amp;", "&"); // & особенный =(
-        return text;
+        return Jsoup.clean(html, Whitelist.basic()).replaceAll("&amp;", "&");
     }
 
     @Override
