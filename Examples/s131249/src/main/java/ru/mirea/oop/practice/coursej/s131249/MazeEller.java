@@ -82,15 +82,15 @@ public class MazeEller extends AbstractMazeExtension {
         return "maze.services.MazeEller";
     }
 
-    static final Random random = new Random();
-    static long lastGroupId = 0L;
-    static int rows;
-    static int cols;
+    private final Random random = new Random();
+    private long lastGroupId = 0L;
+    private int rows;
+    private int cols;
 
     @Override
     public Maze generateMaze(int rows, int cols) {
-        MazeEller.cols = cols;
-        MazeEller.rows = rows;
+        this.cols = cols;
+        this.rows = rows;
         List<Cell[]> cells = new ArrayList<>();
         cells.add(createFirstRow());
         for (int i = 0; i < rows - 2; i++) {
@@ -122,7 +122,7 @@ public class MazeEller extends AbstractMazeExtension {
         return maze;
     }
 
-    public static void tryCreateWall(Cell cell1, Cell cell2, Cell[] row) {
+    public void tryCreateWall(Cell cell1, Cell cell2, Cell[] row) {
 
         if (cell1.groupId != cell2.groupId) {
             if (random.nextBoolean()) {
@@ -136,7 +136,7 @@ public class MazeEller extends AbstractMazeExtension {
         }
     }
 
-    public static void tryCreateFloor(Cell cell, Cell[] row) {
+    public void tryCreateFloor(Cell cell, Cell[] row) {
         int cellsWithFloor = 0;
         int cellsInGroup = 0;
         for (Cell cellFromRow : row) {
@@ -153,7 +153,7 @@ public class MazeEller extends AbstractMazeExtension {
     }
 
 
-    public static Cell[] createFirstRow() {
+    public Cell[] createFirstRow() {
         Cell[] row = new Cell[cols];
         for (int i = 0; i < cols; i++) {
             row[i] = new Cell(i, 0);
@@ -168,7 +168,7 @@ public class MazeEller extends AbstractMazeExtension {
         return row;
     }
 
-    public static Cell[] createRow(Cell[] prevRow) {
+    public Cell[] createRow(Cell[] prevRow) {
         Cell[] row = new Cell[cols];
         for (int i = 0; i < cols; i++) {
             row[i] = new Cell(i, prevRow[0].y + 1, prevRow[i]);
@@ -191,7 +191,7 @@ public class MazeEller extends AbstractMazeExtension {
         return row;
     }
 
-    public static Cell[] createLastRow(Cell[] prevRow) {
+    public Cell[] createLastRow(Cell[] prevRow) {
         Cell[] row = createRow(prevRow);
         for (int i = 0; i < row.length - 1; i++) {
             if (row[i].groupId != row[i + 1].groupId) {
