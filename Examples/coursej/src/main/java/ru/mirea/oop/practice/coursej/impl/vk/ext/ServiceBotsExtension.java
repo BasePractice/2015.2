@@ -1,7 +1,6 @@
 package ru.mirea.oop.practice.coursej.impl.vk.ext;
 
 import com.squareup.okhttp.*;
-import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
 import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.UsersApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
@@ -63,16 +62,7 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
     @Override
     public final void run() {
         logger.info("Запущен сервис оповещения");
-        try {
-            friends.clear();
-            FriendsApi friendsApi = api.getFriends();
-            Contact[] contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
-            for (Contact contact : contacts) {
-                friends.put(contact.id, contact);
-            }
-        } catch (Exception ex) {
-            logger.error("Ошибка получения списка друзей", ex);
-        }
+        updateFriends();
         while (isRunning) {
             requestServer();
 

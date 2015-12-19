@@ -4,12 +4,13 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /*
    Анализ запроса пользователя
  */
-public class Parser {
+final class Parser {
     private final String msg;
     private final LocalDate date;
     private final ArrayList<String> queryOfPeople;
@@ -17,11 +18,9 @@ public class Parser {
     private final boolean isDate;
     private static final ThreadLocal<DateTimeFormatter> threadFormat = new ThreadLocal<>();
 
-
-
     /*Парсер будет рабоать как для класса Attachment так и для VkStatistic, все переменные будут проиницилизораны
     с помощью полученного соообщения */
-    public Parser(String message) {
+    Parser(String message) {
         //Пытаемся получить дату из сообщения
         if (message.contains("/")) {
                 String date = message.split(" ")[message.split(" ").length - 1];
@@ -64,7 +63,7 @@ public class Parser {
 
     }
 
-    public static DateTimeFormatter getFormat() {
+    static DateTimeFormatter getFormat() {
         DateTimeFormatter format = threadFormat.get();
         if (format == null) {
             format =  DateTimeFormatter.ofPattern("d/M/yyyy");
@@ -73,23 +72,23 @@ public class Parser {
         return format;
     }
 
-    public String getMsg() {
+    String getMsg() {
         return msg;
     }
 
-    public LocalDate getDate() {
+    LocalDate getDate() {
         return date;
     }
 
-    public ArrayList<String> getQueryOfPeople() {
+    List<String> getQueryOfPeople() {
         return queryOfPeople;
     }
 
-    public boolean isAllPeople() {
+    boolean isAllPeople() {
         return allPeople;
     }
 
-    public boolean isDate() {
+    boolean isDate() {
         return isDate;
     }
 }
