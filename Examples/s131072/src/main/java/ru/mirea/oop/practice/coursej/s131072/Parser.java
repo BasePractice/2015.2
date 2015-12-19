@@ -1,11 +1,11 @@
 package ru.mirea.oop.practice.coursej.s131072;
 
-/**
- * Created by Paul on 10.12.2015.
- */
+final class Parser {
+    private Parser() {
 
-public class Parser {
-    public static String parserMessage(String message) {
+    }
+
+    static String parserMessage(String message) {
         String[] messageArray = message.split(" ");
         StringBuilder answer = new StringBuilder();
         boolean flag = false;

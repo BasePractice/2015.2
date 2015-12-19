@@ -9,6 +9,7 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.LongPollData;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.SocketTimeoutException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -263,6 +264,29 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
                 }
             }
         }
+    }
+
+    protected final int sendMessage(Contact contact, String message) {
+        int idMessage = -1;
+        try {
+            idMessage = messages.send(
+                    contact.id,
+                    null,
+                    null,
+                    null,
+                    message,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            logger.debug(MessageFormat.format("Сообщение отправлено {0}", idMessage));
+        } catch (IOException ex) {
+            logger.error("Ошибка отправки сообщения", ex);
+        }
+        return idMessage;
     }
 
     private Contact loadContactFrom(long idContact) throws Exception {

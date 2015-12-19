@@ -7,13 +7,10 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by Paul on 14.12.2015.
- */
-public final class Keywords {
+final class Keywords {
     private static HashMap<String, String> answers = new HashMap<>();
 
-    public static void loadKeywords() {
+    static void loadKeywords() {
         answers.clear();
         try (Reader reader = new InputStreamReader(Keywords.class.getResourceAsStream("/dictionary.dict"))) {
             List<String> lines = CharStreams.readLines(reader);
@@ -26,11 +23,11 @@ public final class Keywords {
         }
     }
 
-    public static boolean isKeyword (String key) {
+    static boolean isKeyword (String key) {
         return answers.containsKey(key);
     }
 
-    public static String getAnswer(String key) {
+    static String getAnswer(String key) {
         return answers.get(key);
     }
 }
