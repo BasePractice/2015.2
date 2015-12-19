@@ -30,8 +30,7 @@ public final class Keywords {
         return answers.containsKey(key);
     }
 
-    public static String getAnswer(String key)
-    {
+    public static String getAnswer(String key) {
         return answers.get(key);
     }
 }

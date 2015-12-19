@@ -7,7 +7,7 @@ package ru.mirea.oop.practice.coursej.s131072;
 public class Parser {
     public static String parserMessage(String message) {
         String[] messageArray = message.split(" ");
-        StringBuilder answer = new StringBuilder("");
+        StringBuilder answer = new StringBuilder();
         boolean flag = false;
         for (String aMessageArray : messageArray) {
             String key = aMessageArray.toLowerCase();
