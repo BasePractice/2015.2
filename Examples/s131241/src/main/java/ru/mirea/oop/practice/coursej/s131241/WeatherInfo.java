@@ -6,8 +6,6 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 import ru.mirea.oop.practice.coursej.s131241.impl.OpenWeatherMapApiImpl;
 
-import java.io.IOException;
-
 /**
  * -4?
  */
@@ -40,25 +38,7 @@ public class WeatherInfo extends ServiceBotsExtension {
                 } catch (Exception e) {
                     answer = "Не удалось получить прогноз :( \n Проверьте имя города и попробуйте снова.";
                 }
-
-                try {
-                    Integer idMessage = messages.send(
-                            contact.id,
-                            null,
-                            null,
-                            null,
-                            answer,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null
-                    );
-                    logger.debug("Сообщение отправлено " + idMessage);
-                } catch (IOException ex) {
-                    logger.error("Ошибка отправки сообщения", ex);
-                }
+                sendMessage(contact, answer);
                 break;
             }
 //            default:

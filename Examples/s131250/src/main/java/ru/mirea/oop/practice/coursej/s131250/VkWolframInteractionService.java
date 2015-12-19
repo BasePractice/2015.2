@@ -59,26 +59,8 @@ public final class VkWolframInteractionService extends ServiceBotsExtension {
                     }
 
                     if (message != null) {
-                        try {
-                            Integer idMessage = messages.send(
-                                    contact.id,
-                                    null,
-                                    null,
-                                    null,
-                                    message.text,
-                                    null,
-                                    null,
-                                    null,
-                                    message.attachment,
-                                    null,
-                                    null
-                            );
-                            logger.debug("Сообщение отправлено " + idMessage);
-                        } catch (IOException ex) {
-                            logger.error("Ошибка отправки сообщения", ex);
-                        }
+                        sendMessage(contact, message.text, message.attachment);
                     }
-
                 }
                 break;
             }

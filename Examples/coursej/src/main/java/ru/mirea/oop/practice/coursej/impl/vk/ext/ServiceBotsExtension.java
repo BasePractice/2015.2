@@ -266,7 +266,7 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
         }
     }
 
-    protected final int sendMessage(Contact contact, String message) {
+    protected final int sendMessage(Contact contact, String message, String attachment) {
         int idMessage = -1;
         try {
             idMessage = messages.send(
@@ -278,7 +278,7 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
                     null,
                     null,
                     null,
-                    null,
+                    attachment,
                     null,
                     null
             );
@@ -287,6 +287,10 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
             logger.error("Ошибка отправки сообщения", ex);
         }
         return idMessage;
+    }
+
+    protected final int sendMessage(Contact contact, String message) {
+        return sendMessage(contact, message, null);
     }
 
     private Contact loadContactFrom(long idContact) throws Exception {

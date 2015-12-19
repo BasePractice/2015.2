@@ -62,7 +62,8 @@ public final class VkTranslator extends ServiceBotsExtension {
                     "вместо lang1 можно ввести **, тогда язык будет выбран автоматически" +
                     "\n" +
                     "список доступных языков: es, en, it, ru, ka, de ";
-            sendMessage(contact.id, help);
+            int idMessage = sendMessage(contact, help);
+            alreadySend = idMessage >= 0;
         }
 
         if (msg.text.contains(":")) {
@@ -84,34 +85,8 @@ public final class VkTranslator extends ServiceBotsExtension {
             } catch (Exception e) {
                 logger.info("Невозможен разбор текста : \"{}\"\nтекст не соответствует требованиям ввода", msg.text);
             }
-            sendMessage(contact.id, result);
+            int idMessage = sendMessage(contact, result);
+            alreadySend = idMessage >= 0;
         }
-    }
-
-
-    public void sendMessage(long id, String text) {
-        try {
-            Integer idMessage = messages.send(
-                    id,
-                    null,
-                    null,
-                    null,
-                    text,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-
-            );
-            logger.debug("Сообщение отправлено {}", idMessage);
-            alreadySend = true;
-
-        } catch (IOException ex) {
-            logger.error("Ошибка отправки сообщения", ex);
-        }
-
-
     }
 }

@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -64,7 +63,8 @@ public final class VkStatistic extends ServiceBotsExtension {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            sendMessage(owner.id, "отправка по расписанию ", attachmentName);
+            int idMessage = sendMessage(owner, "отправка по расписанию ", attachmentName);
+            alreadySend = idMessage >= 0;
         }
 
 
@@ -193,8 +193,6 @@ public final class VkStatistic extends ServiceBotsExtension {
             alreadySend = false;
             return;
         }
-
-
         Message msg = (Message) event.object;
         Contact contact = msg.contact;
         String text;
@@ -216,7 +214,8 @@ public final class VkStatistic extends ServiceBotsExtension {
             } else {
                 return;
             }
-            sendMessage(contact.id, text, attachmentName);
+            int idMessage = sendMessage(contact, text, attachmentName);
+            alreadySend = idMessage >= 0;
             if (attachment != null) {
                 attachment.deleteFile(attachmentName);
             }
@@ -244,34 +243,6 @@ public final class VkStatistic extends ServiceBotsExtension {
         }
 
     }
-
-    void sendMessage(long id, String text, String attachmentName) {
-        try {
-            Integer idMessage = messages.send(
-                    id,
-                    null,
-                    null,
-                    null,
-                    text,
-                    null,
-                    null,
-                    null,
-                    attachmentName,
-                    null,
-                    null
-
-            );
-            logger.debug("Сообщение отправлено {}", idMessage);
-            alreadySend = true;
-        } catch (IOException ex) {
-            logger.error("Ошибка отправки сообщения", ex);
-        } catch (Exception e) {
-            logger.debug("Ошибка attachment");
-            e.printStackTrace();
-        }
-    }
-
-
 }
 
 

@@ -34,26 +34,7 @@ public final class CurrencyConverter extends ServiceBotsExtension {
                     break;
                 }
                 String answer = getAnswer(msg.text);
-
-                try {
-                    Integer idMessage = messages.send(
-                            contact.id,
-                            null,
-                            null,
-                            null,
-                            answer,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null
-                    );
-
-                    logger.debug("Сообщение отправлено " + idMessage);
-                } catch (IOException ex) {
-                    logger.error("Ошибка отправки сообщения", ex);
-                }
+                sendMessage(contact, answer);
                 break;
             }
         }
