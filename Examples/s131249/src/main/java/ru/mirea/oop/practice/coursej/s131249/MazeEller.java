@@ -6,7 +6,10 @@ import ru.mirea.oop.practice.coursej.impl.maze.AbstractMazeExtension;
 
 import java.util.*;
 
-public class MazeEller extends AbstractMazeExtension {
+/**
+ * -4?
+ */
+public final class MazeEller extends AbstractMazeExtension {
     private static final Logger logger = LoggerFactory.getLogger(MazeEller.class);
 
     @Override
@@ -17,6 +20,7 @@ public class MazeEller extends AbstractMazeExtension {
         Set<Cell> cellSet = new HashSet<>();
         for (int y = 0; y < maze.rows; y++) {
             for (int x = 0; x < maze.cols; x++) {
+                //TODO: Ошибка? x и y не в разных местах стоят
                 Cell cell = new Cell(y, x, maze.data[y][x]);
                 cells[y][x] = cell;
                 cellSet.add(cell);
@@ -44,6 +48,7 @@ public class MazeEller extends AbstractMazeExtension {
         path.add(finish);
         Cell currCell = finish;
         while (!path.contains(start)) {
+            assert currCell != null;
             currCell = getNearest(currCell.getNeighbors(cellSet));
             path.add(currCell);
         }
@@ -122,7 +127,7 @@ public class MazeEller extends AbstractMazeExtension {
         return maze;
     }
 
-    public void tryCreateWall(Cell cell1, Cell cell2, Cell[] row) {
+    void tryCreateWall(Cell cell1, Cell cell2, Cell[] row) {
 
         if (cell1.groupId != cell2.groupId) {
             if (random.nextBoolean()) {
@@ -136,7 +141,7 @@ public class MazeEller extends AbstractMazeExtension {
         }
     }
 
-    public void tryCreateFloor(Cell cell, Cell[] row) {
+    void tryCreateFloor(Cell cell, Cell[] row) {
         int cellsWithFloor = 0;
         int cellsInGroup = 0;
         for (Cell cellFromRow : row) {
@@ -153,7 +158,7 @@ public class MazeEller extends AbstractMazeExtension {
     }
 
 
-    public Cell[] createFirstRow() {
+    Cell[] createFirstRow() {
         Cell[] row = new Cell[cols];
         for (int i = 0; i < cols; i++) {
             row[i] = new Cell(i, 0);
@@ -168,7 +173,7 @@ public class MazeEller extends AbstractMazeExtension {
         return row;
     }
 
-    public Cell[] createRow(Cell[] prevRow) {
+    Cell[] createRow(Cell[] prevRow) {
         Cell[] row = new Cell[cols];
         for (int i = 0; i < cols; i++) {
             row[i] = new Cell(i, prevRow[0].y + 1, prevRow[i]);
@@ -191,7 +196,7 @@ public class MazeEller extends AbstractMazeExtension {
         return row;
     }
 
-    public Cell[] createLastRow(Cell[] prevRow) {
+    Cell[] createLastRow(Cell[] prevRow) {
         Cell[] row = createRow(prevRow);
         for (int i = 0; i < row.length - 1; i++) {
             if (row[i].groupId != row[i + 1].groupId) {
@@ -203,7 +208,7 @@ public class MazeEller extends AbstractMazeExtension {
         return row;
     }
 
-    public static void joinGroup(long groupId1, long groupId2, Cell[] row) {
+    static void joinGroup(long groupId1, long groupId2, Cell[] row) {
         for (Cell cell : row) {
             if (cell.groupId == groupId2) {
                 cell.groupId = groupId1;

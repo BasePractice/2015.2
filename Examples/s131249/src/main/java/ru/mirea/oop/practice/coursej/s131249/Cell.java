@@ -2,14 +2,14 @@ package ru.mirea.oop.practice.coursej.s131249;
 
 import ru.mirea.oop.practice.coursej.api.ext.MazeExtension;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
-public class Cell {
-    int x;
-    int y;
+final class Cell {
+    final int x;
+    final int y;
     long groupId;
     boolean up;
     boolean left;
@@ -17,7 +17,7 @@ public class Cell {
     boolean right;
     int distance;
 
-    public Cell(int x, int y) {
+    Cell(int x, int y) {
         this.x = x;
         this.y = y;
         this.groupId = 0;
@@ -27,7 +27,7 @@ public class Cell {
         this.right = false;
     }
 
-    public Cell(int x, int y, char c) {
+    Cell(int x, int y, char c) {
         this.x = x;
         this.y = y;
         if ((c & MazeExtension.SQUARE_LEFT) == MazeExtension.SQUARE_LEFT) {
@@ -45,7 +45,7 @@ public class Cell {
         this.distance = -1;
     }
 
-    public Cell(int x, int y, Cell other) {
+    Cell(int x, int y, Cell other) {
         this.x = x;
         this.y = y;
         this.groupId = other.getGroupId();
@@ -53,19 +53,19 @@ public class Cell {
         this.right = other.isRight();
     }
 
-    public long getGroupId() {
+    long getGroupId() {
         return groupId;
     }
 
-    public boolean isDown() {
+    boolean isDown() {
         return down;
     }
 
-    public boolean isRight() {
+    boolean isRight() {
         return right;
     }
 
-    public char getValue() {
+    char getValue() {
         char val = 0;
         if (up) val |= MazeExtension.SQUARE_UP;
         if (left) val |= MazeExtension.SQUARE_LEFT;
@@ -74,11 +74,11 @@ public class Cell {
         return val;
     }
 
-    public boolean isNeighbor(Cell otherCell) {
+    boolean isNeighbor(Cell otherCell) {
         return Math.abs(this.x - otherCell.x) + Math.abs(this.y - otherCell.y) == 1;
     }
 
-    public boolean canMoveTo(Cell to) {
+    boolean canMoveTo(Cell to) {
         if (this.isNeighbor(to)) {
             switch (this.x - to.x) {
                 case 0: {
@@ -116,14 +116,10 @@ public class Cell {
         return false;
     }
 
-    public List<Cell> getNeighbors(Set<Cell> cells) {
-        List<Cell> neighbors = new ArrayList<>();
-        for (Cell cell2 : cells) {
-            if (this.isNeighbor(cell2) && this.canMoveTo(cell2)) {
-                neighbors.add(cell2);
-            }
-        }
-        return neighbors;
+    List<Cell> getNeighbors(Set<Cell> cells) {
+        return cells.stream().filter(cell2 ->
+                this.isNeighbor(cell2) &&
+                        this.canMoveTo(cell2)).collect(Collectors.toList());
     }
 
 }
