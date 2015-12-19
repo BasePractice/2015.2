@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * -3?
+ */
 public final class Converter extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(Converter.class);
 

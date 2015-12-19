@@ -8,6 +8,9 @@ import ru.mirea.oop.practice.coursej.s131241.impl.OpenWeatherMapApiImpl;
 
 import java.io.IOException;
 
+/**
+ * -4?
+ */
 public class WeatherInfo extends ServiceBotsExtension {
     public static final String DESCRIPTION = "Прогноз погоды на 7 дней по огромному количеству городов";
     private static final Logger logger = LoggerFactory.getLogger(WeatherInfo.class);

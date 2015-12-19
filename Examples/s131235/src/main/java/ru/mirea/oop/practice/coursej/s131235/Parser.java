@@ -1,18 +1,12 @@
 package ru.mirea.oop.practice.coursej.s131235;
 
-/**
- * Created by TopKek on 12.12.2015.
- */
-public class Parser {
-    private String msg;
-    private String languageFirst;
-    private String languageSecond;
-    private String text;
+final class Parser {
+    private final String languageFirst;
+    private final String languageSecond;
+    private final String text;
 
 
-    public Parser(String message) {
-
-        this.msg = message;
+    Parser(String message) {
         this.languageFirst = findLanguageFirst(message);
         this.languageSecond = findLanguageSecond(message);
         this.text = findText(message);
@@ -25,6 +19,7 @@ public class Parser {
         return lang[0];
 
     }
+
     private String findLanguageSecond(String message) {
         String[] texx = message.split(":", 2);
         String[] lang = texx[0].split(" ", (texx[0].length()) - 1);
@@ -38,15 +33,15 @@ public class Parser {
 
     }
 
-    public String getLanguageFirst() {
+    String getLanguageFirst() {
         return languageFirst;
     }
 
-    public String getLanguageSecond() {
+    String getLanguageSecond() {
         return languageSecond;
     }
 
-    public String getText() {
+    String getText() {
         return text;
     }
 }

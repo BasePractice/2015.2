@@ -132,12 +132,11 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
                 if (data.failed != null) {
                     return -1;
                 }
-
                 processUpdates(data.updates);
             }
         }
 
-        return response.isSuccessful() ? data.lastEvent : -1;
+        return response.isSuccessful() ? (data != null ? data.lastEvent : -1) : -1;
     }
 
 
@@ -253,12 +252,14 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
                     break;
                 }
                 default: {
-                    System.out.print("" + type + ": ");
+                    StringBuilder notify = new StringBuilder();
+                    notify.append(type).append(": ");
                     for (int i = 0; i < update.size(); ++i) {
                         if (i > 0)
-                            System.out.print(", ");
-                        System.out.print(update.get(i));
+                            notify.append(", ");
+                        notify.append(update.get(i));
                     }
+                    logger.debug("{}", notify.toString());
                 }
             }
         }
