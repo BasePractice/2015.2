@@ -49,11 +49,13 @@ class Currency {
             NodeList nodeList = document.getElementsByTagName("Valute");
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Currency currency = getCurrencyFromNode(nodeList.item(i));
-                currencyList.add(currency);
+                if (currency != null) {
+                    currencyList.add(currency);
+                }
             }
 
         } catch (ParserConfigurationException e) {
-            // ну не может его тут быть, стандартные же параметры
+            logger.error("Ошибка чтения парамтеров конфигурации при разборке XML документа.");
         } catch (SAXException e) {
             logger.error("Ошибка при разборе XML документа полученного с сайта ЦБ РФ по url {}", URL);
         } catch (IOException e) {
@@ -77,7 +79,10 @@ class Currency {
         String charCode = getCharacterDataFromElement((Element) element.getElementsByTagName("CharCode").item(0));
         int nominal = Integer.parseInt(getCharacterDataFromElement((Element) element.getElementsByTagName("Nominal").item(0)));
         double value = Double.parseDouble((getCharacterDataFromElement((Element) element.getElementsByTagName("Value").item(0))).replaceAll(",", "."));
-        return new Currency(charCode, value / nominal);
+        if (nominal != 0 && value != 0) {
+            return new Currency(charCode, value / nominal);
+        }
+        return null;
     }
 
     public String getCharCode() {
