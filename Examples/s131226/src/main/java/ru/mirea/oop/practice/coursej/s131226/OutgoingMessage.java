@@ -1,14 +1,11 @@
 package ru.mirea.oop.practice.coursej.s131226;
 
-import com.google.gson.JsonParser;
-import com.squareup.okhttp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.vk.DocumentsApi;
 import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Document;
-import ru.mirea.oop.practice.coursej.api.vk.entities.UploadServer;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +23,7 @@ public class OutgoingMessage {
         this.id = id;
         this.api = api;
     }
+
     public void setText(String text) {
         this.text = text;
     }
@@ -34,26 +32,27 @@ public class OutgoingMessage {
         this.attachment = attachment;
     }
 
-    public void setAttachment(File file)  {
+    public void setAttachment(File file) {
         DocumentsApi documentsApi = null;
         try {
             documentsApi = api.getDocuments();
 
-        Document[] documents = documentsApi.list(CHECK_COUNT, 0, api.idOwner());
-        for (Document existDoc : documents) {
-            if (existDoc.title .equals(file.getName())) {
-                if (documentsApi.delete(existDoc) == 1) logger.debug("успешно удален " + existDoc.title);
+            Document[] documents = documentsApi.list(CHECK_COUNT, 0, api.idOwner());
+            for (Document existDoc : documents) {
+                if (existDoc.title.equals(file.getName())) {
+                    if (documentsApi.delete(existDoc) == 1) logger.debug("успешно удален " + existDoc.title);
+                }
             }
+
+            documentsApi.uploadDocument(file);
+            documents = documentsApi.list(1, 0, api.idOwner());
+            this.setAttachment("doc" + documents[0].idOwner + "_" + documents[0].id);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        documentsApi.uploadDocument(file);
-        documents=documentsApi.list(1, 0, api.idOwner());
-        this.setAttachment("doc" + documents[0].idOwner + "_" + documents[0].id);
-        } catch (Exception e) {
-        e.printStackTrace();
     }
 
-    }
     public String getText() {
         return text;
     }

@@ -1,4 +1,5 @@
 package ru.mirea.oop.practice.coursej.s131235;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
@@ -7,9 +8,9 @@ import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 import java.io.IOException;
 
 /**
- * Created by TopKek on 12.12.2015.
+ * -5
  */
-public class VkTranslator extends ServiceBotsExtension {
+public final class VkTranslator extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkTranslator.class);
     private boolean alreadySend = false;
 
@@ -21,11 +22,9 @@ public class VkTranslator extends ServiceBotsExtension {
     protected void doEvent(Event event) {
         switch (event.type) {
             case MESSAGE_RECEIVE: {
-
                 eventMessageReceive(event);
                 break;
             }
-
         }
     }
 
@@ -37,12 +36,10 @@ public class VkTranslator extends ServiceBotsExtension {
 
 
     public void eventMessageReceive(Event event) {
-
         if (alreadySend) {
             alreadySend = false;
             return;
         }
-
         Message msg = (Message) event.object;
         Contact contact = msg.contact;
         String help;
@@ -51,9 +48,7 @@ public class VkTranslator extends ServiceBotsExtension {
         String textForTransl;
         String result = "";
 
-
         if (msg.text.equals("help")) {
-
             help = "Гайд по использованию бота> \n" +
                     "Отправьте боту сообщение> \n" +
                     " lang1 lang2 : text" +
@@ -67,71 +62,31 @@ public class VkTranslator extends ServiceBotsExtension {
                     "вместо lang1 можно ввести **, тогда язык будет выбран автоматически" +
                     "\n" +
                     "список доступных языков: es, en, it, ru, ka, de ";
-            sendMessage(contact.id, help);
-
+            int idMessage = sendMessage(contact, help);
+            alreadySend = idMessage >= 0;
         }
 
-        if ( msg.text.contains(":"))  {
+        if (msg.text.contains(":")) {
             try {
                 Parser useParser = new Parser(msg.text);
                 textLangFirst = useParser.getLanguageFirst();
                 textLangSecond = useParser.getLanguageSecond();
                 textForTransl = useParser.getText();
-
-
-                if (textLangFirst.equals("**")){
-                    result =  Translator.translating(textLangSecond, textForTransl);
-
+                if (textLangFirst.equals("**")) {
+                    result = Translator.translating(textLangSecond, textForTransl);
                 } else {
-                    StringBuffer sb = new StringBuffer();
-                    sb.append(textLangFirst);
-                    sb.append("-");
-                    sb.append(textLangSecond);
-                    String combined = sb.toString();
-                    result =  Translator.translating(combined, textForTransl);
+                    String combined = textLangFirst +
+                            "-" +
+                            textLangSecond;
+                    result = Translator.translating(combined, textForTransl);
                 }
-
-
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 logger.error(" Ошибка при обращении к Переводчику Яндекса. (возможно ключ устарел) ");
+            } catch (Exception e) {
+                logger.info("Невозможен разбор текста : \"{}\"\nтекст не соответствует требованиям ввода", msg.text);
             }
-            catch (Exception e) {
-                logger.info("Невозможен Парсинг текста : \""+ msg.text +"\"" + "\n" + "текст не соответствует требованиям ввода");
-            }
-            sendMessage(contact.id, result);
-
+            int idMessage = sendMessage(contact, result);
+            alreadySend = idMessage >= 0;
         }
-    }
-
-
-
-
-    public void sendMessage(long id, String text) {
-        try {
-
-            Integer idMessage = messages.send(
-                    id,
-                    null,
-                    null,
-                    null,
-                    text,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-
-            );
-            logger.debug("Сообщение отправлено " + idMessage);
-
-            alreadySend = true;
-
-        } catch (IOException ex) {
-            logger.error("Ошибка отправки сообщения", ex);
-        }
-
-
     }
 }

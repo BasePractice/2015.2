@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicLong;
 
-class ImageBuilder {
+final class ImageBuilder {
     private static final Logger logger = LoggerFactory.getLogger(ImageBuilder.class);
     private static final int TEXT_FONT_SIZE = 14;
     private static final int TITLE_FONT_SIZE = 16;
@@ -23,7 +23,7 @@ class ImageBuilder {
     private static final AtomicLong counter = new AtomicLong(1);
 
 
-    public ImageBuilder() {
+    ImageBuilder() {
         long counterValue = counter.getAndIncrement();
         BufferedImage img = new BufferedImage(80, 20, BufferedImage.TYPE_INT_ARGB);
         FontMetrics imgMetrics = getImageMetrics(img, true);
@@ -44,7 +44,7 @@ class ImageBuilder {
         fileName = counterValue + IMAGE_FILE_EXTENSION;
     }
 
-    private FontMetrics getImageMetrics(BufferedImage img, boolean isTitle) {
+    private static FontMetrics getImageMetrics(BufferedImage img, boolean isTitle) {
         Graphics2D g2d = img.createGraphics();
         if (isTitle) {
             g2d.setFont(new Font(Font.SERIF, Font.BOLD, TITLE_FONT_SIZE));
@@ -54,7 +54,7 @@ class ImageBuilder {
         return g2d.getFontMetrics();
     }
 
-    private void writeImageFile(BufferedImage result) throws IOException {
+    void writeImageFile(BufferedImage result) throws IOException {
         long counterValue = counter.getAndIncrement();
         ImageIO.write(result, IMAGE_FILE_TYPE, new File(Configuration.getFileName(counterValue + IMAGE_FILE_EXTENSION)));
         File file = new File(Configuration.getFileName(fileName));
@@ -64,7 +64,7 @@ class ImageBuilder {
         fileName = counterValue + IMAGE_FILE_EXTENSION;
     }
 
-    public void writeTextOnImage(String text) throws IOException {
+    void writeTextOnImage(String text) throws IOException {
         BufferedImage img = ImageIO.read(new File(Configuration.getFileName(fileName)));
         FontMetrics imgMetrics = getImageMetrics(img, false);
 
@@ -80,7 +80,7 @@ class ImageBuilder {
     }
 
 
-    public void pasteImageFromURL(String imageURL) throws Exception {
+    void pasteImageFromURL(String imageURL) throws Exception {
         BufferedImage img1 = ImageIO.read(new File(Configuration.getFileName(fileName)));
         BufferedImage img2 = ImageIO.read(new URL(imageURL));
 
@@ -99,7 +99,7 @@ class ImageBuilder {
         writeImageFile(im);
     }
 
-    public String getFullFileName() {
+    String getFullFileName() {
         return Configuration.getFileName(fileName);
     }
 }

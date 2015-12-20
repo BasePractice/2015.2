@@ -1,12 +1,11 @@
 package ru.mirea.oop.practice.coursej.impl.vk.ext;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.ext.BotsExtension;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
+import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 import ru.mirea.oop.practice.coursej.impl.vk.VkontakteApiImpl;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 abstract class AbstractBotsExtension implements BotsExtension {
     protected final String DEFAULT_USER_FIELDS = "sex," +
@@ -172,6 +170,19 @@ abstract class AbstractBotsExtension implements BotsExtension {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+    }
+
+    protected final void updateFriends() {
+        try {
+            friends.clear();
+            FriendsApi friendsApi = api.getFriends();
+            Contact[] contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
+            for (Contact contact : contacts) {
+                friends.put(contact.id, contact);
+            }
+        } catch (Exception ex) {
+            logger.error("Ошибка получения списка друзей", ex);
+        }
     }
 
     @Override

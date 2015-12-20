@@ -2,14 +2,15 @@ package ru.mirea.oop.practice.coursej.s131239;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * -3?
+ */
 public final class Converter extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(Converter.class);
 
@@ -60,7 +61,6 @@ public final class Converter extends ServiceBotsExtension {
                     map.get("см").put("линия", 3.937);
 
 
-
                     map.put("бар", new HashMap<String, Double>());
                     map.get("бар").put("паскаль", 100000.0);
                     map.get("бар").put("кПа", 100.0);
@@ -77,24 +77,7 @@ public final class Converter extends ServiceBotsExtension {
                         for (Map.Entry<String, Double> stringDoubleEntry : map.get(desc).entrySet()) {
                             msgToSend.append(num).append(" ").append(desc).append(" = ").append(stringDoubleEntry.getValue() * num).append(" ").append(stringDoubleEntry.getKey()).append("\n");
                         }
-                        try {
-                            Integer idMessage = messages.send(
-                                    contact.id,
-                                    null,
-                                    null,
-                                    null,
-                                    msgToSend.toString(),
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null
-                            );
-                            logger.debug("Сообщение отправлено " + idMessage);
-                        } catch (IOException ex) {
-                            logger.error("Ошибка отправки сообщения", ex);
-                        }
+                        sendMessage(contact, msgToSend.toString());
                     }
 
                 }

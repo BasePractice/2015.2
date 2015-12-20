@@ -8,6 +8,9 @@ import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
 import java.io.IOException;
 
+/**
+ * -5
+ */
 public final class VkWolframInteractionService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkWolframInteractionService.class);
     private final AccountApi accApi;
@@ -56,26 +59,8 @@ public final class VkWolframInteractionService extends ServiceBotsExtension {
                     }
 
                     if (message != null) {
-                        try {
-                            Integer idMessage = messages.send(
-                                    contact.id,
-                                    null,
-                                    null,
-                                    null,
-                                    message.text,
-                                    null,
-                                    null,
-                                    null,
-                                    message.attachment,
-                                    null,
-                                    null
-                            );
-                            logger.debug("Сообщение отправлено " + idMessage);
-                        } catch (IOException ex) {
-                            logger.error("Ошибка отправки сообщения", ex);
-                        }
+                        sendMessage(contact, message.text, message.attachment);
                     }
-
                 }
                 break;
             }

@@ -1,7 +1,6 @@
 package ru.mirea.oop.practice.coursej.impl.vk.ext;
 
 import com.squareup.okhttp.*;
-import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
 import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.UsersApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
@@ -10,6 +9,7 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.LongPollData;
 import java.io.IOException;
 import java.io.Reader;
 import java.net.SocketTimeoutException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,16 +63,7 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
     @Override
     public final void run() {
         logger.info("Запущен сервис оповещения");
-        try {
-            friends.clear();
-            FriendsApi friendsApi = api.getFriends();
-            Contact[] contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
-            for (Contact contact : contacts) {
-                friends.put(contact.id, contact);
-            }
-        } catch (Exception ex) {
-            logger.error("Ошибка получения списка друзей", ex);
-        }
+        updateFriends();
         while (isRunning) {
             requestServer();
 
@@ -142,12 +133,11 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
                 if (data.failed != null) {
                     return -1;
                 }
-
                 processUpdates(data.updates);
             }
         }
 
-        return response.isSuccessful() ? data.lastEvent : -1;
+        return response.isSuccessful() ? (data != null ? data.lastEvent : -1) : -1;
     }
 
 
@@ -263,15 +253,44 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
                     break;
                 }
                 default: {
-                    System.out.print("" + type + ": ");
+                    StringBuilder notify = new StringBuilder();
+                    notify.append(type).append(": ");
                     for (int i = 0; i < update.size(); ++i) {
                         if (i > 0)
-                            System.out.print(", ");
-                        System.out.print(update.get(i));
+                            notify.append(", ");
+                        notify.append(update.get(i));
                     }
+                    logger.debug("{}", notify.toString());
                 }
             }
         }
+    }
+
+    protected final int sendMessage(Contact contact, String message, String attachment) {
+        int idMessage = -1;
+        try {
+            idMessage = messages.send(
+                    contact.id,
+                    null,
+                    null,
+                    null,
+                    message,
+                    null,
+                    null,
+                    null,
+                    attachment,
+                    null,
+                    null
+            );
+            logger.debug(MessageFormat.format("Сообщение отправлено {0}", idMessage));
+        } catch (IOException ex) {
+            logger.error("Ошибка отправки сообщения", ex);
+        }
+        return idMessage;
+    }
+
+    protected final int sendMessage(Contact contact, String message) {
+        return sendMessage(contact, message, null);
     }
 
     private Contact loadContactFrom(long idContact) throws Exception {

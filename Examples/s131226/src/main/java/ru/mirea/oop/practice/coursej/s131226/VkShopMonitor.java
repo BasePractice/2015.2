@@ -7,6 +7,9 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 import ru.mirea.oop.practice.coursej.s131226.impl.ParserApiImpl;
 
+/**
+ * -5?
+ */
 public final class VkShopMonitor extends ServiceBotsExtension {
     public static final String HELP_MESSAGE =
             "На данный  момент бот знает команды:\n" +

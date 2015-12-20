@@ -4,21 +4,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
+
 import java.text.MessageFormat;
 
-import java.io.IOException;
-
 /**
- * Created by Александр on 27.11.2015.
+ * -4
  */
-
-public class VkQuiz extends ServiceBotsExtension {
+public final class VkQuiz extends ServiceBotsExtension {
 
     private static final Logger logger = LoggerFactory.getLogger(VkQuiz.class);
-    private Game game = new Game();
-    private Question justSended; //Последний отправленный вопрос
+    private final Game game = new Game();
+    private Question justSanded; //Последний отправленный вопрос
     private boolean isTestEnded = true; //Завершёна ли викторина. По умолчанию, пока игра не началась, завершёна.
-    private int questionsCount = game.getQuestionsCount();
+    private final int questionsCount = game.getQuestionsCount();
+
     public String description() {
         return "Сервис для проведения викторины/теста с пользователями";
     }
@@ -45,103 +44,74 @@ public class VkQuiz extends ServiceBotsExtension {
                 logger.debug(MessageFormat.format("Получили сообщение от: {0}", Contact.viewerString(contact)));
 
                 if (msg.text.toLowerCase().equals("инфо") || msg.text.toLowerCase().equals("help")) {
-                    sendMessage(contact.id, MessageFormat.format("Привет, я бот викторина! \n Чтобы сыграть, напишите «Начать викторину». \n Вам будет задано {0} вопросов. \n В ответах регистр (нижний/ВЕрХниЙ) не имеет значения. \n В вопросах-тестах присылайте номер правильного варианта.", questionsCount));
+                    sendMessage(contact, MessageFormat.format("Привет, я бот викторина! \n Чтобы сыграть, напишите «Начать викторину». \n Вам будет задано {0} вопросов. \n В ответах регистр (нижний/ВЕрХниЙ) не имеет значения. \n В вопросах-тестах присылайте номер правильного варианта.", questionsCount));
                     break;
                 }
 
                 if (msg.text.toLowerCase().equals("начать викторину") && !isTestEnded()) {
-                    sendMessage(msg.contact.id, "Sorry! Кто-то уже играет в викторину. \n Попробуйте позже.");
+                    sendMessage(msg.contact, "Sorry! Кто-то уже играет в викторину. \n Попробуйте позже.");
                 }
 
-                if (game.getCountOfSended() == questionsCount && !isTestEnded())  {
-                    if (justSended.getAnswer().toLowerCase().equals(msg.text.toLowerCase()) && contact.id == game.getIdPlayer()) {
+                if (game.getCountOfSanded() == questionsCount && !isTestEnded()) {
+                    if (justSanded.getAnswer().toLowerCase().equals(msg.text.toLowerCase()) && contact.id == game.getIdPlayer()) {
                         game.scorePlus();
-                        sendMessage(contact.id, "Правильно! \n");
+                        sendMessage(contact, "Правильно! \n");
                     }
 
-                    if (!justSended.getAnswer().toLowerCase().equals(msg.text.toLowerCase()) && contact.id == game.getIdPlayer()) {
-                        sendMessage(contact.id, MessageFormat.format("Ошибка! Правильный ответ: {0}", justSended.getAnswer()));
+                    if (!justSanded.getAnswer().toLowerCase().equals(msg.text.toLowerCase()) && contact.id == game.getIdPlayer()) {
+                        sendMessage(contact, MessageFormat.format("Ошибка! Правильный ответ: {0}", justSanded.getAnswer()));
                     }
 
                     long testTime = System.currentTimeMillis() / 1000L - game.getStartTime();
 
                     if (game.getScore() == questionsCount) {
-
-                        sendMessage(contact.id, MessageFormat.format("Тест завершён. \n Поздравляю, вы ответили правильно на все вопросы \n Ваше время: {0} секунд. \n Чтобы начать новую игру, напишите «Начать викторину»", testTime));
-                        isTestEnded=true;
-
+                        sendMessage(contact, MessageFormat.format("Тест завершён. \n Поздравляю, вы ответили правильно на все вопросы \n Ваше время: {0} секунд. \n Чтобы начать новую игру, напишите «Начать викторину»", testTime));
+                        isTestEnded = true;
                     } else {
-                        sendMessage(contact.id, MessageFormat.format("Тест завершён. \n Кол-во правильных ответов: {0}/{1} \n Ваше время: {2} секунд. \n Чтобы начать новую игру, напишите «Начать викторину»", game.getScore(), questionsCount, testTime ));
-                        isTestEnded=true;
+                        sendMessage(contact, MessageFormat.format("Тест завершён. \n Кол-во правильных ответов: {0}/{1} \n Ваше время: {2} секунд. \n Чтобы начать новую игру, напишите «Начать викторину»", game.getScore(), questionsCount, testTime));
+                        isTestEnded = true;
                     }
-
                     game.setQuestionsFalse();
                     break;
                 }
 
                 if ((msg.text.toLowerCase().equals("начать викторину")) && isTestEnded()) {
-                    game = new Game();
+                    game.restart();
                     game.setStarted(true);
-                    isTestEnded=false;
+                    isTestEnded = false;
                     game.putPlayerId(contact.id);
                     Question random = game.RandomQuestion();
-                    sendMessage(contact.id, "Игра началась, отсчёт времени запущен! \n \n" +
+                    sendMessage(contact, "Игра началась, отсчёт времени запущен! \n \n" +
                             "Итак, первый вопрос: \n" + random.getText());
-                    justSended = random;
-                    game.currentQuest().setSended(true);
+                    justSanded = random;
+                    game.currentQuest().setSanded(true);
                     game.plusCount();
-
                 } else if (contact.id == game.getIdPlayer() && game.isStarted() && !isTestEnded()) {
-
-                    if (justSended.getAnswer().toLowerCase().equals(msg.text.toLowerCase()) && contact.id == game.getIdPlayer()) {
+                    if (justSanded.getAnswer().toLowerCase().equals(msg.text.toLowerCase()) && contact.id == game.getIdPlayer()) {
                         Question random = game.RandomQuestion();
                         game.scorePlus();
-                        sendMessage(contact.id, MessageFormat.format("Правильно! \n Следующий вопрос: \n \n {0}", random.getText()));
-                        justSended = random;
-                        game.currentQuest().setSended(true);
+                        sendMessage(contact, MessageFormat.format("Правильно! \n Следующий вопрос: \n \n {0}", random.getText()));
+                        justSanded = random;
+                        game.currentQuest().setSanded(true);
                         game.plusCount();
 
                     } else if (contact.id == game.getIdPlayer() && game.isStarted() && !isTestEnded()) {
                         Question random = game.RandomQuestion();
-                        sendMessage(contact.id, MessageFormat.format("Ошибка! Правильный ответ: {0} \n \n Следующий вопрос: \n {1}", justSended.getAnswer(), random.getText()));
-                        justSended = random;
-                        game.currentQuest().setSended(true);
+                        sendMessage(contact, MessageFormat.format("Ошибка! Правильный ответ: {0} \n \n Следующий вопрос: \n {1}", justSanded.getAnswer(), random.getText()));
+                        justSanded = random;
+                        game.currentQuest().setSanded(true);
                         game.plusCount();
                     }
                 }
                 break;
             }
-
             default:
                 logger.debug("" + (event.object == null ? event.type : event.type + "|" + event.object));
                 break;
         }
     }
 
-    public boolean isTestEnded () {
+    private boolean isTestEnded() {
         return isTestEnded;
-    }
-
-    public void sendMessage(long id, String text) {  //Метод отправки сообщения text пользователю id.
-        try {
-            Integer idMessage = messages.send(
-                    id,
-                    null,
-                    null,
-                    null,
-                    text,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-
-            );
-            logger.debug(MessageFormat.format("Сообщение отправлено: {0}", idMessage));
-        } catch (IOException ex) {
-            logger.error("Ошибка отправки сообщения", ex);
-
-        }
     }
 }

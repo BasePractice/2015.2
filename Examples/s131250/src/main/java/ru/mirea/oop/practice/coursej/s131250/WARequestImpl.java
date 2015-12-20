@@ -7,7 +7,7 @@ import retrofit.Response;
 import java.io.IOException;
 
 final class WARequestImpl {
-    public static ResponseBody doWARequest(WARequest service, String input, String appid) {
+    static ResponseBody doWARequest(WARequest service, String input, String appid) {
         Call<ResponseBody> resp = service.doWARequest(input, appid, "Step-by-step solution");
         try {
             Response<ResponseBody> r = resp.execute();
