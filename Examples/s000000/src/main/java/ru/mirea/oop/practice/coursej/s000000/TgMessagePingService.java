@@ -18,7 +18,7 @@ public final class TgMessagePingService extends ServiceBotsExtension {
 
     @Override
     protected void sendEvent(Update update) {
-        Message message = update.getMessage();
+        Message message = update.message;
         if (message != null) {
             try {
                 InputStream stream = TgMessagePingService.class.getResourceAsStream("/photos/safe_image.png");
