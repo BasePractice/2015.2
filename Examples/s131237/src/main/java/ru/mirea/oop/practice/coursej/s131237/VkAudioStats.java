@@ -19,9 +19,8 @@ import java.util.*;
 
 import static java.lang.Thread.sleep;
 
-
 /**
- * Created by Shams on 10.12.2015.
+ * -4?
  */
 public final class VkAudioStats extends ClientBotsExtension {
     public static final Logger logger = LoggerFactory.getLogger(VkAudioStats.class);
