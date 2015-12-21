@@ -69,6 +69,38 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         return maze;
     }
 
+    @Override
+    public Point[] findPath(Maze maze) {
+        cells[0][0].UP = false;//ворота
+        maze.data[0][0] = cells[0][0].getValue();
+        cells[maze.rows - 1][maze.cols - 1].DOWN = false;
+        maze.data[maze.rows - 1][maze.cols - 1] = cells[maze.rows - 1][maze.cols - 1].getValue();
+
+        LinkedList<Cell> cellsInWork = new LinkedList<>();
+        Cell firstCell = cells[0][0];
+        cellsInWork.add(firstCell);
+        Cell workCell;
+        while (cellsInWork.size() != 0) {
+            workCell = cellsInWork.removeFirst();
+            for (Cell cell : workCell.capabilities) {
+                cell.capabilities.remove(workCell);
+                cell.target = workCell;
+                cellsInWork.add(cell);
+            }
+        }
+        LinkedList<Point> path = new LinkedList<>();
+        workCell = cells[maze.rows - 1][maze.cols - 1];
+        while (workCell.target != null) {
+            path.add(new Point(workCell.x, workCell.y));
+            workCell = workCell.target;
+        }
+        path.add(new Point(firstCell.x, firstCell.y));
+
+        Point[] points = new Point[path.size()];
+        path.toArray(points);
+        return points;
+    }
+
     //Добавляет новый элемент к нашему пути
     void addToStack(Cell cell) {
         if (stack.size() != 0)
@@ -87,22 +119,26 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
             case 1:
                 firstCell.LEFT = false;
                 secondCell.RIGHT = false;
-                return;
+                break;
             case -1:
                 firstCell.RIGHT = false;
                 secondCell.LEFT = false;
-                return;
+                break;
         }
         switch (firstCell.y - secondCell.y) {
             case 1:
                 firstCell.UP = false;
                 secondCell.DOWN = false;
-                return;
+                break;
             case -1:
                 firstCell.DOWN = false;
                 secondCell.UP = false;
                 break;
         }
+        if (!firstCell.capabilities.contains(secondCell))
+            firstCell.capabilities.add(secondCell);
+        if (!secondCell.capabilities.contains(firstCell))
+            secondCell.capabilities.add(firstCell);
 
     }
 
@@ -134,6 +170,9 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         boolean LEFT;
         boolean DOWN;
         boolean RIGHT;
+        LinkedList<Cell> capabilities;
+        Cell target;
+
 
         public Cell(int x, int y) {
             this.x = x;
@@ -143,6 +182,7 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
             LEFT = true;
             DOWN = true;
             RIGHT = true;
+            capabilities = new LinkedList<>();
         }
 
 
@@ -160,5 +200,3 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         }
     }
 }
-
-
