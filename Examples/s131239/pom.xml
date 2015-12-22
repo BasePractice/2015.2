@@ -70,8 +70,7 @@
                 <version>2.18.1</version>
                 <configuration>
                     <additionalClasspathElements>
-                        <additionalClasspathElement>../../../../../../../../../../../Program
-                            Files/Java/jdk1.8.0_31/lib/tools.jar</additionalClasspathElement>
+                        <additionalClasspathElement>${java.home}/../lib/tools.jar</additionalClasspathElement>
                     </additionalClasspathElements>
                     <!--<skipTests>true</skipTests>-->
                 </configuration>
