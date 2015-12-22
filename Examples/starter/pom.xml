@@ -154,7 +154,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>s131227</artifactId>
-            <artifactId>s131072</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
