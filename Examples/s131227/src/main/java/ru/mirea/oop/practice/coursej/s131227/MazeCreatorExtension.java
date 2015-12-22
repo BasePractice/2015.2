@@ -3,11 +3,8 @@ package ru.mirea.oop.practice.coursej.s131227;
 
 import ru.mirea.oop.practice.coursej.impl.maze.AbstractMazeExtension;
 
-import java.util.*;
-
 public final class MazeCreatorExtension extends AbstractMazeExtension {
 
-    Random rnd = new Random();
     int rows, cols;
 
     @Override
@@ -26,104 +23,14 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         this.cols = cols;
         Maze maze = new Maze(rows, cols);
 
-        int x, y, a, b, c, d;
-        int fullness = 0;
+        MazeBlueprint mazeb = new MazeBlueprint(rows, cols);
+        mazeb.fillMaze();
+        mazeb.firstKill();
+        mazeb.hunt();
 
-        for (x = 0; x < rows; x++) {
-            for (y = 0; y < cols; y++) {
-                maze.data[x][y] = 0;
-            }
-        }
-        x = rnd.nextInt(rows);
-        y = rnd.nextInt(cols);
-        maze.data[x][y] = 15;
-        while (((x != 0 && maze.data[x - 1][y] == 0) || (x != (rows - 1) && maze.data[x + 1][y] == 0) ||
-                (y != 0 && maze.data[x][y - 1] == 0) || (y != (cols - 1) && maze.data[x][y + 1] == 0))) {
-            c = (rnd.nextInt(3) - 1);
-            d = (rnd.nextInt(3) - 1);
-            if (c == -1 && d == 0 && (x != 0 && maze.data[x + c][y + d] == 0)) {
-                maze.data[x][y] -= 2;
-                x -= 1;
-                maze.data[x][y] = 7;
-            }
-            if (c == 1 && d == 0 && (x != (rows - 1) && maze.data[x + c][y + d] == 0)) {
-                maze.data[x][y] -= 8;
-                x += 1;
-                maze.data[x][y] = 13;
-            }
-            if (c == 0 && d == -1 && (y != 0 && maze.data[x + c][y + d] == 0)) {
-                maze.data[x][y] -= 1;
-                y -= 1;
-                maze.data[x][y] = 11;
-            }
-            if (c == 0 && d == 1 && (y != (cols - 1) && maze.data[x + c][y + d] == 0)) {
-                maze.data[x][y] -= 4;
-                y += 1;
-                maze.data[x][y] = 14;
-            }
-        }
-        while(fullness != rows * cols){
-            fullness = 0;
-        for (x = 0; x < rows; x++) {
-            for (y = 0; y < cols; y++) {
-                if ((x != (rows - 1) && maze.data[x][y] == 0 && maze.data[x + 1][y] != 0) ||
-                        (y != 0 && maze.data[x][y - 1] != 0 && maze.data[x][y] == 0) ||
-                        (y != (cols - 1) && maze.data[x][y] == 0 && maze.data[x][y + 1] != 0) ||
-                        (x != 0 && maze.data[x - 1][y] != 0 && maze.data[x][y] == 0)) {
-                    if (x != (rows - 1) && maze.data[x][y] == 0 && maze.data[x + 1][y] != 0) {
-                        maze.data[x][y] = 7;
-                        maze.data[x + 1][y] -= 2;
-                    }
-                    if (y != 0 && maze.data[x][y - 1] != 0 && maze.data[x][y] == 0) {
-                        maze.data[x][y] = 14;
-                        maze.data[x][y - 1] -= 4;
-                    }
-                    if (y != (cols - 1) && maze.data[x][y] == 0 && maze.data[x][y + 1] != 0) {
-                        maze.data[x][y] = 11;
-                        maze.data[x][y + 1] -= 1;
-                    }
-                    if (x != 0 && maze.data[x - 1][y] != 0 && maze.data[x][y] == 0) {
-                        maze.data[x][y] = 13;
-                        maze.data[x - 1][y] -= 8;
-                    }
-                    a = x;
-                    b = y;
-                    while (((x != 0 && maze.data[x - 1][y] == 0) || (x != (rows - 1) && maze.data[x + 1][y] == 0) ||
-                            (y != 0 && maze.data[x][y - 1] == 0) || (y != (cols - 1) && maze.data[x][y + 1] == 0))) {
-                        c = (rnd.nextInt(3) - 1);
-                        d = (rnd.nextInt(3) - 1);
-                        if (c == -1 && d == 0 && (x != 0 && maze.data[x + c][y + d] == 0)) {
-                            maze.data[x][y] -= 2;
-                            x -= 1;
-                            maze.data[x][y] = 7;
-                        }
-                        if (c == 1 && d == 0 && (x != (rows - 1) && maze.data[x + c][y + d] == 0)) {
-                            maze.data[x][y] -= 8;
-                            x += 1;
-                            maze.data[x][y] = 13;
-                        }
-                        if (c == 0 && d == -1 && (y != 0 && maze.data[x + c][y + d] == 0)) {
-                            maze.data[x][y] -= 1;
-                            y -= 1;
-                            maze.data[x][y] = 11;
-                        }
-                        if (c == 0 && d == 1 && (y != (cols - 1) && maze.data[x + c][y + d] == 0)) {
-                            maze.data[x][y] -= 4;
-                            y += 1;
-                            maze.data[x][y] = 14;
-                        }
-                    }
-                    x = a;
-                    y = b;
-                }
-            }
-        }
-            for (x = 0; x < rows; x++) {
-                for (y = 0; y < cols; y++) {
-                    if(maze.data[x][y] != 0){
-                        fullness++;
-                    }
-                }
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                maze.data[i][j] = mazeb.getWalls(j, i);
             }
         }
 
@@ -132,64 +39,90 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
 
     @Override
     public Point[] findPath(Maze maze) {
-        cols = maze.cols;
-        rows = maze.rows;
-        Cell[][] cells = new Cell[maze.rows][maze.cols];
-        Set<Cell> cellSet = new HashSet<>();
-        for (int y = 0; y < maze.rows; y++) {
-            for (int x = 0; x < maze.cols; x++) {
-                Cell cell = new Cell(y, x, maze.data[y][x]);
-                cells[y][x] = cell;
-                cellSet.add(cell);
+        cols = maze.rows;
+        rows = maze.cols;
+        char[][][] map = new char[rows][cols][4];
+        char w;
+        char bw;
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j < cols; j++){
+                map[i][j][0] = maze.data[j][i];
             }
         }
-
-        Cell start = cells[0][0];
-        start.distance = 0;
-        Cell finish = cells[rows - 1][cols - 1];
-        int wave = 0;
-        while (finish.distance == -1){
-            for (Cell cell : cellSet) {
-                if (cell.distance == wave) {
-                    List<Cell> neighbors = cell.getNeighbors(cellSet);
-                    for (Cell neighbor : neighbors) {
-                        if (neighbor.distance == -1) {
-                            neighbor.distance = wave + 1;
-                        }
+        w = 2;
+        map[rows - 1][cols - 1][1] = 1;
+        map[rows - 1][cols - 1][2] = 1;
+        while(map[0][0][2] != 1) {
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    if (i != (rows - 1) && (map[i + 1][j][0] & 2) != 2 && map[i + 1][j][1] == (w - 1) &&
+                            map[i][j][2] != 1) {
+                        map[i][j][1] += w;
+                        map[i][j][2] = 1;
+                    }
+                    if (j != 0 && (map[i][j - 1][0] & 4) != 4 && map[i][j - 1][1] == (w - 1) &&
+                            map[i][j][2] != 1) {
+                        map[i][j][1] += w;
+                        map[i][j][2] = 1;
+                    }
+                    if (j != (cols - 1) && (map[i][j + 1][0] & 1) != 1 && map[i][j + 1][1] == (w - 1) &&
+                            map[i][j][2] != 1) {
+                        map[i][j][1] += w;
+                        map[i][j][2] = 1;
+                    }
+                    if (i != 0 && (map[i - 1][j][0] & 8) != 8 && map[i - 1][j][1] == (w - 1) &&
+                            map[i][j][2] != 1) {
+                        map[i][j][1] += w;
+                        map[i][j][2] = 1;
                     }
                 }
             }
-            wave++;
+            w++;
         }
-        List<Cell> path = new ArrayList<>();
-        path.add(finish);
-        Cell currCell = finish;
-        while (!path.contains(start)) {
-            currCell = getNearest(currCell.getNeighbors(cellSet));
-            path.add(currCell);
-        }
+        Point[] pathPoints = new Point[w];
+        pathPoints[0] = new Point(0, 0);
+        int c = 1;
+        int a = 0;
+        int b = 0;
+        bw = map[0][0][1];
+        map[0][0][3] = bw;
+        while(bw != 1){
+            if (a != 0 && (map[a - 1][b][0] & 8) != 8 && map[a - 1][b][1] == (bw - 1)) {
+                bw--;
+                map[a][b][3] = bw;
+                pathPoints[c] = new Point(b, a);
+                c++;
+                a--;
+                continue;
+            }
+            if (a != (rows - 1) && (map[a + 1][b][0] & 2) != 2 && map[a + 1][b][1] == (bw - 1)) {
+                bw--;
+                map[a][b][3] = bw;
+                pathPoints[c] = new Point(b, a);
+                c++;
+                a++;
+                continue;
 
-        Point[] pathPoints = new Point[path.size()];
-        for (int i = 0; i < pathPoints.length; i++) {
-            pathPoints[i] = new Point(path.get(i).x, path.get(i).y);
-        }
-        return pathPoints;
+            }
+            if (b != 0 && (map[a][b - 1][0] & 4) != 4 && map[a][b - 1][1] == (bw - 1)) {
+                bw--;
+                map[a][b][3] = bw;
+                pathPoints[c] = new Point(b, a);
+                c++;
+                b--;
+                continue;
 
-    }
-
-    public static Cell getNearest(List<Cell> neighbors) {
-        Collections.sort(neighbors, (o1, o2) -> {
-            Integer d1 = o1.distance;
-            Integer d2 = o2.distance;
-            return d1.compareTo(d2);
-        });
-        for (Cell cell : neighbors) {
-            if (cell.distance != -1) {
-                return cell;
+            }
+            if (b != (cols - 1) && (map[a][b + 1][0] & 1) != 1 && map[a][b + 1][1] == (bw - 1)) {
+                bw--;
+                map[a][b][3] = bw;
+                pathPoints[c] = new Point(b, a);
+                c++;
+                b++;
             }
         }
-        return null;
+        pathPoints[c] = new Point(rows - 1, cols - 1);
+
+        return pathPoints;
     }
 }
-
-

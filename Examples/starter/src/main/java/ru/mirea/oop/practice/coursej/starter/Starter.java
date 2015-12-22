@@ -40,8 +40,8 @@ public final class Starter {
                 logger.debug("Сервис: \"" + extension.name() + "\" пропущен");
                 continue;
             }
-            logger.debug("Запусксаем: " + extension.name());
-            MazeExtension.Maze maze = extension.generateMaze(5, 5);
+            logger.debug("Запусксам: " + extension.name());
+            MazeExtension.Maze maze = extension.generateMaze(100, 100);
             BufferedImage image = extension.createImage(maze);
             File file = new File(directory, extension.name() + ".Generated.png");
             ImageIO.write(image, "PNG", file);
