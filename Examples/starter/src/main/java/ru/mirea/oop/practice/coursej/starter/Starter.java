@@ -21,7 +21,7 @@ public final class Starter {
         Set<Future<?>> futures = new LinkedHashSet<>();
         Set<String> enabled = loadEnabled();
         startMazeExtensions(enabled);
-        //startBotsExtensions(futures, enabled);
+        startBotsExtensions(futures, enabled);
 
         for (Future<?> future : futures) {
             future.get();

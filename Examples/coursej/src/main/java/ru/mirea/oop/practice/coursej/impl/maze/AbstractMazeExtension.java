@@ -6,8 +6,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class AbstractMazeExtension implements MazeExtension {
-    private static final int WIDTH = 20;
-    private static final int THICKNESS = 3;
+    private static final int WIDTH = 40;
+    private static final int THICKNESS = 4;
 
     public Point[] findPath(Maze maze) {
         return null;
@@ -23,7 +23,7 @@ public abstract class AbstractMazeExtension implements MazeExtension {
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         drawMaze(g, maze, Color.DARK_GRAY, WIDTH, THICKNESS);
         if (path != null)
-            drawPath(g, path, Color.ORANGE, WIDTH, THICKNESS);
+            drawPath(g, path, Color.BLUE, WIDTH, THICKNESS);
         return result;
     }
 

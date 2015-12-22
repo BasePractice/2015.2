@@ -3,6 +3,8 @@ package ru.mirea.oop.practice.coursej.s131235;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.DataOutputStream;
@@ -10,46 +12,59 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Properties;
 import java.util.Scanner;
 
-/**
- * Created by TopKek on 12.12.2015.
- */
-public class Translator {
-    private String textForTransl;
-    private String langForTransl;
+final class Translator {
+    private static final Logger logger = LoggerFactory.getLogger(Translator.class);
+    private static final YaInformation ya = YaInformation.load();
 
-
-    public Translator(String langForTransl, String textForTransl) {
-        this.textForTransl = textForTransl;
-        this.langForTransl = langForTransl;
-
+    private Translator() {
     }
 
-
-    public static String translating(String lang, String text) throws IOException {
-        String key = "trnsl.1.1.20151208T095415Z.967d846ac9275be4.62e517b3d9054079fa6aa57d02f15b1a0e1fc9ea";
-        String urlStr = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key;
-
-        URL urlObject = new URL(urlStr);
+    public static String translating(String langFirst, String text) throws IOException {
+        if (ya == null)
+            return text;
+        URL urlObject = new URL(ya.url);
         HttpsURLConnection connection = (HttpsURLConnection) urlObject.openConnection();
         connection.setDoOutput(true);
-        DataOutputStream outputStr = new DataOutputStream(connection.getOutputStream());
-        outputStr.writeBytes("text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + lang);
-        InputStream inpStr = connection.getInputStream();
+        String json;
 
-        Scanner scan = new Scanner(inpStr);
-        String json = scan.nextLine();
-
-        JsonElement jsonPars = new JsonParser().parse(json);
-        JsonObject jsObj = jsonPars.getAsJsonObject();
-        String perevod = jsObj.get("text").getAsString();
-
-        String secondString = new String(perevod.getBytes("windows-1251"), "UTF-8");
-
-        if (text.equals(secondString)) {
-            return "перевод не будет осуществлен, так как языки одинаковы";
+        try (DataOutputStream outputData = new DataOutputStream(connection.getOutputStream())) {
+            outputData.writeBytes("text=" + URLEncoder.encode(text, "UTF-8") + "&lang=" + langFirst);
         }
-        return secondString;
+
+        try (InputStream inputData = connection.getInputStream()) {
+            Scanner scan = new Scanner(inputData);
+            json = scan.nextLine();
+        }
+
+        JsonElement jsonParsing = new JsonParser().parse(json);
+        JsonObject jsObject = jsonParsing.getAsJsonObject();
+        String translated = jsObject.get("text").getAsString();
+        if (text.equals(translated)) {
+            return "перевод не будет осуществлен";
+        }
+        return translated;
+    }
+
+    private static final class YaInformation {
+        private final String url;
+
+        private YaInformation(String key, String query) {
+            this.url = query + key;
+        }
+
+        private static YaInformation load() {
+            try (InputStream stream = Translator.class.getResourceAsStream("/ya.properties")) {
+                Properties p = new Properties();
+                p.load(stream);
+                return new YaInformation(p.getProperty("key"), p.getProperty("query"));
+            } catch (IOException ex) {
+                logger.error("Не могу считать параметры", ex);
+                return null;
+            }
+        }
     }
 }
+

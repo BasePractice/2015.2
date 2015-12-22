@@ -3,6 +3,7 @@ package ru.mirea.oop.practice.coursej.s131328;
 import ru.mirea.oop.practice.coursej.impl.maze.AbstractMazeExtension;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public final class MazeCreatorExtension extends AbstractMazeExtension {
@@ -19,11 +20,11 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
     //Массив клеток
     Cell[][] cells;
     //Всё те же клетки, находятся в множестве для быстрого доступа
-    LinkedList<Cell> nonCheckCells = new LinkedList<>();
+    List<Cell> nonCheckCells = new LinkedList<>();
     //Путь алгоритма
     LinkedList<Cell> stack = new LinkedList<>();
     //Список для хранения соседей отдельно взятой клетки
-    LinkedList<Cell> neighbors;
+    List<Cell> neighbors;
     //Общий объект для слуайной выборки
 
     Random random;
@@ -69,6 +70,38 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         return maze;
     }
 
+    @Override
+    public Point[] findPath(Maze maze) {
+        cells[0][0].UP = false;//ворота
+        maze.data[0][0] = cells[0][0].getValue();
+        cells[maze.rows - 1][maze.cols - 1].DOWN = false;
+        maze.data[maze.rows - 1][maze.cols - 1] = cells[maze.rows - 1][maze.cols - 1].getValue();
+
+        LinkedList<Cell> cellsInWork = new LinkedList<>();
+        Cell firstCell = cells[0][0];
+        cellsInWork.add(firstCell);
+        Cell workCell;
+        while (cellsInWork.size() != 0) {
+            workCell = cellsInWork.removeFirst();
+            for (Cell cell : workCell.capabilities) {
+                cell.capabilities.remove(workCell);
+                cell.target = workCell;
+                cellsInWork.add(cell);
+            }
+        }
+        LinkedList<Point> path = new LinkedList<>();
+        workCell = cells[maze.rows - 1][maze.cols - 1];
+        while (workCell.target != null) {
+            path.add(new Point(workCell.x, workCell.y));
+            workCell = workCell.target;
+        }
+        path.add(new Point(firstCell.x, firstCell.y));
+
+        Point[] points = new Point[path.size()];
+        path.toArray(points);
+        return points;
+    }
+
     //Добавляет новый элемент к нашему пути
     void addToStack(Cell cell) {
         if (stack.size() != 0)
@@ -87,22 +120,26 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
             case 1:
                 firstCell.LEFT = false;
                 secondCell.RIGHT = false;
-                return;
+                break;
             case -1:
                 firstCell.RIGHT = false;
                 secondCell.LEFT = false;
-                return;
+                break;
         }
         switch (firstCell.y - secondCell.y) {
             case 1:
                 firstCell.UP = false;
                 secondCell.DOWN = false;
-                return;
+                break;
             case -1:
                 firstCell.DOWN = false;
                 secondCell.UP = false;
                 break;
         }
+        if (!firstCell.capabilities.contains(secondCell))
+            firstCell.capabilities.add(secondCell);
+        if (!secondCell.capabilities.contains(firstCell))
+            secondCell.capabilities.add(firstCell);
 
     }
 
@@ -125,15 +162,18 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         return Neighbors;
     }
 
-    class Cell {
+    private final class Cell {
 
-        int x;
-        int y;
+        final int x;
+        final int y;
         boolean isCheck;
         boolean UP;
         boolean LEFT;
         boolean DOWN;
         boolean RIGHT;
+        final List<Cell> capabilities;
+        Cell target;
+
 
         public Cell(int x, int y) {
             this.x = x;
@@ -143,6 +183,7 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
             LEFT = true;
             DOWN = true;
             RIGHT = true;
+            capabilities = new LinkedList<>();
         }
 
 
@@ -160,5 +201,3 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         }
     }
 }
-
-

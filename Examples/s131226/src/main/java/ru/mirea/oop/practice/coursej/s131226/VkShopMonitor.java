@@ -7,6 +7,9 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 import ru.mirea.oop.practice.coursej.s131226.impl.ParserApiImpl;
 
+/**
+ * -5?
+ */
 public final class VkShopMonitor extends ServiceBotsExtension {
     public static final String HELP_MESSAGE =
             "На данный  момент бот знает команды:\n" +
@@ -16,12 +19,10 @@ public final class VkShopMonitor extends ServiceBotsExtension {
                     "бот обнови БД\n" +
                     "бот состояние БД";
     private static final Logger logger = LoggerFactory.getLogger(VkShopMonitor.class);
-    private final MessagesApi msgApi;
     private final ParserApi parser;
 
     public VkShopMonitor() throws Exception {
         super("vk.services.ShopMonitor");
-        this.msgApi = api.getMessages();
         this.parser = new ParserApiImpl();
     }
 
@@ -52,7 +53,7 @@ public final class VkShopMonitor extends ServiceBotsExtension {
                     case "бот обнови БД": {
                         outgoingMessage.setText("начинаю обновление БД, это займет некоторое время \n" +
                                 "дождитесь уведомления о завершении");
-                        outgoingMessage.send(msgApi);
+                        outgoingMessage.send(messages);
                         parser.updateDB();
                         outgoingMessage.setText("Обновление прошло нормально");
                         break;
@@ -66,7 +67,7 @@ public final class VkShopMonitor extends ServiceBotsExtension {
                         break;
                     }
                 }
-                Integer idMessage = outgoingMessage.send(msgApi);
+                Integer idMessage = outgoingMessage.send(messages);
                 switch (idMessage) {
                     case 0: {
                         logger.debug("Ошибка отправки сообщения");

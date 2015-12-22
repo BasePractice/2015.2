@@ -2,23 +2,21 @@ package ru.mirea.oop.practice.coursej.s131241;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 import ru.mirea.oop.practice.coursej.s131241.impl.OpenWeatherMapApiImpl;
 
-import java.io.IOException;
-
+/**
+ * -4?
+ */
 public class WeatherInfo extends ServiceBotsExtension {
     public static final String DESCRIPTION = "Прогноз погоды на 7 дней по огромному количеству городов";
     private static final Logger logger = LoggerFactory.getLogger(WeatherInfo.class);
     private final OpenWeatherMapApi weatherApi;
-    private final MessagesApi msgApi;
 
     public WeatherInfo() throws Exception {
         super("vk.services.WeatherInfo");
         this.weatherApi = new OpenWeatherMapApiImpl();
-        this.msgApi = api.getMessages();
     }
 
     @Override
@@ -40,25 +38,7 @@ public class WeatherInfo extends ServiceBotsExtension {
                 } catch (Exception e) {
                     answer = "Не удалось получить прогноз :( \n Проверьте имя города и попробуйте снова.";
                 }
-
-                try {
-                    Integer idMessage = msgApi.send(
-                            contact.id,
-                            null,
-                            null,
-                            null,
-                            answer,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null
-                    );
-                    logger.debug("Сообщение отправлено " + idMessage);
-                } catch (IOException ex) {
-                    logger.error("Ошибка отправки сообщения", ex);
-                }
+                sendMessage(contact, answer);
                 break;
             }
 //            default:

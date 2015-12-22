@@ -216,5 +216,43 @@ INSERT INTO 'Users' (uuid, last_name, first_name, middl_name, login, password, e
    'CC5330A3F52E7C935F6360B3A8FBB9B6', '', 2, 'http://randus.ru/avatars/w/myAvatar13.png');
 
 --------
-INSERT INTO 'Objects'(uuid, name, address) VALUES ('E7A47FF4-8D02-4A0D-8F5C-D6BEAAB8FD0F', 'ОАО "Корвет"', '');
+INSERT INTO 'Objects' (uuid, name, address) VALUES ('E7A47FF4-8D02-4A0D-8F5C-D6BEAAB8FD0F', 'ОАО "Корвет"', '');
 
+INSERT INTO 'ComplexIndexes' (uuid, name, min, max) VALUES
+  ('C2F8C1E6-64F0-4DD1-AFE7-6E04C17E2F15', 'Степень соответствия функциональной структуры целевой функции', 0., 100.);
+INSERT INTO 'Indexes' (uuid, complex_index_id, name)
+VALUES ('C1725F6C-FC70-4803-BDA8-A32CF83E4953', 1, 'Соответствие структуры органов управления целевой функции');
+INSERT INTO 'Indexes' (uuid, complex_index_id, name) VALUES ('DE67F7CE-BAFE-4E98-AA93-85FD031172E5', 1,
+                                                             'Соответствие организационно-распорядительной докумен-тации целевой функции');
+INSERT INTO 'Indexes' (uuid, complex_index_id, name) VALUES ('5FDC48BD-B258-427F-9293-E1D2CBCD4C5F', 1,
+                                                             'Соответствие методов, алгоритмов взаимодействия органов управления целевой функции');
+
+INSERT INTO 'ComplexIndexes' (uuid, name, min, max) VALUES ('E03CAD42-01CF-48F8-959C-EEA2B69AC6D1',
+                                                            'Степень соответствия информационной инфраструктуры  целевой функции управления',
+                                                            0., 100.);
+INSERT INTO 'Indexes' (uuid, complex_index_id, name)
+VALUES ('31F0796D-9B41-4CB6-A806-5836D5B4A526', 2, 'Соответствие информационных ресурсов целевой функции');
+INSERT INTO 'Indexes' (uuid, complex_index_id, name)
+VALUES ('CF0DC728-38DF-4B5B-8ACB-3A9BC0115BA5', 2, 'Соответствие вычислительных ресурсов целевой функции');
+INSERT INTO 'Indexes' (uuid, complex_index_id, name)
+VALUES ('3D5259DC-0592-4568-A818-AF175C30BA9C', 2, 'Соответствие телекоммуникационных  ресурсов целевой функции');
+
+INSERT INTO 'ComplexIndexes' (uuid, name, min, max) VALUES ('E8B771F9-89EC-474F-9757-FF5AC3AB0A69',
+                                                            'Уровень подготовки  персонала системы управления  к выполнению целевой функции',
+                                                            0., 100.);
+INSERT INTO 'Indexes' (uuid, complex_index_id, name) VALUES
+  ('32CBE386-0D8C-43B1-8AAE-782926FCDBF1', 3, 'Соответствие уровня подготовки руководства выполнению целевой функции');
+INSERT INTO 'Indexes' (uuid, complex_index_id, name) VALUES
+  ('00A6E638-7B8C-48B0-A6CF-165ADBA8CA3B', 3, 'Соответствие уровня подготовки сотрудников выполнению целевой функции');
+INSERT INTO 'Indexes' (uuid, complex_index_id, name) VALUES ('496EC8EB-7E96-4350-8F5E-53C37E0B7057', 3,
+                                                             'Соответствие уровня подготовки технического персонала выполнению целевой функции');
+
+INSERT INTO 'ComplexIndexes' (uuid, name, min, max) VALUES ('2985B3FD-0CA7-4B3A-A3BC-48830BD4144F',
+                                                            'Уровень соответствия материально-технического обеспечения реализации целевой функции',
+                                                            0., 100.);
+INSERT INTO 'Indexes' (uuid, complex_index_id, name)
+VALUES ('950F96D0-CAE6-43ED-8AD1-B06E856B294F', 4, 'Соответствие финансового обеспечения  выполнению целе-вой функции');
+INSERT INTO 'Indexes' (uuid, complex_index_id, name) VALUES ('E1CBFE12-0324-4ADC-B3BA-AFD924B5A646', 4,
+                                                             'Соответствие технологического и технического обеспече-ния  выполнению целевой функции');
+INSERT INTO 'Indexes' (uuid, complex_index_id, name)
+VALUES ('19BFB0EA-1137-41DC-845D-3DDA7A312528', 4, 'Соответствие материальных ресурсов целевой функции');

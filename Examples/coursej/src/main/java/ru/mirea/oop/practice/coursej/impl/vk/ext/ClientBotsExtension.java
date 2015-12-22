@@ -1,8 +1,5 @@
 package ru.mirea.oop.practice.coursej.impl.vk.ext;
 
-import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
-import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
-
 import java.util.concurrent.Future;
 
 public abstract class ClientBotsExtension extends AbstractBotsExtension implements Runnable {
@@ -34,16 +31,7 @@ public abstract class ClientBotsExtension extends AbstractBotsExtension implemen
     @Override
     public final void run() {
         logger.info("Запущен клиент");
-        try {
-            friends.clear();
-            FriendsApi friendsApi = api.getFriends();
-            Contact[] contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
-            for (Contact contact : contacts) {
-                friends.put(contact.id, contact);
-            }
-        } catch (Exception ex) {
-            logger.error("Ошибка получения списка друзей", ex);
-        }
+        updateFriends();
         try {
             doClient();
         } catch (Exception ex) {

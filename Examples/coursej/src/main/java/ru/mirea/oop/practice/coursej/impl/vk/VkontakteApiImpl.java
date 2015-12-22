@@ -93,7 +93,7 @@ public final class VkontakteApiImpl implements VkontakteApi {
 
     @Override
     public OkHttpClient createClient() {
-        return client.clone();
+        return client;
     }
 
     private static final class GetterImpl implements Getter {

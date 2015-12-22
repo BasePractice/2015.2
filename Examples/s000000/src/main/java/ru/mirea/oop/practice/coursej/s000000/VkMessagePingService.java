@@ -12,11 +12,9 @@ import java.io.IOException;
 
 public final class VkMessagePingService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkMessagePingService.class);
-    private final MessagesApi msgApi;
 
     public VkMessagePingService() throws Exception {
         super("vk.services.EchoServer");
-        this.msgApi = api.getMessages();
     }
 
     @Override
@@ -32,25 +30,7 @@ public final class VkMessagePingService extends ServiceBotsExtension {
                     break;
                 }
                 logger.debug("Получили сообщение от " + Contact.viewerString(contact));
-
-                try {
-                    Integer idMessage = msgApi.send(
-                            contact.id,
-                            null,
-                            null,
-                            null,
-                            msg.text,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null
-                    );
-                    logger.debug("Сообщение отправлено " + idMessage);
-                } catch (IOException ex) {
-                    logger.error("Ошибка отправки сообщения", ex);
-                }
+                sendMessage(contact, msg.text);
                 break;
             }
             default:

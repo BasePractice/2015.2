@@ -1,28 +1,29 @@
 package ru.mirea.oop.practice.coursej.s131253;
 
-/**
- * Created by Александр on 08.12.2015.
- */
-public class Game {
+final class Game {
     private Questions questions;
     private Question currentQuestion; //Текущий вопрос
     private int score = 0;  //Кол-во правильных ответов пользователя
-    private int countOfSended = 0; //Кол-во отправленных вопросов
+    private int countOfSanded = 0; //Кол-во отправленных вопросов
     private boolean isStarted = false; //Начата ли игра
     private long idPlayer;
     private long startTime = System.currentTimeMillis() / 1000L; //Записывается время начала игры
 
 
-    public Game() {
+    Game() {
         this.questions = new Questions();
     }
 
-    public int getCountOfSended() {
-        return countOfSended;
+    void restart() {
+        this.questions.reload();
+    }
+
+    public int getCountOfSanded() {
+        return countOfSanded;
     }
 
     public void plusCount() {
-        countOfSended++;
+        countOfSanded++;
     }
 
     public boolean isStarted() {
@@ -43,25 +44,27 @@ public class Game {
 
     public Question RandomQuestion() { //Метод, выдающий случайный вопрос из тех, которые ещё не были отправлены
         do {
-            int number = (int) (Math.random() * questions.getBaseOfQuestons().size());
-            Question question = questions.getQuesForNumber(number);
-            this.currentQuestion = question;
+            int number = (int) (Math.random() * questions.getQuestionsCount());
+            this.currentQuestion = questions.getQuestionForNumber(number);
         }
-        while (currentQuestion.isSended());
+        while (currentQuestion.isSanded());
 
         return currentQuestion;
     }
-
 
     public Question currentQuest() {
         return currentQuestion;
     }
 
     public void setQuestionsFalse() { //Сброс флага "Был отправлен" на false у всех вопросов.
-        for (int i = 0; i < questions.getBaseOfQuestons().size(); i++) {
-            questions.getQuesForNumber(i).setSended(false);
+        for (int i = 0; i < questions.getQuestionsCount(); i++) {
+            questions.getQuestionForNumber(i).setSanded(false);
         }
         System.out.println("Вопросы сброшены");
+    }
+
+    public int getQuestionsCount() {
+        return questions.getBaseOfQuestions().size();
     }
 
     public void putPlayerId(long idPlayer) {

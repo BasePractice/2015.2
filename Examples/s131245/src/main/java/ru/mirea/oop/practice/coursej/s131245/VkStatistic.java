@@ -3,59 +3,31 @@ package ru.mirea.oop.practice.coursej.s131245;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.api.vk.FriendsApi;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
-import java.io.IOException;
-
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /*
- Класс VkStatisctic - основной класс модуля, отвечающий за сбор статистики, передача запроса на файл от
+ Класс VkStatistic - основной класс модуля, отвечающий за сбор статистики, передача запроса на файл от
  пользователя другому классу, формирование ответа пользователю с вложенным файлом.
  */
 
+/**
+ * -5?
+ */
 public final class VkStatistic extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkStatistic.class);
-    //FIXME: Зачем static поле?
-    private final Map<Long, ArrayList<Session>> mapSession = new HashMap<>();
-    private final Map<Long, Contact> friendsMap = new HashMap<>();
-    private final MessagesApi msgApi;
+    private final Map<Long, List<Session>> mapSession = new HashMap<>();
     private boolean alreadySend = false;
     private static final ThreadLocal<DateTimeFormatter> threadFormat = new ThreadLocal<>();
-    private DateScheduled dateScheduled = new DateScheduled();
-    private static final String FRIENDS_FIELDS = "nickname, " +
-            "domain, " +
-            "sex, " +
-            "bdate, " +
-            "city, " +
-            "country, " +
-            "timezone, " +
-            "photo_50, " +
-            "photo_100, " +
-            "photo_200_orig, " +
-            "has_mobile, " +
-            "contacts, " +
-            "education, " +
-            "online, " +
-            "relation, " +
-            "last_seen, " +
-            "status, " +
-            "can_write_private_message, " +
-            "can_see_all_posts, " +
-            "can_post, " +
-            "universities";
-
-
-
-
-
+    private final DateScheduled dateScheduled = new DateScheduled();
 
     {
         mapSession.clear();
@@ -63,13 +35,13 @@ public final class VkStatistic extends ServiceBotsExtension {
 
     public VkStatistic() throws Exception {
         super("vk.services.VkStatistic");
-        this.msgApi = api.getMessages();
     }
-    //Если DateTimeFormatter thread-safe - нужен ли class ThreadLocal
+
+    //FIXME: Если DateTimeFormatter thread-safe - нужен ли class ThreadLocal?
     private static DateTimeFormatter getFormat() {
         DateTimeFormatter format = threadFormat.get();
         if (format == null) {
-            format =  DateTimeFormatter.ofPattern("HH:mm");
+            format = DateTimeFormatter.ofPattern("HH:mm");
             threadFormat.set(format);
         }
         return format;
@@ -78,26 +50,22 @@ public final class VkStatistic extends ServiceBotsExtension {
 
     @Override
     protected void doEvent(Event event) {
-
         //Первоночальное заполнение статистки друзей, запись пользоватлей, находящихся на сайте во время запуска программы
         if (mapSession.isEmpty()) {
             firstPutOfFriends();
         }
-
-
-
-        if(dateScheduled.isScheduled()) {
+        if (dateScheduled.isScheduled()) {
             Parser parser = new Parser("bot get: всех");
-           Attachment attachment = new Attachment(mapSession, friendsMap, api, parser);
+            Attachment attachment = new Attachment(mapSession, friends, api, parser);
             String attachmentName = null;
             try {
-                 attachmentName = attachment.getAttachmentName();
+                attachmentName = attachment.getAttachmentName();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            sendMessage(owner.id, "отправка по расписанию ", attachmentName );
+            int idMessage = sendMessage(owner, "отправка по расписанию ", attachmentName);
+            alreadySend = idMessage >= 0;
         }
-
 
 
         switch (event.type) {
@@ -111,7 +79,6 @@ public final class VkStatistic extends ServiceBotsExtension {
                 eventOffline(event);
                 break;
             }
-
             //Получение запроса от на получение статистики.
             case MESSAGE_RECEIVE: {
                 eventMessageReceive(event);
@@ -125,8 +92,6 @@ public final class VkStatistic extends ServiceBotsExtension {
                 eventTimeout();
                 break;
             }
-
-
             default:
                 logger.debug("" + (event.object == null ? event.type : event.type + "|" + event.object));
                 break;
@@ -136,19 +101,15 @@ public final class VkStatistic extends ServiceBotsExtension {
     }
 
 
-
-
     @Override
     public String description() {
         return "Сервис статистики пользователей \"Вконтакте\"";
     }
 
-    public void firstPutOfFriends() {
-
-        putFriendsMap();
-
-        for (Map.Entry<Long, Contact> friend : friendsMap.entrySet()) {
-            ArrayList<Session> arrayList = new ArrayList<>();
+    void firstPutOfFriends() {
+        updateFriends();
+        for (Map.Entry<Long, Contact> friend : friends.entrySet()) {
+            List<Session> arrayList = new ArrayList<>();
             if (friend.getValue().online == 1) {
                 Session session = new Session(LocalDateTime.now());
                 arrayList.add(session);
@@ -162,27 +123,21 @@ public final class VkStatistic extends ServiceBotsExtension {
 
     }
 
-    public void putFriendsMap() {
+    public void eventOnline(Event event) {
+        //Пропускает пользователей, которые стали друзьями или перестали ими быть
+        UserOnline userOnline;
+        Long key;
         try {
-            friendsMap.clear();
-            FriendsApi friendsApi = api.getFriends();
-            Contact[] contacts = friendsApi.list(null, null, null, null, FRIENDS_FIELDS);
-            for (Contact contact : contacts) {
-                friendsMap.put(contact.id, contact);
-            }
+            userOnline = (UserOnline) event.object;
+            key = userOnline.getContact().id;
         } catch (Exception e) {
-            logger.error("Ошибка получения списка друзей");
+            logger.error("Лишний пользователь");
+            return;
         }
-    }
+        if (!mapSession.containsKey(key)) {
+            return;
+        }
 
-
-
-
-
-
-    public  void eventOnline(Event event) {
-        UserOnline userOnline = (UserOnline) event.object;
-        Long key = userOnline.getContact().id;
 
         Session session = new Session(LocalDateTime.now());
         if (mapSession.get(key).isEmpty()) {
@@ -206,11 +161,23 @@ public final class VkStatistic extends ServiceBotsExtension {
     }
 
     public void eventOffline(Event event) {
-        UserOffline userOffline = (UserOffline) event.object;
-        Long key = userOffline.getContact().id;
+        //Пропускает пользователей, которые стали друзьями или перестали ими быть
+        UserOffline userOffline;
+        Long key;
+        try {
+            userOffline = (UserOffline) event.object;
+            key = userOffline.getContact().id;
+        } catch (Exception e) {
+            logger.error("Лишний пользователь");
+            return;
+        }
+        if (!mapSession.containsKey(key)) {
+            return;
+        }
+
         int index = mapSession.get(key).size() - 1;
         //Данная проверка необходима, если первоначальная инициализация вызвана кейсом Offline.
-        if(index == -1) {
+        if (index == -1) {
             return;
         }
         String name = ((UserOffline) event.object).getContact().firstName + " " + ((UserOffline) event.object).getContact().lastName;
@@ -226,8 +193,6 @@ public final class VkStatistic extends ServiceBotsExtension {
             alreadySend = false;
             return;
         }
-
-
         Message msg = (Message) event.object;
         Contact contact = msg.contact;
         String text;
@@ -235,33 +200,35 @@ public final class VkStatistic extends ServiceBotsExtension {
         String attachmentName = null;
         if (contact.id == owner.id) {
             if (msg.text.contains("bot get")) {
-                   text = "Ошибка ввода";
+                text = "Ошибка ввода";
                 try {
                     Parser parser = new Parser(msg.text);
                     text = parser.getMsg();
-                    attachment = new Attachment(mapSession, friendsMap, api, parser);
+                    attachment = new Attachment(mapSession, friends, api, parser);
                     attachmentName = attachment.getAttachmentName();
                 } catch (Exception e) {
                     logger.error("Ошибка получения документа");
                 }
             } else if (msg.text.equals("help")) {
                 text = "Запрос состоит имеет вид\n1)bot get: Иван Иванов\n2)bog get: всех\n3)bot get: Иванов Иван, Иванова Ивана 10/04/2015\n";
-            }
-            else {
+            } else {
                 return;
             }
-            sendMessage(contact.id, text, attachmentName);
-            if(attachment != null) {
+            int idMessage = sendMessage(contact, text, attachmentName);
+            alreadySend = idMessage >= 0;
+            if (attachment != null) {
                 attachment.deleteFile(attachmentName);
             }
         }
     }
 
-    public void eventTimeout() {
-        putFriendsMap();
-        for (Map.Entry<Long, Contact> current : friendsMap.entrySet()) {
+    void eventTimeout() {
+        updateFriends();
+        for (Map.Entry<Long, Contact> current : friends.entrySet()) {
             Long key = current.getValue().id;
-
+            if (!mapSession.containsKey(key)) {
+                continue;
+            }
             if (!mapSession.get(key).isEmpty()) {
                 int index = mapSession.get(key).size() - 1;
                 Session lastSession = mapSession.get(key).get(index);
@@ -276,38 +243,6 @@ public final class VkStatistic extends ServiceBotsExtension {
         }
 
     }
-
-    public void sendMessage(long id, String text, String attachmentName) {
-        try {
-
-            Integer idMessage = msgApi.send(
-                    id,
-                    null,
-                    null,
-                    null,
-                    text,
-                    null,
-                    null,
-                    null,
-                    attachmentName,
-                    null,
-                    null
-
-            );
-            logger.debug("Сообщение отправлено " + idMessage);
-
-            alreadySend = true;
-
-        } catch (IOException ex) {
-            logger.error("Ошибка отправки сообщения", ex);
-        } catch (Exception e) {
-            logger.debug("Ошибка attachment");
-            e.printStackTrace();
-        }
-    }
-
-
-
 }
 
 

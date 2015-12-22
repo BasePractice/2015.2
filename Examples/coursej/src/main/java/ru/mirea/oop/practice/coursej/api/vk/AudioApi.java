@@ -3,7 +3,7 @@ package ru.mirea.oop.practice.coursej.api.vk;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Audio;
 
 public interface AudioApi extends ExternalCall {
-    Audio[] list(Integer idOwner,
+    Audio[] list(Long idOwner,
                  Integer idAlbum,
                  String idsAudio,
                  Integer needUser,

@@ -1,47 +1,52 @@
 package ru.mirea.oop.practice.coursej.s131253;
 
-import java.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import ru.mirea.oop.practice.coursej.Configuration;
+import java.util.List;
 
+final class Questions {
 
-/**
- * Created by Александр on 08.12.2015.
- */
+    private static final Logger logger = LoggerFactory.getLogger(Questions.class);
+    private final List<Question> baseOfQuestions = new ArrayList<>();
 
-public class Questions {
+    Questions() {
+        reload();
+    }
 
-    private ArrayList<Question> baseOfQuestons = new ArrayList<>();
-
-    public Questions() {
-
-        BufferedReader reader = null;
-        try {  //Производится считывание вопросов для викторины из текстового файла
-            reader = new BufferedReader(new FileReader(new File(Configuration.getFileName("Questions.txt"))));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        String line = null;
-        try {
-            assert reader != null;
+    void reload() {
+        baseOfQuestions.clear();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Questions.class.getResourceAsStream("/questions.txt")))) {
+            String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("=")) {  //Каждая строка в документе разбивается символом "=" на 2 строковых элемента.
                     String[] elements = line.split("=");
-                    baseOfQuestons.add(new Question(elements[0], elements[1])); /*Текст вопроса и ответ на него передаются
+                    baseOfQuestions.add(new Question(elements[0], elements[1]));  /*Текст вопроса и ответ на него передаются
                     в конструктор класса Question, а затем экземпляр класса добавляется в динамический массив */
                 }
             }
+        } catch (FileNotFoundException e) {
+            logger.error("Файл с вопросами не найден: ", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Ошибка чтения файла с вопросами: ", e);
         }
     }
 
-    public ArrayList<Question> getBaseOfQuestons() {
-        return baseOfQuestons;
+    int getQuestionsCount() {
+        return getBaseOfQuestions().size();
     }
 
-    public Question getQuesForNumber(int i) {
-     return baseOfQuestons.get(i);
+    List<Question> getBaseOfQuestions() {
+        return baseOfQuestions;
+    }
+
+    Question getQuestionForNumber(int i) {
+        return baseOfQuestions.get(i);
     } //Метод выдаёт вопрос по номеру i.
 
 }
