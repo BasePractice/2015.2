@@ -3,6 +3,10 @@ package ru.mirea.oop.practice.coursej.s131227;
 
 import ru.mirea.oop.practice.coursej.impl.maze.AbstractMazeExtension;
 
+/**
+ * -3
+ * Не работает поиск пути
+ */
 public final class MazeCreatorExtension extends AbstractMazeExtension {
 
     int rows;
