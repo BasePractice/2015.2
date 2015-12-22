@@ -42,9 +42,9 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
     public Point[] findPath(Maze maze) {
         cols = maze.rows;
         rows = maze.cols;
-        char[][][] map = new char[rows][cols][4];
-        char w;
-        char bw;
+        int[][][] map = new int[rows][cols][4];
+        int w;
+        int bw;
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < cols; j++){
                 map[i][j][0] = maze.data[j][i];
