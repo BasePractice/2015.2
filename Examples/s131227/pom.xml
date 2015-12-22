@@ -129,10 +129,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>ru.mirea.oop.practice</groupId>
-            <artifactId>coursej</artifactId>
-            <version>1.0.1</version>
-        </dependency>
+
     </dependencies>
 </project>

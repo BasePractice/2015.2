@@ -5,7 +5,8 @@ import ru.mirea.oop.practice.coursej.impl.maze.AbstractMazeExtension;
 
 public final class MazeCreatorExtension extends AbstractMazeExtension {
 
-    int rows, cols;
+    int rows;
+    int cols;
 
     @Override
     public String description() {
