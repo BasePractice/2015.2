@@ -8,7 +8,7 @@ import ru.mirea.oop.practice.coursej.api.vk.entities.AudioLyrics;
 
 interface Audios {
     @GET("/method/audio.get")
-    Call<Result<Audio[]>> list(@Query("owner_id") Long idOwner,
+    Call<Result<Audio[]>> list(@Query("owner_id") Integer idOwner,
                                @Query("album_id") Integer idAlbum,
                                @Query("audio_ids") String idsAudio,
                                @Query("need_user") Integer needUser,
