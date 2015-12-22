@@ -25,7 +25,7 @@ public final class BotClient {
     private final OkHttpClient client;
 
     public BotClient() {
-        this(Configuration.loadKeyFrom(".telegram"), ClientFactory.createOkClient());
+        this(Configuration.loadKeyFrom(".telegram.txt"), ClientFactory.createOkClient());
     }
 
     public BotClient(String token, OkHttpClient client) {
