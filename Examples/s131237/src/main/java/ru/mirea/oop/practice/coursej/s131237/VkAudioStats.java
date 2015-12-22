@@ -218,11 +218,10 @@ public final class VkAudioStats extends ClientBotsExtension {
                         sb.append(System.lineSeparator());
                     }
                     br.close();
-
                     return sb.toString();
                 }
             } else {
-                logger.info("RESP", "Ответ сервера: " + resp);
+                logger.info("RESP", "Ответ сервера: {}", resp);
             }
 
         } catch (Exception e) {
