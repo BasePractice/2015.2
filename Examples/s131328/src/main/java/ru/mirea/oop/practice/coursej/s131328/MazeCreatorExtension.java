@@ -3,6 +3,7 @@ package ru.mirea.oop.practice.coursej.s131328;
 import ru.mirea.oop.practice.coursej.impl.maze.AbstractMazeExtension;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public final class MazeCreatorExtension extends AbstractMazeExtension {
@@ -19,11 +20,11 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
     //Массив клеток
     Cell[][] cells;
     //Всё те же клетки, находятся в множестве для быстрого доступа
-    LinkedList<Cell> nonCheckCells = new LinkedList<>();
+    List<Cell> nonCheckCells = new LinkedList<>();
     //Путь алгоритма
     LinkedList<Cell> stack = new LinkedList<>();
     //Список для хранения соседей отдельно взятой клетки
-    LinkedList<Cell> neighbors;
+    List<Cell> neighbors;
     //Общий объект для слуайной выборки
 
     Random random;
@@ -161,16 +162,16 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         return Neighbors;
     }
 
-    class Cell {
+    private final class Cell {
 
-        int x;
-        int y;
+        final int x;
+        final int y;
         boolean isCheck;
         boolean UP;
         boolean LEFT;
         boolean DOWN;
         boolean RIGHT;
-        LinkedList<Cell> capabilities;
+        final List<Cell> capabilities;
         Cell target;
 
 
