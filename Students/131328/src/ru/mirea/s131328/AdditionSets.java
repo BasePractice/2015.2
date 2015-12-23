@@ -18,7 +18,6 @@ public class AdditionSets {
             result.add(a);
         }
 
-
         for (int a : result) {
             System.out.println(a);
         }
