@@ -3,7 +3,7 @@ package ru.mirea.s131328;
 import java.util.Set;
 import java.util.TreeSet;
 /**
- * Пересечение множеств
+ * Сложение множеств
 */
 public class AdditionSets {
     public static void main(String[] args) {
