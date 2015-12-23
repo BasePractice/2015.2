@@ -47,11 +47,11 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         }
 
 
-        while (nonCheckCells.size() != 0) {
-            if (stack.size() == 0) {
+        while (!nonCheckCells.isEmpty()) {
+            if (stack.isEmpty()) {
                 addToStack(nonCheckCells.get(random.nextInt(nonCheckCells.size())));//Добавляем первую клетку
             } else {
-                while (getNeighbors(stack.getLast(), rows, cols).size() == 0)
+                while (getNeighbors(stack.getLast(), rows, cols).isEmpty())
                     stack.removeLast();
             }
             while ((neighbors = getNeighbors(stack.getLast(), rows, cols)).size() != 0) {
@@ -81,8 +81,7 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         Cell firstCell = cells[0][0];
         cellsInWork.add(firstCell);
         Cell workCell;
-        while (cellsInWork.size() != 0) {
-            workCell = cellsInWork.removeFirst();
+        while ((workCell = cellsInWork.removeFirst()) != cells[maze.rows - 1][maze.cols - 1]) {//условие останова breakpoint
             for (Cell cell : workCell.capabilities) {
                 cell.capabilities.remove(workCell);
                 cell.target = workCell;
@@ -172,7 +171,7 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         boolean DOWN;
         boolean RIGHT;
         final List<Cell> capabilities;
-        Cell target;
+        Cell target; //ссылка на клетку, в которую она должна идти, чтобы прийти к выходу
 
 
         public Cell(int x, int y) {
