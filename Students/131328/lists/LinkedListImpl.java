@@ -1,6 +1,6 @@
-package ru.mirea.oop.practice.lists;
-
 import java.util.Iterator;
+
+
 
 final class LinkedListImpl<E> implements ILinkedList<E> {
 

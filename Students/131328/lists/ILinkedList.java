@@ -1,5 +1,3 @@
-package ru.mirea.oop.practice.lists;
-
 public interface ILinkedList<E> extends Iterable<E> {
 
     int size();
