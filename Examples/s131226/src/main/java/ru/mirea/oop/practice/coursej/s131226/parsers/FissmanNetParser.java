@@ -4,7 +4,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.s131226.Parser;
+import ru.mirea.oop.practice.coursej.s131226.entities.Item;
+import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,34 +19,10 @@ import java.util.Map;
 final class FissmanNetParser implements Parser {
     public static final String TABLE_NAME = "FissmanNet";
     public static final String ADRESS = "http://www.fissman.net";
+    private static final Logger logger = LoggerFactory.getLogger(FissmanNetParser.class);
 
-    private static int formatArticle(String articleStr) {
-        if (articleStr.equals("")) {
-            articleStr = "0";
-        }
-        if (articleStr.length() > 3) {
-            articleStr = articleStr.substring(0, 4);
-
-        }
-        return Integer.parseInt(articleStr);
-
-
-    }
-
-    private static int formatPrice(String priceStr) {
-        if (priceStr.equals("")) {
-            priceStr = "0";
-        }
-        priceStr = priceStr.replaceAll(" ", "");
-        priceStr = priceStr.replaceAll("руб", "");
-        return Integer.parseInt(priceStr);
-
-    }
-
-    @Override
     public List<String> parseLinks() {
         List<String> links = new ArrayList<>();
-
         try {
             Document document = Jsoup.connect("http://www.fissman.net/shop/CID_43.html").timeout(15000).get();
             Elements elements = document.select("div.podcatalog_forma").select("td.pod_c");
@@ -54,16 +34,14 @@ final class FissmanNetParser implements Parser {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Ошибка при получении данных с сайта.");
         }
-        System.out.println("количество запросов для " + this.getClass().getName() + " " + links.size());
         return links;
     }
 
     @Override
-    public Prices parsePrices() {
-
-        Map<Integer, Integer> pairs = new HashMap<>();
+    public Snapshot parsePrices() {
+        Snapshot snapshot = new Snapshot(TABLE_NAME);
         for (String link : parseLinks()) {
             try {
                 Document document = Jsoup.connect(link).timeout(15000).get();
@@ -73,17 +51,31 @@ final class FissmanNetParser implements Parser {
                 for (Element element : elements) {
                     int price = formatPrice(element.select(".price").text());
                     int article = formatArticle(element.select(".product_name").attr("title"));
-                    pairs.put(article, price);
+                    snapshot.add(new Item(article, price));
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Ошибка при получении данных с сайта.");
             }
         }
-        return new Prices(TABLE_NAME, pairs);
+        return snapshot;
     }
 
-    @Override
-    public String getName() {
-        return TABLE_NAME;
+    private static int formatArticle(String articleStr) {
+        if (articleStr.equals("")) {
+            return 0;
+        }
+        if (articleStr.length() > 3) {
+            articleStr = articleStr.substring(0, 4);
+        }
+        return Integer.parseInt(articleStr);
+    }
+
+    private static int formatPrice(String priceStr) {
+        priceStr = priceStr.replaceAll("\\D", "");
+        if (priceStr.equals("")) {
+            return 0;
+        }
+        return Integer.parseInt(priceStr);
+
     }
 }

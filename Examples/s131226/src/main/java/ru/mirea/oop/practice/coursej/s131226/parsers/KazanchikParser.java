@@ -5,7 +5,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.s131226.Parser;
+import ru.mirea.oop.practice.coursej.s131226.entities.Item;
+import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +19,37 @@ import java.util.Map;
 
 final class KazanchikParser implements Parser {
     public static final String TABLE_NAME = "kazanchik";
+    private static final Logger logger = LoggerFactory.getLogger(KazanchikParser.class);
+
+    public List<String> parseLinks() {
+        List<String> links = new ArrayList<>();
+        for (int i = 1; i < 42; i++) {
+            String link = "http://www.kazanchik.ru/category/fissman/" + i + "/";
+            links.add(link);
+        }
+        return links;
+    }
+
+    @Override
+    public Snapshot parsePrices() {
+        Snapshot snapshot = new Snapshot(TABLE_NAME);
+        for (String link : parseLinks()) {
+            try {
+                Document document = Jsoup.connect(link).timeout(15000).get();
+                Elements elements = document.select(".vitrine").select(".product");
+                for (Element element : elements) {
+                    int article = formatArticle(element.select(".product-name-link").attr("href"));
+                    int price = formatPrice(element.select(".price").text());
+                    snapshot.add(new Item(article, price));
+                }
+            } catch (HttpStatusException e404) {
+                logger.error("Ошибка при получении данных с сайта.(404)");
+            } catch (IOException e) {
+                logger.error("Ошибка при получении данных с сайта.");
+            }
+        }
+        return snapshot;
+    }
 
     private static int formatArticle(String articleStr) {
         if (articleStr.equals("")) {
@@ -32,51 +67,12 @@ final class KazanchikParser implements Parser {
     }
 
     private static int formatPrice(String priceStr) {
+        priceStr = priceStr.replaceAll("\\D", "");
         if (priceStr.equals("")) {
             return 0;
         }
 
-        priceStr = priceStr.replaceAll("\\D", "");
-
         return Integer.parseInt(priceStr);
     }
 
-    @Override
-    public List<String> parseLinks() {
-        List<String> links = new ArrayList<>();
-        for (int i = 1; i < 42; i++) {
-            String link = "http://www.kazanchik.ru/category/fissman/" + i + "/";
-            links.add(link);
-        }
-        System.out.println("количество запросов для " + this.getClass().getName() + " " + links.size());
-        return links;
-    }
-
-    @Override
-    public Prices parsePrices() {
-        Map<Integer, Integer> pairs = new HashMap<>();
-        for (String link : parseLinks()) {
-            try {
-                Document document = Jsoup.connect(link).timeout(15000).get();
-                Elements elements = document.select(".vitrine").select(".product");
-
-                for (Element element : elements) {
-                    int article = formatArticle(element.select(".product-name-link").attr("href"));
-                    int price = formatPrice(element.select(".price").text());
-                    pairs.put(article, price);
-                }
-            } catch (HttpStatusException e404) {
-                System.out.println("404 " + link);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return new Prices(TABLE_NAME, pairs);
-
-    }
-
-    @Override
-    public String getName() {
-        return TABLE_NAME;
-    }
 }

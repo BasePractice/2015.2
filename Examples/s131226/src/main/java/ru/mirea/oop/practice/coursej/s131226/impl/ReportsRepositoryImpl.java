@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReportsRepositoryImpl implements ReportsRepository {
-    private static final Logger logger = LoggerFactory.getLogger(ReportsRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReportsRepositoryImpl.class);
     private final Context ctx = new Context();
     public static final String REFERENCE_SHOP_NAME = "FissmanPosuda";
     public static final int PRICE_DIFFERENCE = -5;// и меньше

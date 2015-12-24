@@ -4,7 +4,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.s131226.Parser;
+import ru.mirea.oop.practice.coursej.s131226.entities.Item;
+import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,39 +19,9 @@ import java.util.Map;
 final class FissmanPosudaParser implements Parser {
     public static final String TABLE_NAME = "FissmanPosuda";
     public static final String ADRESS = "http://www.fissmanposuda.ru";
+    private static final Logger logger = LoggerFactory.getLogger(FissmanPosudaParser.class);
 
 
-    private static int formatArticle(String articleStr) {
-        if (articleStr != null) {
-
-
-            if (articleStr.equals("")) {
-                return 0;
-            } else {
-                articleStr = articleStr.substring(0, 4);
-            }
-            return Integer.parseInt(articleStr);
-        }
-        return 0;
-
-    }
-
-    private static int formatPrice(String priceStr) {
-        if (priceStr != null) {
-
-
-            if (priceStr.equals("")) {
-                return 0;
-            }
-            priceStr = priceStr.replaceAll("\\..*руб.*", "");
-            priceStr = priceStr.replaceAll("\\D", "");
-
-            return Integer.parseInt(priceStr);
-        }
-        return 0;
-    }
-
-    @Override
     public List<String> parseLinks() {
         List<String> catLinks = new ArrayList<>();
         try {
@@ -59,7 +33,7 @@ final class FissmanPosudaParser implements Parser {
                 catLinks.add(link);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Ошибка при получении данных с сайта.");
         }
         List<String> links = new ArrayList<>();
         for (String catLink : catLinks) {
@@ -83,18 +57,16 @@ final class FissmanPosudaParser implements Parser {
                     links.add(link);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Ошибка при получении данных с сайта.");
             }
         }
         links.addAll(catLinks);
-        System.out.println("количество запросов для " + this.getClass().getName() + " " + links.size());
         return links;
     }
 
     @Override
-    public Prices parsePrices() {
-
-        Map<Integer, Integer> pairs = new HashMap<>();
+    public Snapshot parsePrices() {
+        Snapshot snapshot = new Snapshot(TABLE_NAME);
         for (String link : parseLinks()) {
             try {
                 Document document = Jsoup.connect(link).timeout(15000).get();
@@ -102,17 +74,36 @@ final class FissmanPosudaParser implements Parser {
                 for (Element element : elements) {
                     int article = formatArticle(element.select(".prdbrief_name").select("a").text());
                     int price = formatPrice(element.select(".totalPrice").text());
-                    pairs.put(article, price);
+                    snapshot.add(new Item(article, price));
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Ошибка при получении данных с сайта.");
             }
         }
-        return new Prices(TABLE_NAME, pairs);
+        return snapshot;
     }
 
-    @Override
-    public String getName() {
-        return TABLE_NAME;
+    private static int formatArticle(String articleStr) {
+        if (articleStr != null) {
+            if (articleStr.equals("")) {
+                return 0;
+            } else {
+                articleStr = articleStr.substring(0, 4);
+            }
+            return Integer.parseInt(articleStr);
+        }
+        return 0;
+    }
+
+    private static int formatPrice(String priceStr) {
+        if (priceStr != null) {
+            if (priceStr.equals("")) {
+                return 0;
+            }
+            priceStr = priceStr.replaceAll("\\..*руб.*", "");
+            priceStr = priceStr.replaceAll("\\D", "");
+            return Integer.parseInt(priceStr);
+        }
+        return 0;
     }
 }

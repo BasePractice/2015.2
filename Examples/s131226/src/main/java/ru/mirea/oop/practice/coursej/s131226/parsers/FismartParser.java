@@ -4,7 +4,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.s131226.Parser;
+import ru.mirea.oop.practice.coursej.s131226.entities.Item;
+import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,8 +19,8 @@ import java.util.Map;
 final class FismartParser implements Parser {
     public static final String ADRESS = "http://fismart.ru";
     public static final String TABLE_NAME = "Fismart";
+    private static final Logger logger = LoggerFactory.getLogger(FismartParser.class);
 
-    @Override
     public List<String> parseLinks() {
         List<String> links = new ArrayList<>();
         try {
@@ -29,18 +33,16 @@ final class FismartParser implements Parser {
 
                 links.add(link);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-
+        } catch (IOException e) {
+            logger.error("Ошибка при получении данных с сайта.");
         }
-        System.out.println("количество запросов для " + this.getClass().getName() + " " + links.size());
         return links;
     }
 
 
     @Override
-    public Prices parsePrices() {
-        Map<Integer, Integer> pairs = new HashMap<>();
+    public Snapshot parsePrices() {
+        Snapshot snapshot = new Snapshot(TABLE_NAME);
         for (String link : parseLinks()) {
             try {
                 Document document = Jsoup.connect(link).timeout(15000).get();
@@ -49,18 +51,13 @@ final class FismartParser implements Parser {
                 for (Element element : elements) {
                     int article = formatArticle(element.select("a").text());
                     int price = formatPrice(element.select(".price").text());
-                    pairs.put(article, price);
+                    snapshot.add(new Item(article, price));
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Ошибка при получении данных с сайта.");
             }
         }
-        return new Prices(TABLE_NAME, pairs);
-    }
-
-    @Override
-    public String getName() {
-        return TABLE_NAME;
+        return snapshot;
     }
 
     private static int formatArticle(String articleStr) {
@@ -73,11 +70,12 @@ final class FismartParser implements Parser {
     }
 
     private static int formatPrice(String priceStr) {
+
+        priceStr = priceStr.replaceAll("руб.*", "");
+        priceStr = priceStr.replaceAll("\\D", "");
         if (priceStr.equals("")) {
             return 0;
         }
-        priceStr = priceStr.replaceAll("руб.*", "");
-        priceStr = priceStr.replaceAll("\\D", "");
         return Integer.parseInt(priceStr);
     }
 }
