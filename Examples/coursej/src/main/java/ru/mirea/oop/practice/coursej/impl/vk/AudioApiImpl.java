@@ -13,7 +13,7 @@ final class AudioApiImpl implements AudioApi {
     }
 
     @Override
-    public Audio[] list(Integer idOwner,
+    public Audio[] list(Long idOwner,
                         Integer idAlbum,
                         String idsAudio,
                         Integer needUser,
