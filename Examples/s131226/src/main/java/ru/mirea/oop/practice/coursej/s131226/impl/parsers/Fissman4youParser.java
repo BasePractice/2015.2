@@ -1,25 +1,26 @@
-package ru.mirea.oop.practice.coursej.s131226.parsers;
+package ru.mirea.oop.practice.coursej.s131226.impl.parsers;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import ru.mirea.oop.practice.coursej.s131226.Parser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.mirea.oop.practice.coursej.s131226.impl.Parser;
+import ru.mirea.oop.practice.coursej.s131226.entities.Item;
+import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 final class Fissman4youParser implements Parser {
     public static final String TABLE_NAME = "fissman4you";
     public static final String ADRESS = "http://fissman4you.ru";
+    private static final Logger logger = LoggerFactory.getLogger(Fissman4youParser.class);
 
-    @Override
     public List<String> parseLinks() {
         List<String> links = new ArrayList<>();
-
         try {
             Document document = Jsoup.connect("http://fissman4you.ru/shop/CID_37.html").timeout(10000).get();
             Elements elements = document.select("div.podcatalog_div");
@@ -28,20 +29,16 @@ final class Fissman4youParser implements Parser {
                 link = link.replaceAll(".html", "_ALL.html");
                 link = ADRESS + link;
                 links.add(link);
-
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Ошибка при получении данных с сайта.");
         }
-        System.out.println("количество запросов для " + this.getClass().getName() + " " + links.size());
         return links;
-
     }
 
     @Override
-    public Prices parsePrices() {
-
-        Map<Integer, Integer> pairs = new HashMap<>();
+    public Snapshot parsePrices() {
+        Snapshot snapshot = new Snapshot(TABLE_NAME);
         for (String link : parseLinks()) {
             try {
                 Document document = Jsoup.connect(link).timeout(15000).get();
@@ -52,19 +49,14 @@ final class Fissman4youParser implements Parser {
                     int price = formatPrice(element.select(".tovarThree_price4").text());
                     int article = formatArticle(element.select(".tovarTwo_name").select("a").attr("title"));
                     if (article != 0 || price != 0) {
-                        pairs.put(article, price);
+                        snapshot.add(new Item(article, price));
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Ошибка при получении данных с сайта.");
             }
         }
-        return new Prices(TABLE_NAME, pairs);
-    }
-
-    @Override
-    public String getName() {
-        return TABLE_NAME;
+        return snapshot;
     }
 
     private static int formatArticle(String articleStr) {

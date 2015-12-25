@@ -1,6 +1,6 @@
-package ru.mirea.oop.practice.coursej.s131226.parsers;
+package ru.mirea.oop.practice.coursej.s131226.impl.parsers;
 
-import ru.mirea.oop.practice.coursej.s131226.Parser;
+import ru.mirea.oop.practice.coursej.s131226.impl.Parser;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public final class ParserCollections {
         parsers.add(new FissmanGroupParser());
         parsers.add(new FissmanInfoParser());
         parsers.add(new FissmanNetParser());
-       // parsers.add(new MakedonMarketParser()); сайт не работает
+        parsers.add(new MakedonMarketParser());
         parsers.add(new PosudaProfParser());
         parsers.add(new FismartParser());
         parsers.add(new Superpovar());
