@@ -28,30 +28,25 @@ public class OutgoingMessage {
         this.text = text;
     }
 
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
-    }
-
     public void setAttachment(File file) {
-        DocumentsApi documentsApi = null;
+        DocumentsApi documentsApi;
         try {
             documentsApi = api.getDocuments();
-
             Document[] documents = documentsApi.list(CHECK_COUNT, 0, api.idOwner());
             for (Document existDoc : documents) {
                 if (existDoc.title.equals(file.getName())) {
                     if (documentsApi.delete(existDoc) == 1) logger.debug("успешно удален " + existDoc.title);
                 }
             }
-
             documentsApi.uploadDocument(file);
-            documents = documentsApi.list(1, 0, api.idOwner());
-            this.setAttachment("doc" + documents[0].idOwner + "_" + documents[0].id);
+            Document document = documentsApi.list(1, 0, api.idOwner())[0];
+            this.attachment = "doc" + document.idOwner + "_" + document.id;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Ошибка при работе со списком документов пользователя.");
         }
 
     }
+
 
     public String getText() {
         return text;
@@ -65,8 +60,7 @@ public class OutgoingMessage {
         try {
             return api.send(id, null, null, null, text, null, null, null, attachment, null, null);
         } catch (IOException e) {
-            e.printStackTrace();
-
+            logger.error("отправка сообщения не удалась.");
         }
         return 0;
     }

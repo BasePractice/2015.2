@@ -11,7 +11,6 @@ public interface ReportsRepository {
     void addSnapshot(Snapshot snapshot);
 
 
-
     List<Report> getReports();
 
 }

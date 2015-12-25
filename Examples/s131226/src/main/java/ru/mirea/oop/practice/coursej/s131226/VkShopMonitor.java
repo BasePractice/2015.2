@@ -2,7 +2,6 @@ package ru.mirea.oop.practice.coursej.s131226;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 import ru.mirea.oop.practice.coursej.s131226.impl.ParserApiImpl;
@@ -16,8 +15,7 @@ public final class VkShopMonitor extends ServiceBotsExtension {
                     "бот help\n" +
                     "бот полный отчет\n" +
                     "бот краткий отчет\n" +
-                    "бот обнови БД\n" +
-                    "бот состояние БД";
+                    "бот обнови БД\n";
     private static final Logger logger = LoggerFactory.getLogger(VkShopMonitor.class);
     private final ParserApi parser;
 
@@ -56,10 +54,6 @@ public final class VkShopMonitor extends ServiceBotsExtension {
                         outgoingMessage.send(messages);
                         parser.updateDB();
                         outgoingMessage.setText("Обновление прошло нормально");
-                        break;
-                    }
-                    case "бот состояние БД": {
-                        outgoingMessage.setText(parser.getDBState());
                         break;
                     }
                     default: {

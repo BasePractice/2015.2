@@ -1,4 +1,4 @@
-package ru.mirea.oop.practice.coursej.s131226.parsers;
+package ru.mirea.oop.practice.coursej.s131226.impl.parsers;
 
 
 import org.jsoup.Jsoup;
@@ -7,15 +7,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.s131226.Parser;
+import ru.mirea.oop.practice.coursej.s131226.impl.Parser;
 import ru.mirea.oop.practice.coursej.s131226.entities.Item;
 import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 final class MakedonMarketParser implements Parser {
     public static final String TABLE_NAME = "makedonshop";
@@ -26,7 +24,7 @@ final class MakedonMarketParser implements Parser {
         try {
             Document document = Jsoup.connect("http://www.makedon-market.ru/search/?search_field=FISSMAN&page=1").timeout(15000).get();
             Elements elementsLinks = document.select("div.navigation-pages").select("a");
-            String lastPage = "anylink";
+            String lastPage = "1";
             for (Element e : elementsLinks) {
                 lastPage = e.attr("abs:href");
             }

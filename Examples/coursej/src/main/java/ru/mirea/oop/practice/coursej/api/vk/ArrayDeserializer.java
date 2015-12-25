@@ -20,7 +20,7 @@ public final class ArrayDeserializer<E> implements JsonDeserializer<E[]> {
         if (array.size() == 0)
             return toArray.toArray(0);
         JsonElement element = array.get(0);
-        if (!element.isJsonPrimitive()) {
+        if (!element.isJsonPrimitive() && array.size() > 1) { // одиночные документы тоже приходят в массиве =(
             throw new JsonParseException("Возможно старая верси API");
         }
         E[] list = toArray.toArray(array.size() - 1);

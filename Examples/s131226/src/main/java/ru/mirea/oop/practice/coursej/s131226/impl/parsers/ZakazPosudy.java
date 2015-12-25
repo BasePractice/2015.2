@@ -1,9 +1,7 @@
-package ru.mirea.oop.practice.coursej.s131226.parsers;
+package ru.mirea.oop.practice.coursej.s131226.impl.parsers;
 
-import ru.mirea.oop.practice.coursej.s131226.Parser;
+import ru.mirea.oop.practice.coursej.s131226.impl.Parser;
 import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
-
-import java.util.List;
 
 final class ZakazPosudy implements Parser {
 

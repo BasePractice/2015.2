@@ -1,4 +1,4 @@
-package ru.mirea.oop.practice.coursej.s131226.parsers;
+package ru.mirea.oop.practice.coursej.s131226.impl.parsers;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -6,15 +6,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.s131226.Parser;
+import ru.mirea.oop.practice.coursej.s131226.impl.Parser;
 import ru.mirea.oop.practice.coursej.s131226.entities.Item;
 import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 final class FissmanPosudaParser implements Parser {
     public static final String TABLE_NAME = "FissmanPosuda";

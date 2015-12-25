@@ -7,4 +7,8 @@ public class ReportItem extends Item {
         super(article, price);
         this.referencePrice = referencePrice;
     }
+
+    public int getReferencePrice() {
+        return referencePrice;
+    }
 }
