@@ -1,52 +1,46 @@
 package ru.mirea.s131328;
 
+import java.util.Arrays;
 
 public class BinarySearch {
 
-    int array[];
-
-    public BinarySearch(int i) {
-        array = new int[i];
+    private BinarySearch() {
     }
 
-    public static void setArr(int a[]) {
-        for (int k = 0; k < a.length; k++) {
-            a[k] = (int) (Math.random() * 10);
+    public static int indexOf(int[] a, int key) {
+        int lo = 0;
+        int hi = a.length - 1;
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (key < a[mid]) hi = mid - 1;
+            else if (key > a[mid]) lo = mid + 1;
+            else return mid;
         }
-        for (int i = a.length - 1; i > 0; i--) {
-            for (int j = 0; j < i; j++) {
-                if (a[j] > a[j + 1]) {
-                    int tmp = a[j];
-                    a[j] = a[j + 1];
-                    a[j + 1] = tmp;
-                }
-            }
-        }
+        return -1;
     }
 
-    public static void seekingNumber(int a[], int key) {
-        int l = 0;
-        int mid = -1;
-        int h = a.length - 1;
-        while (l < h) {
-            mid = (l + (h - l) / 2);
-            if (a[mid] == key) {
-                break;
-            } else if (a[mid] > key) {
-                h = mid - 1;
-            } else if (a[mid] < key) {
-                l = mid + 1;
-            } else mid = -1;
-        }
-        System.out.println(mid);
-    }
+    public static void main(String[] args) {
 
-    public static void main(String args[]) {
-        int[] object = new int[10];
-        setArr(object);
-        for (int i = 0; i < object.length; i++) {
-            System.out.println(object[i]);
+        // initializing unsorted int array
+        int intArr[] = {31, 10, 22, 14, 56};
+
+        // sorting array
+        Arrays.sort(intArr);
+
+        // let us print all the elements available in list
+        System.out.println("The sorted int array is:");
+        for (int number : intArr) {
+            System.out.println("Number = " + number);
         }
-        seekingNumber(object, 10);
+
+        // entering the value to be searched
+        int searchVal = 31;
+
+        int retVal = BinarySearch.indexOf(intArr, searchVal);
+
+        System.out.println("The index of element 31 is : " + retVal);
     }
 }
+
+
+
