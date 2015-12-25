@@ -7,8 +7,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mirea.oop.practice.coursej.s131226.entities.Item;
 import ru.mirea.oop.practice.coursej.s131226.impl.Parser;
-import ru.mirea.oop.practice.coursej.s131226.entities.item;
 import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
@@ -38,7 +38,7 @@ final class KazanchikParser implements Parser {
                 for (Element element : elements) {
                     int article = formatArticle(element.select(".product-name-link").attr("href"));
                     int price = formatPrice(element.select(".price").text());
-                    snapshot.add(new item(article, price));
+                    snapshot.add(new Item(article, price));
                 }
             } catch (HttpStatusException e404) {
                 logger.error("Ошибка при получении данных с сайта.(404)");

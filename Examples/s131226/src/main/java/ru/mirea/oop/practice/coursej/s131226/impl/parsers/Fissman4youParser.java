@@ -7,7 +7,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.s131226.impl.Parser;
-import ru.mirea.oop.practice.coursej.s131226.entities.item;
+import ru.mirea.oop.practice.coursej.s131226.entities.Item;
 import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ final class Fissman4youParser implements Parser {
                     int price = formatPrice(element.select(".tovarThree_price4").text());
                     int article = formatArticle(element.select(".tovarTwo_name").select("a").attr("title"));
                     if (article != 0 || price != 0) {
-                        snapshot.add(new item(article, price));
+                        snapshot.add(new Item(article, price));
                     }
                 }
             } catch (IOException e) {

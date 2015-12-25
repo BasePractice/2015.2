@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.db.Context;
 import ru.mirea.oop.practice.coursej.s131226.ReportsRepository;
+import ru.mirea.oop.practice.coursej.s131226.entities.Item;
 import ru.mirea.oop.practice.coursej.s131226.entities.Report;
 import ru.mirea.oop.practice.coursej.s131226.entities.ReportItem;
 import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
@@ -52,7 +53,7 @@ public class ReportsRepositoryImpl implements ReportsRepository {
                 logger.debug("Запись за {} для магазина {} уже существует.",
                         snapshot.getDate().toString(), snapshot.getShopName());
             }
-            for (ru.mirea.oop.practice.coursej.s131226.entities.item item : snapshot.getItems()) {
+            for (Item item : snapshot.getItems()) {
                 try (final PreparedStatement stmt = connection.prepareStatement("INSERT INTO ITEMS SELECT ID,?,? FROM SNAPSHOTS WHERE (DATE =? AND SHOP_ID = (SELECT ID FROM SHOPS WHERE NAME=?));")) {
                     stmt.setInt(1, item.getArticle());
                     stmt.setInt(2, item.getPrice());

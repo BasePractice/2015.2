@@ -7,7 +7,7 @@ import java.util.List;
 public class Snapshot {
     private final String shopName;
     private final Date date;
-    private List<item> items = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
     public Snapshot(String shopName) {
         this.shopName = shopName;
@@ -20,7 +20,7 @@ public class Snapshot {
         return shopName;
     }
 
-    public void add(item item) {
+    public void add(Item item) {
         items.add(item);
     }
 
@@ -28,7 +28,7 @@ public class Snapshot {
         return date;
     }
 
-    public List<item> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 }
