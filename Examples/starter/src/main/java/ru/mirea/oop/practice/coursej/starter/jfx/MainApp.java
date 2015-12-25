@@ -68,11 +68,11 @@ public final class MainApp extends Application {
 //        final ListView<MazeExtension> listView = new ListView<>(mazeExtensions);
 //        listView.setCellFactory(param -> new ListCell<MazeExtension>() {
 //            @Override
-//            protected void updateItem(MazeExtension Item, boolean empty) {
-//                super.updateItem(Item, empty);
+//            protected void updateItem(MazeExtension item, boolean empty) {
+//                super.updateItem(item, empty);
 //                if (!empty) {
-//                    setText(Item.name());
-//                    setTooltip(new Tooltip(Item.description()));
+//                    setText(item.name());
+//                    setTooltip(new Tooltip(item.description()));
 //                }
 //            }
 //        });
