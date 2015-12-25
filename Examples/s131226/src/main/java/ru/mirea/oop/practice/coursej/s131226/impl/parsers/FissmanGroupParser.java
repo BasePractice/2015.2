@@ -7,7 +7,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.s131226.impl.Parser;
-import ru.mirea.oop.practice.coursej.s131226.entities.Item;
+import ru.mirea.oop.practice.coursej.s131226.entities.item;
 import ru.mirea.oop.practice.coursej.s131226.entities.Snapshot;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ final class FissmanGroupParser implements Parser {
                 for (Element element : elements) {
                     int price = formatPrice(element.select(".product_price").text());
                     int article = formatArticle(element.select("a").attr("data-artnum"));
-                    snapshot.add(new Item(article, price));
+                    snapshot.add(new item(article, price));
                 }
             } catch (IOException e) {
                 logger.error("Ошибка при получении данных с сайта.");
