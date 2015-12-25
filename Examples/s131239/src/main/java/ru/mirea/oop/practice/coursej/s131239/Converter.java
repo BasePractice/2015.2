@@ -12,7 +12,7 @@ import java.util.Map;
 
 public final class Converter extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(Converter.class);
-    HashMap<String, HashMap<String, Double>> valuesMap;
+    Map<String, HashMap<String, Double>> valuesMap;
     private boolean isMapLoaded = false;
 
     public Converter() throws Exception {
@@ -34,10 +34,8 @@ public final class Converter extends ServiceBotsExtension {
 
                 if (!isMapLoaded) {
                     valuesMap = new HashMap<String, HashMap<String, Double>>();
-                    BufferedReader reader;
                     String line;
-                    try {
-                        reader = new BufferedReader(new InputStreamReader(Converter.class.getResourceAsStream("/values.txt")));
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(Converter.class.getResourceAsStream("/values.txt")))) {
                         while ((line = reader.readLine()) != null) {
                             if (line.contains("/")) {
                                 String[] strings = line.split("/");
