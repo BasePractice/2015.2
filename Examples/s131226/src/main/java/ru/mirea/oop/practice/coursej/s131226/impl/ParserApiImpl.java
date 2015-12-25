@@ -65,7 +65,7 @@ public class ParserApiImpl implements ParserApi {
                 logger.debug("Ошибка записи");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Ошибка при созддания документа MS Excel.");
         }
         return null;
     }
