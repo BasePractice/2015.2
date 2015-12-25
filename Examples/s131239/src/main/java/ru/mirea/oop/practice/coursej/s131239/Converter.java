@@ -5,12 +5,14 @@ import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
 
+import java.io.*;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 public final class Converter extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(Converter.class);
-    HashMap<String, HashMap<String, Double>> map;
+    HashMap<String, HashMap<String, Double>> valuesMap;
     private boolean isMapLoaded = false;
 
     public Converter() throws Exception {
@@ -31,19 +33,19 @@ public final class Converter extends ServiceBotsExtension {
                 logger.debug(MessageFormat.format("Получили сообщение от: {0}", Contact.viewerString(contact)));
 
                 if (!isMapLoaded) {
-                    map = new HashMap<String, HashMap<String, Double>>();
+                    valuesMap = new HashMap<String, HashMap<String, Double>>();
                     BufferedReader reader;
                     String line;
                     try {
-                        reader = new BufferedReader(new FileReader(new File(Configuration.getFileName("values.txt"))));
+                        reader = new BufferedReader(new InputStreamReader(Converter.class.getResourceAsStream("/values.txt")));
                         while ((line = reader.readLine()) != null) {
                             if (line.contains("/")) {
                                 String[] strings = line.split("/");
-                                if (map.containsKey(strings[0])) {
-                                    map.get(strings[0]).put(strings[1], Double.parseDouble(strings[2]));
+                                if (valuesMap.containsKey(strings[0])) {
+                                    valuesMap.get(strings[0]).put(strings[1], Double.parseDouble(strings[2]));
                                 } else {
-                                    map.put(strings[0], new HashMap<String, Double>());
-                                    map.get(strings[0]).put(strings[1], Double.parseDouble(strings[2]));
+                                    valuesMap.put(strings[0], new HashMap<String, Double>());
+                                    valuesMap.get(strings[0]).put(strings[1], Double.parseDouble(strings[2]));
                                 }
                             }
                         }
@@ -65,8 +67,8 @@ public final class Converter extends ServiceBotsExtension {
                             replace("дюймов", "дюйм").replace("паскаля", "паскаль").replace("паскалей", "паскаль");
 
                     StringBuilder msgToSend = new StringBuilder();
-                    if (map.containsKey(desc)) {
-                        for (Map.Entry<String, Double> stringDoubleEntry : map.get(desc).entrySet()) {
+                    if (valuesMap.containsKey(desc)) {
+                        for (Map.Entry<String, Double> stringDoubleEntry : valuesMap.get(desc).entrySet()) {
                             msgToSend.append(num).append(" ").append(desc).append(" = ").append(stringDoubleEntry.getValue() * num).append(" ").append(stringDoubleEntry.getKey()).append("\n");
                         }
                         sendMessage(contact, msgToSend.toString());
