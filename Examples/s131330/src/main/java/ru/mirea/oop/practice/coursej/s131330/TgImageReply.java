@@ -21,10 +21,8 @@ public final class TgImageReply extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(TgImageReply.class);
     private OkHttpClient requestClient = new OkHttpClient();
 
-    private final String descriptionBot = "Приветствую!\n\n"+ "Я обычный бот, который присылает тебе забавные картинки, когда ты пишешь любое слово.\n" +
-            "Только не налегай: я устаю после 100 запросов :(\n\n" + "Поехали!";
-    private final String startBot = "Доступные комманды:\n\n" + "/help - выводит справку по боту,\n" + "/start - список доступных комманд.\n\n"
-            + "Если я сейчас нахожусь в чате, то обращайтесь ко мне по такому шаблону:\n\n  */ (ВАШ ЗАПРОС)* ";
+    private final String descriptionBot = "Приветствую!\n\nЯ обычный бот, который присылает тебе забавные картинки, когда ты пишешь любое слово.\nТолько не налегай: я устаю после 100 запросов :(\n\nПоехали!";
+    private final String startBot = "Доступные комманды:\n\n/help - выводит справку по боту,\n/start - список доступных комманд.\n\nЕсли я сейчас нахожусь в чате, то обращайтесь ко мне по такому шаблону:\n\n  */ (ВАШ ЗАПРОС)* ";
 
 
     public TgImageReply() {
@@ -42,19 +40,16 @@ public final class TgImageReply extends ServiceBotsExtension {
 
                 Integer id = message.chat.id;
                 String text = message.text;
-
+                logger.debug("Text: " + message.text);
 
                 if (message.newUserInChat != null) {
                     client.get().sendMessage(id, startBot, null);
                 }
 
-
                 if (text.equals("/help") || text.equals("/help@ImageDealerBot")){
                     client.get().sendMessage(id, descriptionBot, null);
                     return;
                 }
-
-
                 if (text.equals("/start") || text.equals("/start@ImageDealerBot")){
                     client.get().sendMessage(id, startBot, null);
                     return;
@@ -66,8 +61,11 @@ public final class TgImageReply extends ServiceBotsExtension {
                     Message document = client.get().sendPhoto(id, "", "safe_image.png", stream);
                     logger.debug("Send message: " + document);
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            } catch (IOException ioExp) {
+                ioExp.printStackTrace();
+            }
+            catch (NullPointerException npeExp) {
+                logger.error("Один из параметром Message (принятый или отправленный) равен null");
             }
         }
     }
@@ -77,9 +75,9 @@ public final class TgImageReply extends ServiceBotsExtension {
         String apiGoogleKey = "AIzaSyBjqgcErVLhQbBii3V98QWHkC23RtyQAx0&cx=006089795620242106307:i0lyndgsama";
         String apiGoogleEngineCode = "006089795620242106307:i0lyndgsama";
         Random random = new Random();
-        String url = "https://www.googleapis.com/customsearch/v1?searchType=image&num=1" +
-                "&start=" + (random.nextInt(10) + 1)+ "&key=" + apiGoogleKey + "&cx=" + apiGoogleEngineCode+
-                "&q=" + req;
+        String url = "https://www.googleapis.com/customsearch/v1?searchType=image&num=1&start=" + (random.nextInt(100) + 1) //побольше разброс
+                + "&key=" + apiGoogleKey + "&cx=" + apiGoogleEngineCode
+                + "&q=" + req;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -92,9 +90,10 @@ public final class TgImageReply extends ServiceBotsExtension {
 
         JsonObject root = (JsonObject) parser.parse(response.body().string()); //корень
         JsonArray items = (JsonArray) root.get("items"); //массив
-        JsonObject Image = (JsonObject) items.get(0); //строчка с картинкой
-        String link = Image.get("link").getAsString(); //линка
+        JsonObject image = (JsonObject) items.get(0); //строчка с картинкой
+        String link = image.get("link").getAsString(); //линка
 
+        logger.debug("Link: " + link);
         request = new Request.Builder()
                 .url(link)
                 .build();
@@ -105,8 +104,7 @@ public final class TgImageReply extends ServiceBotsExtension {
 
     @Override
     public String description() {
-        return "Сервис пересылки сообщений \"Telegram\"";
+        return "Сервис вывода картинок на соответствующий запрос \"Telegram\"";
     }
 
 }
-
