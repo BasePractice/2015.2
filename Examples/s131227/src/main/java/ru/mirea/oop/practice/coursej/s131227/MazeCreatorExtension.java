@@ -34,6 +34,8 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
                 maze.data[i][j] = mazeb.getWalls(j, i);
             }
         }
+        maze.data[0][0] -= 1;
+        maze.data[rows - 1][cols - 1] -= 4;
 
         return maze;
     }
