@@ -17,4 +17,6 @@ public interface VkontakteApi extends CommonApi {
     DocumentsApi getDocuments() throws Exception;
 
     AudioApi getAudios() throws Exception;
+
+    VideoApi getVideos() throws Exception;
 }
