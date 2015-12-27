@@ -42,7 +42,7 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
     public Point[] findPath(Maze maze) {
         cols = maze.rows;
         rows = maze.cols;
-        int[][][] map = new int[rows][cols][4];
+        int[][][] map = new int[rows][cols][3];
         int w;
         int bw;
         for (int i = 0; i < rows; i++){
@@ -86,11 +86,9 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
         int a = 0;
         int b = 0;
         bw = map[0][0][1];
-        map[0][0][3] = bw;
         while(bw != 1){
             if (a != 0 && (map[a - 1][b][0] & 8) != 8 && map[a - 1][b][1] == (bw - 1)) {
                 bw--;
-                map[a][b][3] = bw;
                 pathPoints[c] = new Point(b, a);
                 c++;
                 a--;
@@ -98,7 +96,6 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
             }
             if (a != (rows - 1) && (map[a + 1][b][0] & 2) != 2 && map[a + 1][b][1] == (bw - 1)) {
                 bw--;
-                map[a][b][3] = bw;
                 pathPoints[c] = new Point(b, a);
                 c++;
                 a++;
@@ -107,7 +104,6 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
             }
             if (b != 0 && (map[a][b - 1][0] & 4) != 4 && map[a][b - 1][1] == (bw - 1)) {
                 bw--;
-                map[a][b][3] = bw;
                 pathPoints[c] = new Point(b, a);
                 c++;
                 b--;
@@ -116,7 +112,6 @@ public final class MazeCreatorExtension extends AbstractMazeExtension {
             }
             if (b != (cols - 1) && (map[a][b + 1][0] & 1) != 1 && map[a][b + 1][1] == (bw - 1)) {
                 bw--;
-                map[a][b][3] = bw;
                 pathPoints[c] = new Point(b, a);
                 c++;
                 b++;

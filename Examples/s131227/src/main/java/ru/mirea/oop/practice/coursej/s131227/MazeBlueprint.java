@@ -71,7 +71,7 @@ public class MazeBlueprint {
     public void hunt(){
         while(fullness != rows * cols){
             fullness = 0;
-            for(int i = 0; i < rows; i++){
+            a: for(int i = 0; i < rows; i++){
                 for(int j = 0; j < cols; j++){
                     if ((i != (rows - 1) && mazeb[i][j] == 0 && mazeb[i + 1][j] != 0) ||
                             (j != 0 && mazeb[i][j - 1] != 0 && mazeb[i][j] == 0) ||
@@ -94,6 +94,7 @@ public class MazeBlueprint {
                             mazeb[i - 1][j] -= 8;
                         }
                         this.kill(i, j);
+                        break a;
                     }
                 }
             }
