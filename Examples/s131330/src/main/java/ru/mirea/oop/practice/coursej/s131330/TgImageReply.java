@@ -13,8 +13,10 @@ import ru.mirea.oop.practice.coursej.api.tg.entities.Message;
 import ru.mirea.oop.practice.coursej.api.tg.entities.Update;
 import ru.mirea.oop.practice.coursej.impl.tg.ext.ServiceBotsExtension;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 import java.util.Random;
 
 public final class TgImageReply extends ServiceBotsExtension {
@@ -63,19 +65,33 @@ public final class TgImageReply extends ServiceBotsExtension {
                 }
             } catch (IOException ioExp) {
                 ioExp.printStackTrace();
-            }
-            catch (NullPointerException npeExp) {
-                logger.error("Один из параметром Message (принятый или отправленный) равен null");
+            } catch (NullPointerException npeExp) {
+                logger.debug("Один из параметром Message (принятый или отправленный) равен null");
             }
         }
     }
 
     InputStream getImage(String req)throws IOException{
 
-        String apiGoogleKey = "AIzaSyBjqgcErVLhQbBii3V98QWHkC23RtyQAx0&cx=006089795620242106307:i0lyndgsama";
-        String apiGoogleEngineCode = "006089795620242106307:i0lyndgsama";
+        String apiGoogleKey = "";
+        String apiGoogleEngineCode = "";
+        String urlGoogle = "";
+
+        try {
+            Properties prop = new Properties();
+            prop.load(TgImageReply.class.getResourceAsStream("/keys&url.txt"));
+            apiGoogleKey = prop.getProperty("apiGoogleKey");
+            apiGoogleEngineCode = prop.getProperty("apiGoogleEngineCode");
+            urlGoogle = prop.getProperty("urlGoogle");
+        } catch (NullPointerException fnfeExp){
+            logger.error("Не найден файл с ключами", fnfeExp);
+        } catch (IOException ioExp) {
+            logger.error("Ошибка чтения файла с ключами", ioExp);
+        }
+
         Random random = new Random();
-        String url = "https://www.googleapis.com/customsearch/v1?searchType=image&num=1&start=" + (random.nextInt(100) + 1) //побольше разброс
+        String url = urlGoogle + "searchType=image&num=1"
+                + "&start=" + (random.nextInt(100) + 1) //побольше разброс
                 + "&key=" + apiGoogleKey + "&cx=" + apiGoogleEngineCode
                 + "&q=" + req;
 
@@ -87,19 +103,33 @@ public final class TgImageReply extends ServiceBotsExtension {
         Response response = requestClient.newCall(request).execute();
 
         JsonParser parser = new com.google.gson.JsonParser();
+        try {
+            if (response.isSuccessful()) {
+                JsonObject root = (JsonObject) parser.parse(response.body().string()); //корень
+                JsonArray items = (JsonArray) root.get("items"); //массив
+                JsonObject image = (JsonObject) items.get(0); //строчка с картинкой
+                String link = image.get("link").getAsString();//линка
 
-        JsonObject root = (JsonObject) parser.parse(response.body().string()); //корень
-        JsonArray items = (JsonArray) root.get("items"); //массив
-        JsonObject image = (JsonObject) items.get(0); //строчка с картинкой
-        String link = image.get("link").getAsString(); //линка
-
-        logger.debug("Link: " + link);
-        request = new Request.Builder()
-                .url(link)
-                .build();
-
-        response = requestClient.newCall(request).execute();
-        return response.body().byteStream();
+                logger.debug("Link: " + link);
+                request = new Request.Builder()
+                        .url(link)
+                        .build();
+            } else {
+                logger.debug("Первый запрос не был выполнен");
+                return null;
+            }
+            response = requestClient.newCall(request).execute();
+            if(response.isSuccessful()) {
+                return response.body().byteStream();
+            } else {
+                logger.debug("Второй запрос не был выполнен");
+                return null;
+            }
+        } catch (IOException ioExp) {
+            logger.debug("Error:");
+            ioExp.printStackTrace();
+            return null;
+        }
     }
 
     @Override

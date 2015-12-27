@@ -1,0 +1,3 @@
+apiGoogleKey=AIzaSyBjqgcErVLhQbBii3V98QWHkC23RtyQAx0
+apiGoogleEngineCode=006089795620242106307:i0lyndgsama
+urlGoogle=https://www.googleapis.com/customsearch/v1?
