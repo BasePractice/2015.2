@@ -20,8 +20,7 @@ public final class MazeEller extends AbstractMazeExtension {
         Set<Cell> cellSet = new HashSet<>();
         for (int y = 0; y < maze.rows; y++) {
             for (int x = 0; x < maze.cols; x++) {
-                //TODO: Ошибка? x и y не в разных местах стоят
-                Cell cell = new Cell(y, x, maze.data[y][x]);
+                Cell cell = new Cell(x, y, maze.data[x][y]);
                 cells[y][x] = cell;
                 cellSet.add(cell);
             }
