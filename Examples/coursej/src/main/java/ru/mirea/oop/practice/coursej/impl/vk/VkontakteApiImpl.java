@@ -66,6 +66,11 @@ public final class VkontakteApiImpl implements VkontakteApi {
     }
 
     @Override
+    public VideoApi getVideos() throws Exception {
+        return getImpl(VideoApiImpl.class, Videos.class);
+    }
+
+    @Override
     public long idOwner() {
         return authenticator.idOwner();
     }
