@@ -30,7 +30,7 @@ import java.util.List;
  * -5?
  */
 public final class VkVideoSync extends ClientBotsExtension {
-    public static final String VIDEO_DIR = System.getProperty("user.home") + System.getProperty("file.separator") + ".video";
+    public static final String VIDEO_DIR = System.getProperty("user.home") + File.separator + ".video";
     private static final Logger logger = LoggerFactory.getLogger(VkVideoSync.class);
 
     public VkVideoSync() throws Exception {

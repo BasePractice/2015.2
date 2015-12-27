@@ -23,11 +23,19 @@ public final class Video {
     public int comments;
 
     public class Files {
-        public String mp4_240;
-        public String mp4_360;
-        public String mp4_480;
-        public String mp4_720;
-        public String mp4_1080;
+        // не актуально, но пусть будет
+        // "Если в Вашем приложении используется прямая авторизация, возвращается дополнительное поле files,..."
+        // У нас не используется
+        @SerializedName("mp4_240")
+        public String mp4p240;
+        @SerializedName("mp4_360")
+        public String mp4p360;
+        @SerializedName("mp4_480")
+        public String mp4p480;
+        @SerializedName("mp4_720")
+        public String mp4p720;
+        @SerializedName("mp4_1080")
+        public String mp4p1080;
         public String external;
     }
 
