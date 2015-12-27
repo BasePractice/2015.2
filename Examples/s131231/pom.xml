@@ -7,10 +7,10 @@
         <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>starter</artifactId>
+    <artifactId>s131231</artifactId>
     <packaging>jar</packaging>
     <version>1.0.1</version>
-    <name>Mirea.Oop.Practice.CourseJ.Starter</name>
+    <name>Mirea.Oop.Practice.CourseJ.S131231</name>
 
     <licenses>
         <license>
@@ -20,7 +20,7 @@
     </licenses>
 
     <build>
-        <finalName>Mirea.Oop.Practice.Course.Starter</finalName>
+        <finalName>Mirea.Oop.Practice.Course.S131231</finalName>
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
@@ -37,12 +37,15 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <jarName>Mirea.Oop.Practice.Course.Starter</jarName>
+                    <jarName>Mirea.Oop.Practice.Course.S131231</jarName>
                     <archive>
                         <index>true</index>
                         <manifest>
                             <addClasspath>true</addClasspath>
                         </manifest>
+                        <manifestEntries>
+                            <Export-Package>ru.mirea.oop.practice.coursej.s131231.VkMessagePingService</Export-Package>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
@@ -80,95 +83,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>coursej</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s000000</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131237</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s000001</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131253</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131250</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131225</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131226</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131245</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131249</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131241</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131328</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131239</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131235</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131227</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131243</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131252</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>s131231</artifactId>
             <version>${project.version}</version>
         </dependency>
 
