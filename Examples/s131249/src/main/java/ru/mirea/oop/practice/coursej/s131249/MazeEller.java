@@ -18,10 +18,10 @@ public final class MazeEller extends AbstractMazeExtension {
         rows = maze.rows;
         Cell[][] cells = new Cell[maze.rows][maze.cols];
         Set<Cell> cellSet = new HashSet<>();
-        for (int y = 0; y < maze.rows; y++) {
-            for (int x = 0; x < maze.cols; x++) {
-                Cell cell = new Cell(x, y, maze.data[x][y]);
-                cells[y][x] = cell;
+        for (int j = 0; j < maze.rows; j++) {
+            for (int i = 0; i < maze.cols; i++) {
+                Cell cell = new Cell(i, j, maze.data[i][j]);
+                cells[j][i] = cell;
                 cellSet.add(cell);
             }
         }
