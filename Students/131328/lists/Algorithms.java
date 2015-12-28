@@ -53,15 +53,15 @@ public final class Algorithms {
 
     public static <E> ILinkedList<E> removeList(ILinkedList<E> list, E offset, int size) {
         Iterator<E> iterator = list.iterator();
-        LinkedListImpl sublist;
-        E item;
-        sublist = new LinkedListImpl<E>();
+        int count = 0;
         while (iterator.hasNext()) {
-            item = iterator.next();
-            sublist.add(item);
-            if (item.equals(offset)) break;
+            E obj = iterator.next();
+            if (obj.equals(offset) || (count != 0 && count < size)) {
+                list.remove(obj);
+                count++;
+            }
         }
-        return sublist;
+        return list;
     }
 
     public static <E> boolean compareList(ILinkedList<E> list, ILinkedList<E> other) {
