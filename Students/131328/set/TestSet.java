@@ -14,9 +14,9 @@ public class TestSet {
         set1.put(6);
         set1.put(7);
         set1.put(8);
-        set3 = AlgorithmsSet.union(set1, set2);
+        set3 = AlgorithmsSet.difference(set1, set2);
         print(set3);
-        System.out.println(AlgorithmsSet.isIncluded(set1, set3));
+        System.out.println(AlgorithmsSet.isIntersection(set1, set2));
     }
 
 
