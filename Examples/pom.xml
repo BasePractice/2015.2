@@ -12,6 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <twitter.version>4.0.4</twitter.version>
     </properties>
 
     <scm>
@@ -96,7 +97,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>18.0</version>
+                <version>19.0</version>
             </dependency>
 
             <dependency>
@@ -132,7 +133,19 @@
             <dependency>
                 <groupId>org.twitter4j</groupId>
                 <artifactId>twitter4j-core</artifactId>
-                <version>[4.0,)</version>
+                <version>${twitter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.twitter4j</groupId>
+                <artifactId>twitter4j-async</artifactId>
+                <version>${twitter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.twitter4j</groupId>
+                <artifactId>twitter4j-stream</artifactId>
+                <version>${twitter.version}</version>
             </dependency>
 
             <dependency>
@@ -169,20 +182,6 @@
             </plugin>
         </plugins>
     </reporting>
-
-    <repositories>
-        <repository>
-            <id>twitter4j.org</id>
-            <name>twitter4j.org Repository</name>
-            <url>http://twitter4j.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <modules>
         <module>structs</module>

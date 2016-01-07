@@ -1,6 +1,7 @@
 package ru.mirea.oop.practice.coursej.impl.vk;
 
 import com.squareup.okhttp.*;
+import ru.mirea.oop.practice.coursej.api.Getter;
 import ru.mirea.oop.practice.coursej.api.Provider;
 import ru.mirea.oop.practice.coursej.api.Token;
 

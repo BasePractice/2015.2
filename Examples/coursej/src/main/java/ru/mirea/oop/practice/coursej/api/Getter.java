@@ -1,9 +1,4 @@
-package ru.mirea.oop.practice.coursej.impl.vk;
-
-import ru.mirea.oop.practice.coursej.api.Credentials;
-import ru.mirea.oop.practice.coursej.api.Provider;
-import ru.mirea.oop.practice.coursej.api.Token;
-import ru.mirea.oop.practice.coursej.impl.BasicProvider;
+package ru.mirea.oop.practice.coursej.api;
 
 public interface Getter {
 

@@ -7,7 +7,7 @@ import ru.mirea.oop.practice.coursej.api.Provider;
 import ru.mirea.oop.practice.coursej.api.ext.BotsExtension;
 import ru.mirea.oop.practice.coursej.api.tg.entities.Update;
 import ru.mirea.oop.practice.coursej.api.tg.entities.User;
-import ru.mirea.oop.practice.coursej.impl.BasicProvider;
+import ru.mirea.oop.practice.coursej.api.BasicProvider;
 import ru.mirea.oop.practice.coursej.impl.tg.BotClient;
 
 import java.io.IOException;

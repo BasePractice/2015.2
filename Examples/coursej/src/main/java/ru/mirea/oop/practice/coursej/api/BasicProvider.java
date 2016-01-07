@@ -1,6 +1,4 @@
-package ru.mirea.oop.practice.coursej.impl;
-
-import ru.mirea.oop.practice.coursej.api.Provider;
+package ru.mirea.oop.practice.coursej.api;
 
 import java.lang.reflect.Constructor;
 import java.util.stream.Collectors;
