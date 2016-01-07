@@ -1,6 +1,8 @@
 package ru.mirea.oop.practice.coursej.impl.vk.ext;
 
 import com.squareup.okhttp.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.UsersApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
@@ -17,6 +19,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public abstract class ServiceBotsExtension extends AbstractBotsExtension implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceBotsExtension.class.getName());
     private final Map<Long, Message> messageCache = new ConcurrentHashMap<>();
     private static final Event timeoutEvent = new Event(EventType.TIMEOUT, null);
     private final int timeout;
@@ -209,7 +212,13 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
                     long timestamp = ((Number) update.remove(0)).longValue();
                     String subject = (String) update.remove(0);
                     String text = (String) update.remove(0);
-                    Message message = new Message(idMessage, flags, loadContactFrom(idFrom), timestamp, subject, text);
+                    String attachments = null;
+                    //TODO: Реализовать прием attachments
+                    if (!update.isEmpty()) {
+                        attachments = update.remove(0).toString();
+                    }
+                    Message message = new Message(idMessage, flags, loadContactFrom(idFrom),
+                            timestamp, subject, text, attachments);
                     messageCache.put(idMessage, message);
                     doEvent(new Event(EventType.MESSAGE_RECEIVE, message));
                     break;
@@ -406,19 +415,22 @@ public abstract class ServiceBotsExtension extends AbstractBotsExtension impleme
         public final long timestamp;
         public final String subject;
         public final String text;
+        public final String attachments;
 
         protected int flags;
 
         /**
          * Attach
          */
-        protected Message(long id, int flags, Contact contact, long timestamp, String subject, String text) {
+        protected Message(long id, int flags, Contact contact, long timestamp,
+                          String subject, String text, String attachments) {
             this.id = id;
             this.flags = flags;
             this.contact = contact;
             this.timestamp = timestamp;
             this.subject = subject;
             this.text = text;
+            this.attachments = attachments;
         }
 
         public boolean isReaded() {

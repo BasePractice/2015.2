@@ -83,7 +83,7 @@ abstract class AbstractBotsExtension implements BotsExtension {
             "can_post, " +
             "universities";
     protected static final int DEFAULT_TIMEOUT = 1000;
-    protected static final Logger logger = LoggerFactory.getLogger(AbstractBotsExtension.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractBotsExtension.class);
     protected static final Gson gson = ServiceCreator.gson;
     protected final Map<Long, Contact> friends = new HashMap<>();
     protected VkontakteApi api;
