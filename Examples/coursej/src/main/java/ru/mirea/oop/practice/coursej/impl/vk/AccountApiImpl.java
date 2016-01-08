@@ -2,8 +2,6 @@ package ru.mirea.oop.practice.coursej.impl.vk;
 
 import retrofit.Call;
 import ru.mirea.oop.practice.coursej.api.vk.AccountApi;
-import ru.mirea.oop.practice.coursej.impl.vk.Account;
-import ru.mirea.oop.practice.coursej.impl.vk.Result;
 
 import java.io.IOException;
 

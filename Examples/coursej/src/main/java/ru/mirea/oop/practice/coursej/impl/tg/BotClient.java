@@ -11,12 +11,10 @@ import ru.mirea.oop.practice.coursej.api.tg.entities.*;
 import ru.mirea.oop.practice.coursej.impl.ClientFactory;
 import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public final class BotClient {
     private static final Logger logger = LoggerFactory.getLogger(BotClient.class);
@@ -25,7 +23,7 @@ public final class BotClient {
     private final OkHttpClient client;
 
     public BotClient() {
-        this(Configuration.loadKeyFrom(".telegram"), ClientFactory.createOkClient());
+        this(readAccessKey(Configuration.getFileName(".access_tokens")), ClientFactory.createOkClient());
     }
 
     public BotClient(String token, OkHttpClient client) {
@@ -111,6 +109,16 @@ public final class BotClient {
             System.out.println(string);
         }
         return null;
+    }
+
+    private static String readAccessKey(String fileName) {
+        Properties properties = new Properties();
+        try (Reader reader = new FileReader(fileName)) {
+            properties.load(reader);
+        } catch (IOException ex) {
+            logger.error("", ex);
+        }
+        return properties.getProperty("tg.access_key");
     }
 
     private final class ResultMessage {

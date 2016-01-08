@@ -2,13 +2,8 @@ package ru.mirea.oop.practice.coursej.s000000;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mirea.oop.practice.coursej.api.vk.DocumentsApi;
-import ru.mirea.oop.practice.coursej.api.vk.MessagesApi;
 import ru.mirea.oop.practice.coursej.api.vk.entities.Contact;
 import ru.mirea.oop.practice.coursej.impl.vk.ext.ServiceBotsExtension;
-
-import java.io.File;
-import java.io.IOException;
 
 public final class VkMessagePingService extends ServiceBotsExtension {
     private static final Logger logger = LoggerFactory.getLogger(VkMessagePingService.class);
@@ -30,7 +25,7 @@ public final class VkMessagePingService extends ServiceBotsExtension {
                     break;
                 }
                 logger.debug("Получили сообщение от " + Contact.viewerString(contact));
-                sendMessage(contact, msg.text);
+                sendMessage(contact, msg.text.isEmpty() ? "Ответ" : msg.text, msg.attachments);
                 break;
             }
             default:

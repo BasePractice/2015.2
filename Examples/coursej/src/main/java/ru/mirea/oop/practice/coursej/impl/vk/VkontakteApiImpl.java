@@ -1,11 +1,9 @@
 package ru.mirea.oop.practice.coursej.impl.vk;
 
 import com.squareup.okhttp.OkHttpClient;
-import ru.mirea.oop.practice.coursej.api.Provider;
 import ru.mirea.oop.practice.coursej.api.VkontakteApi;
 import ru.mirea.oop.practice.coursej.api.vk.*;
 import ru.mirea.oop.practice.coursej.impl.ClientFactory;
-import ru.mirea.oop.practice.coursej.impl.BasicProvider;
 import ru.mirea.oop.practice.coursej.impl.ServiceCreator;
 
 import java.lang.reflect.Constructor;
@@ -18,12 +16,12 @@ public final class VkontakteApiImpl implements VkontakteApi {
     private final String url;
 
     private final OkHttpClient client;
-    private final Authenticator authenticator;
+    private final VkAuthenticator vkAuthenticator;
 
     private VkontakteApiImpl(String url) throws Exception {
         this.url = url;
         this.client = ClientFactory.createOkClient();
-        this.authenticator = new Authenticator(new GetterImpl());
+        this.vkAuthenticator = new VkAuthenticator();
     }
 
     private VkontakteApiImpl() throws Exception {
@@ -72,7 +70,7 @@ public final class VkontakteApiImpl implements VkontakteApi {
 
     @Override
     public long idOwner() {
-        return authenticator.idOwner();
+        return vkAuthenticator.idOwner();
     }
 
     //FIXME: Сделать конкурентным
@@ -93,7 +91,7 @@ public final class VkontakteApiImpl implements VkontakteApi {
 
     @Override
     public void start() throws Exception {
-        this.authenticator.authenticate(client);
+        this.vkAuthenticator.authenticate(client);
     }
 
     @Override
@@ -101,19 +99,7 @@ public final class VkontakteApiImpl implements VkontakteApi {
         return client;
     }
 
-    private static final class GetterImpl implements Getter {
-
-        @Override
-        public Provider<Token> getToken() {
-            return new BasicProvider<>(Token.class);
-        }
-
-        @Override
-        public Provider<Credentials> getCredentials() {
-            return new BasicProvider<>(Credentials.class);
-        }
-    }
-
+    @SuppressWarnings("unchecked")
     public static synchronized VkontakteApi load() throws Exception {
         Properties prop = new Properties();
         ClassLoader loader = VkontakteApi.class.getClassLoader();
@@ -124,10 +110,11 @@ public final class VkontakteApiImpl implements VkontakteApi {
         }
 
         try {
-            Class<?> klass = loader.loadClass(prop.getProperty("vk.api.class", "ru.mirea.oop.practice.coursej.VkApiImpl"));
-            Constructor<?> constructor = klass.getConstructor();
+            Class<VkontakteApi> klass = (Class<VkontakteApi>)
+                    loader.loadClass(prop.getProperty("vk.api.class", "ru.mirea.oop.practice.coursej.VkApiImpl"));
+            Constructor<VkontakteApi> constructor = klass.getConstructor();
             constructor.setAccessible(true);
-            return (VkontakteApi) constructor.newInstance();
+            return constructor.newInstance();
         } catch (Exception ex) {
             return new VkontakteApiImpl();
         }

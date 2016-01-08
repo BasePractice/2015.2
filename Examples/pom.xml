@@ -12,6 +12,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <twitter.version>4.0.4</twitter.version>
     </properties>
 
     <scm>
@@ -96,7 +97,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>18.0</version>
+                <version>19.0</version>
             </dependency>
 
             <dependency>
@@ -127,6 +128,24 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>1.4.190</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.twitter4j</groupId>
+                <artifactId>twitter4j-core</artifactId>
+                <version>${twitter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.twitter4j</groupId>
+                <artifactId>twitter4j-async</artifactId>
+                <version>${twitter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.twitter4j</groupId>
+                <artifactId>twitter4j-stream</artifactId>
+                <version>${twitter.version}</version>
             </dependency>
 
             <dependency>

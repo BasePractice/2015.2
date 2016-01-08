@@ -1,13 +1,16 @@
 package ru.mirea.oop.practice.coursej.impl.vk;
 
 import com.squareup.okhttp.*;
+import ru.mirea.oop.practice.coursej.api.Getter;
 import ru.mirea.oop.practice.coursej.api.Provider;
+import ru.mirea.oop.practice.coursej.api.Token;
 
-final class Authenticator {
-    private final Provider<Credentials> credentials;
+final class VkAuthenticator implements Constants {
+    private final Provider<ru.mirea.oop.practice.coursej.api.Credentials> credentials;
     private Provider<Token> token;
 
-    Authenticator(Getter getter) {
+    VkAuthenticator() {
+        Getter getter = new Getter.DefaultGetter(PREFIX);
         this.credentials = getter.getCredentials();
         this.token = getter.getToken();
     }
@@ -68,10 +71,9 @@ final class Authenticator {
             }
             location = processed.header("Location");
             location = location.replaceAll("#", "?");
-            token.put(Token.parse(HttpUrl.parse(location)));
-            Token.save(token.get());
+            token.put(Token.parse(PREFIX, HttpUrl.parse(location)));
+            Token.save(PREFIX, token.get());
         }
         AccessTokenAuthenticator.setAccessToken(ok, token.get().accessToken);
     }
-
 }
