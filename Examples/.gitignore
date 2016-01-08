@@ -1,3 +1,5 @@
 .generated
 .Result
 TEST2.db
+replay*.log
+hs_*.log

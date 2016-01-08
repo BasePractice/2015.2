@@ -57,11 +57,11 @@ public final class TgImageReply extends ServiceBotsExtension {
                     return;
                 }
 
-                InputStream stream = getImage(text);
-
-                if (stream != null) {
-                    Message document = client.get().sendPhoto(id, "", "safe_image.png", stream);
-                    logger.debug("Send message: " + document);
+                try (InputStream stream = getImage(text)) {
+                    if (stream != null) {
+                        Message document = client.get().sendPhoto(id, "", "safe_image.png", stream);
+                        logger.debug("Send message: " + document);
+                    }
                 }
             } catch (IOException ioExp) {
                 ioExp.printStackTrace();
