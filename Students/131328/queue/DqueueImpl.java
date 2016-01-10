@@ -1,8 +1,8 @@
+
+
 import java.util.Iterator;
 
-
-
-final class LinkedListImpl<E> implements ILinkedList<E> {
+public final class DqueueImpl<E> implements IDqueue<E> {
 
     private int size = 0;
 
@@ -16,22 +16,7 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0 || first == null;
-    }
-
-    @Override
-    public boolean contains(E element) {
-        for (Node<E> it = first; it != null; it = it.next) {
-            if (element.equals(it.item)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void add(E element) {
+    public void pushBack(E element) {
         final Node<E> l = last;
         final Node<E> newNode = new Node<>(l, element, null);
         last = newNode;
@@ -43,22 +28,39 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
         size++;
     }
 
-    Node<E> indexOf(E element) {
-        for (Node<E> it = first; it != null; it = it.next) {
-            if (element.equals(it.item)) {
-                return (it);
-            }
-        }
-        return null;
+    @Override
+    public void pushFront(E element) {
+        throw new RuntimeException("Not implement yet");
     }
 
     @Override
-    public void remove(E element) {
-        for (Node<E> it = first; it != null; it = it.next) {
-            if (element.equals(it.item)) {
-                remove(it);
-            }
-        }
+    public E popBack() {
+        throw new RuntimeException("Not implement yet");
+    }
+
+    @Override
+    public E popFront() {
+        final E current = first.item;
+        first = first.next;
+        if (first == null)
+            last = null;
+        --size;
+        return current;
+    }
+
+    @Override
+    public E peekBack() {
+        throw new RuntimeException("Not implement yet");
+    }
+
+    @Override
+    public E peekFront() {
+        throw new RuntimeException("Not implement yet");
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     @Override
@@ -78,29 +80,7 @@ final class LinkedListImpl<E> implements ILinkedList<E> {
         return new IteratorImpl(first);
     }
 
-    private E remove(Node<E> x) {
-        final E element = x.item;
-        final Node<E> next = x.next;
-        final Node<E> prev = x.prev;
-
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-            x.prev = null;
-        }
-
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            x.next = null;
-        }
-        size--;
-        return element;
-    }
-
-    static final class Node<E> {
+    private static final class Node<E> {
         final E item;
         Node<E> next;
         Node<E> prev;
