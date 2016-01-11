@@ -1,4 +1,6 @@
 ![Travis-Build](https://travis-ci.org/BasePractice/2015.2.svg?branch=master)
+[![CodeCov IO](https://codecov.io/github/BasePractice/2015.2/coverage.svg?branch=master)](https://codecov.io/github/BasePractice/2015.2?branch=master)
+
 Обновление репозитория
 ======================
 Команда выполняется один раз
