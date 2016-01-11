@@ -1,6 +1,9 @@
 ![Travis-Build](https://travis-ci.org/BasePractice/2015.2.svg?branch=master)
 [![CodeCov IO](https://codecov.io/github/BasePractice/2015.2/coverage.svg?branch=master)](https://codecov.io/github/BasePractice/2015.2?branch=master)
 
+[![Overv IO](https://img.shields.io/badge/overv.io-view-blue.svg)](https://overv.io/workspace/Pastor/famous-mouse/)
+[![Reviewable](https://img.shields.io/badge/reviewable-view-blue.svg)](https://reviewable.io/reviews#-)
+
 Обновление репозитория
 ======================
 Команда выполняется один раз
