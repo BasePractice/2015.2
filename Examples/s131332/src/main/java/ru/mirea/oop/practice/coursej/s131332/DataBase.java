@@ -18,7 +18,7 @@ public final class DataBase {
     private static final Logger logger = LoggerFactory.getLogger(DataBase.class);
 
 
-    public static void getParser() {
+    public static void get() {
         data.clear();
         try (Reader reader = new InputStreamReader(DataBase.class.getResourceAsStream("/help.dict"))) {
             List<String> lines = CharStreams.readLines(reader);
@@ -33,7 +33,7 @@ public final class DataBase {
         }
     }
 
-    public static void writeParser(String message) {
+    public static void write(String message) {
         Path path = Paths.get("/help.dict");
         try (BufferedReader reader = Files.newBufferedReader(path)) {
             List<String> lines = CharStreams.readLines(reader);
@@ -47,7 +47,7 @@ public final class DataBase {
         }
     }
 
-    public static void deleteParser(String message) {
+    public static void delete(String message) {
         Path path = Paths.get("/help.dict");
         int i = 0;
         try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -69,7 +69,7 @@ public final class DataBase {
         }
     }
 
-    public static void refreshParser(String message) {
+    public static void refresh(String message) {
         Path path = Paths.get("/help.dict");
         int i = 0;
         try (BufferedReader reader = Files.newBufferedReader(path)) {

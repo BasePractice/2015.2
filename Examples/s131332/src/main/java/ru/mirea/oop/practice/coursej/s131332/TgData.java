@@ -16,8 +16,8 @@ public final class TgData extends ServiceBotsExtension {
     private final String help = "Доступные комманды:\n/get Фамилия_писателя,\n/add Фамилия_писателя=Информация,\n/delete Фамилия_писателя,\n/update Фамилия_писателя=Информация\n";
 
     public TgData() {
-        super("tg.services.DataEchoServer");
-        DataBase.getParser();
+        super("tg.services.TgData");
+        DataBase.get();
     }
 
     @Override
@@ -38,17 +38,17 @@ public final class TgData extends ServiceBotsExtension {
                 }
                 if (request.equals("/add")) {
                     String namePlusInfo = Parser.getNamePlusInfo(message.text);
-                    DataBase.writeParser(namePlusInfo);
+                    DataBase.write(namePlusInfo);
                     client.get().sendMessage(id, "Добавлено", null);
                 }
                 if (request.equals("/delete")) {
                     String requests = Parser.getNamePlusInfo(message.text);
-                    DataBase.deleteParser(requests);
+                    DataBase.delete(requests);
                     client.get().sendMessage(id, "Удалено", null);
                 }
                 if (request.equals("/update")) {
                     String requests = Parser.getNamePlusInfo(message.text);
-                    DataBase.refreshParser(requests);
+                    DataBase.refresh(requests);
                     client.get().sendMessage(id, "Обновлено", null);
                 }
             } catch (FileNotFoundException ex) {
